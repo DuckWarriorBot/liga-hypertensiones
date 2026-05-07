@@ -288,8 +288,9 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
     teams = sorted(teams_set)
 
     # Resultados y marcadores
-    results_by_team = defaultdict(list)   # ['V','E','D',...]
-    scores_data     = defaultdict(dict)   # {team: {str(round_idx): "gf-gc"}}
+    results_by_team  = defaultdict(list)   # ['V','E','D',...]
+    scores_data      = defaultdict(dict)   # {team: {str(round_idx): "gf-gc"}}
+    venue_by_team_mk = defaultdict(dict)   # {team: {str(round_idx): 'H'/'A'}} — Marca completo
 
     for r_idx, rnd in enumerate(rounds):
         for m in rnd:
@@ -312,6 +313,10 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
             # Marcador desde la perspectiva de cada equipo (propios primero)
             scores_data[home][str(r_idx)] = f'{hg}-{ag}'
             scores_data[away][str(r_idx)] = f'{ag}-{hg}'
+
+            # Condición local/visitante (cobertura total desde Marca)
+            venue_by_team_mk[home][str(r_idx)] = 'H'
+            venue_by_team_mk[away][str(r_idx)] = 'A'
 
     # Número de jornadas jugadas (última con al menos 1 resultado)
     rounds_played = 0
@@ -508,7 +513,12 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
         'h2h_data':            h2h_data,
     }
 
-    return liga_data, dict(scores_data)
+    # Incluir scores_by_team y venue_by_team completos en el dict de salida
+    # (FlashScore lo completará/corregirá encima en su paso posterior)
+    scores_out = dict(scores_data)
+    scores_out['scores_by_team'] = dict(scores_data)  # mismo contenido
+    scores_out['venue_by_team']  = dict(venue_by_team_mk)
+    return liga_data, scores_out
 
 
 # ── 5. Escudos desde BeSoccer ─────────────────────────────────────────────────
