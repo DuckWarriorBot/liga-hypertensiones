@@ -1,228 +1,1886 @@
 {
-  "Albacete": {
+  "Burgos": {
     "0": {
-      "ascenso": 5,
-      "playoff": 16,
-      "permanencia": 77,
-      "descenso": 2
+      "ascenso": 1,
+      "playoff": 4,
+      "permanencia": 62,
+      "descenso": 33
     },
     "1": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 82,
-      "descenso": 18
+      "ascenso": 1,
+      "playoff": 4,
+      "permanencia": 66,
+      "descenso": 29
     },
     "2": {
-      "ascenso": 4,
-      "playoff": 2,
+      "ascenso": 0,
+      "playoff": 5,
       "permanencia": 58,
-      "descenso": 36
+      "descenso": 37
     },
     "3": {
       "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 12,
-      "descenso": 87
+      "playoff": 3,
+      "permanencia": 54,
+      "descenso": 42
     },
     "4": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 10,
-      "descenso": 90
+      "playoff": 5,
+      "permanencia": 70,
+      "descenso": 25
     },
     "5": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 39,
-      "descenso": 59
+      "ascenso": 2,
+      "playoff": 8,
+      "permanencia": 75,
+      "descenso": 15
     },
     "6": {
-      "ascenso": 3,
-      "playoff": 2,
+      "ascenso": 2,
+      "playoff": 9,
       "permanencia": 75,
-      "descenso": 20
+      "descenso": 14
     },
     "7": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 79,
-      "descenso": 21
+      "ascenso": 1,
+      "playoff": 8,
+      "permanencia": 76,
+      "descenso": 15
     },
     "8": {
       "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 67,
-      "descenso": 32
+      "playoff": 3,
+      "permanencia": 72,
+      "descenso": 24
     },
     "9": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 87,
-      "descenso": 9
+      "ascenso": 0,
+      "playoff": 9,
+      "permanencia": 71,
+      "descenso": 20
     },
     "10": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 70,
-      "descenso": 30
+      "ascenso": 1,
+      "playoff": 13,
+      "permanencia": 77,
+      "descenso": 9
     },
     "11": {
-      "ascenso": 0,
-      "playoff": 8,
-      "permanencia": 89,
+      "ascenso": 4,
+      "playoff": 23,
+      "permanencia": 69,
+      "descenso": 4
+    },
+    "12": {
+      "ascenso": 1,
+      "playoff": 25,
+      "permanencia": 69,
+      "descenso": 5
+    },
+    "13": {
+      "ascenso": 5,
+      "playoff": 22,
+      "permanencia": 71,
+      "descenso": 2
+    },
+    "14": {
+      "ascenso": 2,
+      "playoff": 29,
+      "permanencia": 65,
+      "descenso": 4
+    },
+    "15": {
+      "ascenso": 2,
+      "playoff": 18,
+      "permanencia": 73,
+      "descenso": 7
+    },
+    "16": {
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 76,
+      "descenso": 12
+    },
+    "17": {
+      "ascenso": 2,
+      "playoff": 22,
+      "permanencia": 73,
       "descenso": 3
+    },
+    "18": {
+      "ascenso": 5,
+      "playoff": 22,
+      "permanencia": 70,
+      "descenso": 3
+    },
+    "19": {
+      "ascenso": 3,
+      "playoff": 18,
+      "permanencia": 74,
+      "descenso": 5
+    },
+    "20": {
+      "ascenso": 3,
+      "playoff": 26,
+      "permanencia": 69,
+      "descenso": 2
+    },
+    "21": {
+      "ascenso": 1,
+      "playoff": 29,
+      "permanencia": 69,
+      "descenso": 1
+    },
+    "22": {
+      "ascenso": 1,
+      "playoff": 15,
+      "permanencia": 82,
+      "descenso": 2
+    },
+    "23": {
+      "ascenso": 2,
+      "playoff": 22,
+      "permanencia": 75,
+      "descenso": 1
+    },
+    "24": {
+      "ascenso": 0,
+      "playoff": 15,
+      "permanencia": 84,
+      "descenso": 1
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 25,
+      "permanencia": 75,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 14,
+      "permanencia": 86,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 1,
+      "playoff": 24,
+      "permanencia": 74,
+      "descenso": 1
+    },
+    "28": {
+      "ascenso": 1,
+      "playoff": 37,
+      "permanencia": 62,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 2,
+      "playoff": 37,
+      "permanencia": 61,
+      "descenso": 0
+    },
+    "30": {
+      "ascenso": 3,
+      "playoff": 42,
+      "permanencia": 55,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 4,
+      "playoff": 55,
+      "permanencia": 41,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 6,
+      "playoff": 40,
+      "permanencia": 54,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 5,
+      "playoff": 56,
+      "permanencia": 39,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 9,
+      "playoff": 59,
+      "permanencia": 32,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 3,
+      "playoff": 57,
+      "permanencia": 40,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 2,
+      "playoff": 50,
+      "permanencia": 48,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 1,
+      "playoff": 43,
+      "permanencia": 56,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 1,
+      "playoff": 43,
+      "permanencia": 56,
+      "descenso": 0
+    }
+  },
+  "Valladolid": {
+    "0": {
+      "ascenso": 31,
+      "playoff": 34,
+      "permanencia": 34,
+      "descenso": 1
+    },
+    "1": {
+      "ascenso": 32,
+      "playoff": 39,
+      "permanencia": 29,
+      "descenso": 0
+    },
+    "2": {
+      "ascenso": 29,
+      "playoff": 36,
+      "permanencia": 33,
+      "descenso": 2
+    },
+    "3": {
+      "ascenso": 30,
+      "playoff": 35,
+      "permanencia": 34,
+      "descenso": 1
+    },
+    "4": {
+      "ascenso": 30,
+      "playoff": 41,
+      "permanencia": 28,
+      "descenso": 1
+    },
+    "5": {
+      "ascenso": 7,
+      "playoff": 22,
+      "permanencia": 67,
+      "descenso": 4
+    },
+    "6": {
+      "ascenso": 6,
+      "playoff": 17,
+      "permanencia": 71,
+      "descenso": 6
+    },
+    "7": {
+      "ascenso": 4,
+      "playoff": 20,
+      "permanencia": 64,
+      "descenso": 12
+    },
+    "8": {
+      "ascenso": 8,
+      "playoff": 24,
+      "permanencia": 61,
+      "descenso": 7
+    },
+    "9": {
+      "ascenso": 2,
+      "playoff": 15,
+      "permanencia": 75,
+      "descenso": 8
+    },
+    "10": {
+      "ascenso": 3,
+      "playoff": 15,
+      "permanencia": 72,
+      "descenso": 10
+    },
+    "11": {
+      "ascenso": 2,
+      "playoff": 19,
+      "permanencia": 72,
+      "descenso": 7
     },
     "12": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 84,
-      "descenso": 16
+      "playoff": 12,
+      "permanencia": 77,
+      "descenso": 11
     },
     "13": {
-      "ascenso": 2,
-      "playoff": 7,
-      "permanencia": 82,
-      "descenso": 9
+      "ascenso": 3,
+      "playoff": 13,
+      "permanencia": 76,
+      "descenso": 8
     },
     "14": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 84,
+      "ascenso": 2,
+      "playoff": 12,
+      "permanencia": 77,
       "descenso": 9
     },
     "15": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 86,
-      "descenso": 14
+      "ascenso": 1,
+      "playoff": 10,
+      "permanencia": 69,
+      "descenso": 20
     },
     "16": {
-      "ascenso": 2,
-      "playoff": 4,
-      "permanencia": 86,
+      "ascenso": 1,
+      "playoff": 20,
+      "permanencia": 71,
       "descenso": 8
     },
     "17": {
       "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 80,
-      "descenso": 16
+      "playoff": 9,
+      "permanencia": 72,
+      "descenso": 19
     },
     "18": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 17
+      "playoff": 2,
+      "permanencia": 74,
+      "descenso": 24
     },
     "19": {
-      "ascenso": 0,
-      "playoff": 0,
+      "ascenso": 1,
+      "playoff": 4,
       "permanencia": 74,
-      "descenso": 26
+      "descenso": 21
     },
     "20": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 74,
+      "descenso": 25
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 86,
+      "descenso": 10
+    },
+    "22": {
+      "ascenso": 1,
+      "playoff": 2,
+      "permanencia": 76,
+      "descenso": 21
+    },
+    "23": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 80,
+      "descenso": 20
+    },
+    "24": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 54,
+      "descenso": 46
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 62,
+      "descenso": 37
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 54,
+      "descenso": 46
+    },
+    "27": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 71,
+      "descenso": 28
+    },
+    "28": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 73,
       "descenso": 27
     },
-    "21": {
+    "29": {
       "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 84,
-      "descenso": 13
+      "playoff": 0,
+      "permanencia": 83,
+      "descenso": 17
     },
-    "22": {
+    "30": {
       "ascenso": 0,
-      "playoff": 5,
+      "playoff": 0,
+      "permanencia": 78,
+      "descenso": 22
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 74,
+      "descenso": 26
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 81,
+      "descenso": 19
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 71,
+      "descenso": 29
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
       "permanencia": 88,
-      "descenso": 7
+      "descenso": 12
     },
-    "23": {
+    "35": {
       "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
+      "playoff": 0,
+      "permanencia": 83,
+      "descenso": 17
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 96,
       "descenso": 4
     },
-    "24": {
+    "37": {
       "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 98,
+      "descenso": 2
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 98,
+      "descenso": 2
+    }
+  },
+  "Racing": {
+    "0": {
+      "ascenso": 20,
+      "playoff": 34,
+      "permanencia": 45,
+      "descenso": 1
+    },
+    "1": {
+      "ascenso": 30,
+      "playoff": 34,
+      "permanencia": 35,
+      "descenso": 1
+    },
+    "2": {
+      "ascenso": 27,
+      "playoff": 44,
+      "permanencia": 29,
+      "descenso": 0
+    },
+    "3": {
+      "ascenso": 44,
+      "playoff": 37,
+      "permanencia": 19,
+      "descenso": 0
+    },
+    "4": {
+      "ascenso": 35,
+      "playoff": 37,
+      "permanencia": 28,
+      "descenso": 0
+    },
+    "5": {
+      "ascenso": 40,
+      "playoff": 33,
+      "permanencia": 26,
+      "descenso": 1
+    },
+    "6": {
+      "ascenso": 29,
+      "playoff": 35,
+      "permanencia": 35,
+      "descenso": 1
+    },
+    "7": {
+      "ascenso": 35,
+      "playoff": 35,
+      "permanencia": 29,
+      "descenso": 1
+    },
+    "8": {
+      "ascenso": 28,
+      "playoff": 39,
+      "permanencia": 33,
+      "descenso": 0
+    },
+    "9": {
+      "ascenso": 39,
+      "playoff": 39,
+      "permanencia": 21,
+      "descenso": 1
+    },
+    "10": {
+      "ascenso": 48,
+      "playoff": 40,
+      "permanencia": 12,
+      "descenso": 0
+    },
+    "11": {
+      "ascenso": 57,
+      "playoff": 32,
+      "permanencia": 11,
+      "descenso": 0
+    },
+    "12": {
+      "ascenso": 49,
+      "playoff": 43,
+      "permanencia": 8,
+      "descenso": 0
+    },
+    "13": {
+      "ascenso": 37,
+      "playoff": 50,
+      "permanencia": 13,
+      "descenso": 0
+    },
+    "14": {
+      "ascenso": 42,
+      "playoff": 48,
+      "permanencia": 10,
+      "descenso": 0
+    },
+    "15": {
+      "ascenso": 55,
+      "playoff": 39,
+      "permanencia": 6,
+      "descenso": 0
+    },
+    "16": {
+      "ascenso": 73,
+      "playoff": 26,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "17": {
+      "ascenso": 72,
+      "playoff": 26,
+      "permanencia": 2,
+      "descenso": 0
+    },
+    "18": {
+      "ascenso": 76,
+      "playoff": 21,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "19": {
+      "ascenso": 79,
+      "playoff": 20,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "20": {
+      "ascenso": 60,
+      "playoff": 35,
+      "permanencia": 5,
+      "descenso": 0
+    },
+    "21": {
+      "ascenso": 76,
+      "playoff": 21,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "22": {
+      "ascenso": 86,
+      "playoff": 13,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "23": {
+      "ascenso": 78,
+      "playoff": 19,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "24": {
+      "ascenso": 72,
+      "playoff": 27,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "25": {
+      "ascenso": 69,
+      "playoff": 30,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 72,
+      "playoff": 27,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 82,
+      "playoff": 17,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "28": {
+      "ascenso": 95,
       "playoff": 5,
-      "permanencia": 90,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 95,
+      "playoff": 5,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "30": {
+      "ascenso": 88,
+      "playoff": 11,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 77,
+      "playoff": 23,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 86,
+      "playoff": 14,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 75,
+      "playoff": 24,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 89,
+      "playoff": 11,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 96,
+      "playoff": 4,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 87,
+      "playoff": 13,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 92,
+      "playoff": 8,
+      "permanencia": 0,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 92,
+      "playoff": 8,
+      "permanencia": 0,
+      "descenso": 0
+    }
+  },
+  "Deportivo": {
+    "0": {
+      "ascenso": 10,
+      "playoff": 31,
+      "permanencia": 58,
+      "descenso": 1
+    },
+    "1": {
+      "ascenso": 9,
+      "playoff": 27,
+      "permanencia": 61,
+      "descenso": 3
+    },
+    "2": {
+      "ascenso": 11,
+      "playoff": 29,
+      "permanencia": 57,
+      "descenso": 3
+    },
+    "3": {
+      "ascenso": 9,
+      "playoff": 29,
+      "permanencia": 60,
+      "descenso": 2
+    },
+    "4": {
+      "ascenso": 18,
+      "playoff": 40,
+      "permanencia": 40,
+      "descenso": 2
+    },
+    "5": {
+      "ascenso": 30,
+      "playoff": 37,
+      "permanencia": 32,
+      "descenso": 1
+    },
+    "6": {
+      "ascenso": 32,
+      "playoff": 44,
+      "permanencia": 23,
+      "descenso": 1
+    },
+    "7": {
+      "ascenso": 34,
+      "playoff": 40,
+      "permanencia": 26,
+      "descenso": 0
+    },
+    "8": {
+      "ascenso": 17,
+      "playoff": 30,
+      "permanencia": 50,
+      "descenso": 3
+    },
+    "9": {
+      "ascenso": 20,
+      "playoff": 39,
+      "permanencia": 40,
+      "descenso": 1
+    },
+    "10": {
+      "ascenso": 12,
+      "playoff": 38,
+      "permanencia": 49,
+      "descenso": 1
+    },
+    "11": {
+      "ascenso": 20,
+      "playoff": 44,
+      "permanencia": 35,
+      "descenso": 1
+    },
+    "12": {
+      "ascenso": 31,
+      "playoff": 49,
+      "permanencia": 20,
+      "descenso": 0
+    },
+    "13": {
+      "ascenso": 33,
+      "playoff": 48,
+      "permanencia": 19,
+      "descenso": 0
+    },
+    "14": {
+      "ascenso": 37,
+      "playoff": 47,
+      "permanencia": 16,
+      "descenso": 0
+    },
+    "15": {
+      "ascenso": 46,
+      "playoff": 46,
+      "permanencia": 8,
+      "descenso": 0
+    },
+    "16": {
+      "ascenso": 31,
+      "playoff": 55,
+      "permanencia": 13,
+      "descenso": 1
+    },
+    "17": {
+      "ascenso": 22,
+      "playoff": 57,
+      "permanencia": 21,
+      "descenso": 0
+    },
+    "18": {
+      "ascenso": 18,
+      "playoff": 50,
+      "permanencia": 31,
+      "descenso": 1
+    },
+    "19": {
+      "ascenso": 12,
+      "playoff": 54,
+      "permanencia": 34,
+      "descenso": 0
+    },
+    "20": {
+      "ascenso": 16,
+      "playoff": 52,
+      "permanencia": 32,
+      "descenso": 0
+    },
+    "21": {
+      "ascenso": 26,
+      "playoff": 42,
+      "permanencia": 32,
+      "descenso": 0
+    },
+    "22": {
+      "ascenso": 14,
+      "playoff": 51,
+      "permanencia": 35,
+      "descenso": 0
+    },
+    "23": {
+      "ascenso": 22,
+      "playoff": 59,
+      "permanencia": 19,
+      "descenso": 0
+    },
+    "24": {
+      "ascenso": 21,
+      "playoff": 63,
+      "permanencia": 16,
+      "descenso": 0
+    },
+    "25": {
+      "ascenso": 16,
+      "playoff": 57,
+      "permanencia": 27,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 20,
+      "playoff": 68,
+      "permanencia": 12,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 28,
+      "playoff": 61,
+      "permanencia": 11,
+      "descenso": 0
+    },
+    "28": {
+      "ascenso": 14,
+      "playoff": 74,
+      "permanencia": 12,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 33,
+      "playoff": 59,
+      "permanencia": 8,
+      "descenso": 0
+    },
+    "30": {
+      "ascenso": 39,
+      "playoff": 58,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 38,
+      "playoff": 56,
+      "permanencia": 6,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 47,
+      "playoff": 49,
+      "permanencia": 4,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 37,
+      "playoff": 59,
+      "permanencia": 4,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 35,
+      "playoff": 59,
+      "permanencia": 6,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 32,
+      "playoff": 62,
+      "permanencia": 6,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 24,
+      "playoff": 73,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 30,
+      "playoff": 66,
+      "permanencia": 4,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 30,
+      "playoff": 66,
+      "permanencia": 4,
+      "descenso": 0
+    }
+  },
+  "Sporting": {
+    "0": {
+      "ascenso": 3,
+      "playoff": 12,
+      "permanencia": 76,
+      "descenso": 9
+    },
+    "1": {
+      "ascenso": 6,
+      "playoff": 19,
+      "permanencia": 69,
+      "descenso": 6
+    },
+    "2": {
+      "ascenso": 7,
+      "playoff": 22,
+      "permanencia": 66,
       "descenso": 5
+    },
+    "3": {
+      "ascenso": 3,
+      "playoff": 17,
+      "permanencia": 76,
+      "descenso": 4
+    },
+    "4": {
+      "ascenso": 2,
+      "playoff": 9,
+      "permanencia": 76,
+      "descenso": 13
+    },
+    "5": {
+      "ascenso": 2,
+      "playoff": 13,
+      "permanencia": 76,
+      "descenso": 9
+    },
+    "6": {
+      "ascenso": 2,
+      "playoff": 7,
+      "permanencia": 79,
+      "descenso": 12
+    },
+    "7": {
+      "ascenso": 1,
+      "playoff": 12,
+      "permanencia": 71,
+      "descenso": 16
+    },
+    "8": {
+      "ascenso": 5,
+      "playoff": 18,
+      "permanencia": 67,
+      "descenso": 10
+    },
+    "9": {
+      "ascenso": 3,
+      "playoff": 22,
+      "permanencia": 69,
+      "descenso": 6
+    },
+    "10": {
+      "ascenso": 5,
+      "playoff": 25,
+      "permanencia": 67,
+      "descenso": 3
+    },
+    "11": {
+      "ascenso": 5,
+      "playoff": 26,
+      "permanencia": 66,
+      "descenso": 3
+    },
+    "12": {
+      "ascenso": 1,
+      "playoff": 12,
+      "permanencia": 78,
+      "descenso": 9
+    },
+    "13": {
+      "ascenso": 1,
+      "playoff": 14,
+      "permanencia": 78,
+      "descenso": 7
+    },
+    "14": {
+      "ascenso": 0,
+      "playoff": 14,
+      "permanencia": 73,
+      "descenso": 13
+    },
+    "15": {
+      "ascenso": 1,
+      "playoff": 10,
+      "permanencia": 78,
+      "descenso": 11
+    },
+    "16": {
+      "ascenso": 1,
+      "playoff": 19,
+      "permanencia": 77,
+      "descenso": 3
+    },
+    "17": {
+      "ascenso": 2,
+      "playoff": 24,
+      "permanencia": 69,
+      "descenso": 5
+    },
+    "18": {
+      "ascenso": 3,
+      "playoff": 31,
+      "permanencia": 65,
+      "descenso": 1
+    },
+    "19": {
+      "ascenso": 2,
+      "playoff": 19,
+      "permanencia": 74,
+      "descenso": 5
+    },
+    "20": {
+      "ascenso": 0,
+      "playoff": 13,
+      "permanencia": 84,
+      "descenso": 3
+    },
+    "21": {
+      "ascenso": 2,
+      "playoff": 26,
+      "permanencia": 72,
+      "descenso": 0
+    },
+    "22": {
+      "ascenso": 4,
+      "playoff": 30,
+      "permanencia": 66,
+      "descenso": 0
+    },
+    "23": {
+      "ascenso": 3,
+      "playoff": 24,
+      "permanencia": 70,
+      "descenso": 3
+    },
+    "24": {
+      "ascenso": 1,
+      "playoff": 25,
+      "permanencia": 73,
+      "descenso": 1
     },
     "25": {
       "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 91,
-      "descenso": 6
+      "playoff": 23,
+      "permanencia": 77,
+      "descenso": 0
     },
     "26": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 89,
-      "descenso": 11
+      "ascenso": 1,
+      "playoff": 18,
+      "permanencia": 81,
+      "descenso": 0
     },
     "27": {
       "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
-      "descenso": 4
+      "playoff": 17,
+      "permanencia": 83,
+      "descenso": 0
     },
     "28": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 90,
-      "descenso": 10
+      "playoff": 11,
+      "permanencia": 89,
+      "descenso": 0
     },
     "29": {
       "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 89,
-      "descenso": 9
+      "playoff": 17,
+      "permanencia": 82,
+      "descenso": 1
     },
     "30": {
-      "ascenso": 1,
-      "playoff": 4,
-      "permanencia": 91,
-      "descenso": 4
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 94,
+      "descenso": 1
     },
     "31": {
       "ascenso": 0,
       "playoff": 3,
-      "permanencia": 92,
+      "permanencia": 97,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 98,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    }
+  },
+  "Cádiz": {
+    "0": {
+      "ascenso": 14,
+      "playoff": 41,
+      "permanencia": 44,
+      "descenso": 1
+    },
+    "1": {
+      "ascenso": 12,
+      "playoff": 34,
+      "permanencia": 53,
+      "descenso": 1
+    },
+    "2": {
+      "ascenso": 24,
+      "playoff": 33,
+      "permanencia": 42,
+      "descenso": 1
+    },
+    "3": {
+      "ascenso": 18,
+      "playoff": 33,
+      "permanencia": 47,
+      "descenso": 2
+    },
+    "4": {
+      "ascenso": 22,
+      "playoff": 37,
+      "permanencia": 39,
+      "descenso": 2
+    },
+    "5": {
+      "ascenso": 22,
+      "playoff": 43,
+      "permanencia": 35,
+      "descenso": 0
+    },
+    "6": {
+      "ascenso": 20,
+      "playoff": 35,
+      "permanencia": 43,
+      "descenso": 2
+    },
+    "7": {
+      "ascenso": 16,
+      "playoff": 36,
+      "permanencia": 46,
+      "descenso": 2
+    },
+    "8": {
+      "ascenso": 26,
+      "playoff": 37,
+      "permanencia": 37,
+      "descenso": 0
+    },
+    "9": {
+      "ascenso": 18,
+      "playoff": 39,
+      "permanencia": 41,
+      "descenso": 2
+    },
+    "10": {
+      "ascenso": 13,
+      "playoff": 40,
+      "permanencia": 46,
+      "descenso": 1
+    },
+    "11": {
+      "ascenso": 15,
+      "playoff": 39,
+      "permanencia": 44,
+      "descenso": 2
+    },
+    "12": {
+      "ascenso": 1,
+      "playoff": 25,
+      "permanencia": 69,
+      "descenso": 5
+    },
+    "13": {
+      "ascenso": 2,
+      "playoff": 28,
+      "permanencia": 69,
+      "descenso": 1
+    },
+    "14": {
+      "ascenso": 1,
+      "playoff": 25,
+      "permanencia": 69,
+      "descenso": 5
+    },
+    "15": {
+      "ascenso": 3,
+      "playoff": 35,
+      "permanencia": 60,
+      "descenso": 2
+    },
+    "16": {
+      "ascenso": 2,
+      "playoff": 24,
+      "permanencia": 71,
+      "descenso": 3
+    },
+    "17": {
+      "ascenso": 4,
+      "playoff": 29,
+      "permanencia": 65,
+      "descenso": 2
+    },
+    "18": {
+      "ascenso": 5,
+      "playoff": 32,
+      "permanencia": 60,
+      "descenso": 3
+    },
+    "19": {
+      "ascenso": 3,
+      "playoff": 37,
+      "permanencia": 60,
+      "descenso": 0
+    },
+    "20": {
+      "ascenso": 9,
+      "playoff": 41,
+      "permanencia": 50,
+      "descenso": 0
+    },
+    "21": {
+      "ascenso": 6,
+      "playoff": 32,
+      "permanencia": 62,
+      "descenso": 0
+    },
+    "22": {
+      "ascenso": 4,
+      "playoff": 31,
+      "permanencia": 64,
+      "descenso": 1
+    },
+    "23": {
+      "ascenso": 1,
+      "playoff": 19,
+      "permanencia": 79,
+      "descenso": 1
+    },
+    "24": {
+      "ascenso": 1,
+      "playoff": 3,
+      "permanencia": 91,
+      "descenso": 5
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 12,
+      "permanencia": 87,
+      "descenso": 1
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 6,
+      "permanencia": 90,
+      "descenso": 4
+    },
+    "27": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 90,
+      "descenso": 8
+    },
+    "28": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 84,
+      "descenso": 15
+    },
+    "29": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 94,
+      "descenso": 5
+    },
+    "30": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 91,
+      "descenso": 8
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 85,
+      "descenso": 15
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 83,
+      "descenso": 17
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 74,
+      "descenso": 26
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 62,
+      "descenso": 38
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 58,
+      "descenso": 42
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 48,
+      "descenso": 52
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 45,
+      "descenso": 55
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 45,
+      "descenso": 55
+    }
+  },
+  "Real Sociedad B": {
+    "0": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 38,
+      "descenso": 61
+    },
+    "1": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 40,
+      "descenso": 60
+    },
+    "2": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 40,
+      "descenso": 59
+    },
+    "3": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 39,
+      "descenso": 60
+    },
+    "4": {
+      "ascenso": 1,
+      "playoff": 2,
+      "permanencia": 34,
+      "descenso": 63
+    },
+    "5": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 35,
+      "descenso": 65
+    },
+    "6": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 37,
+      "descenso": 63
+    },
+    "7": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 31,
+      "descenso": 68
+    },
+    "8": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 33,
+      "descenso": 66
+    },
+    "9": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 38,
+      "descenso": 61
+    },
+    "10": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 39,
+      "descenso": 61
+    },
+    "11": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 28,
+      "descenso": 72
+    },
+    "12": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 56,
+      "descenso": 43
+    },
+    "13": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 50,
+      "descenso": 49
+    },
+    "14": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 47,
+      "descenso": 52
+    },
+    "15": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 43,
+      "descenso": 56
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 39,
+      "descenso": 61
+    },
+    "17": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 53,
+      "descenso": 44
+    },
+    "18": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 40,
+      "descenso": 60
+    },
+    "19": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 40,
+      "descenso": 60
+    },
+    "20": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 37,
+      "descenso": 62
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 40,
+      "descenso": 60
+    },
+    "22": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 37,
+      "descenso": 63
+    },
+    "23": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 35,
+      "descenso": 65
+    },
+    "24": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 86,
+      "descenso": 13
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 65,
+      "descenso": 35
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 76,
+      "descenso": 23
+    },
+    "27": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 75,
+      "descenso": 24
+    },
+    "28": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 91,
+      "descenso": 9
+    },
+    "29": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 96,
+      "descenso": 3
+    },
+    "30": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 98,
+      "descenso": 2
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 94,
       "descenso": 5
     },
     "32": {
       "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 94,
-      "descenso": 3
+      "playoff": 0,
+      "permanencia": 92,
+      "descenso": 8
     },
     "33": {
       "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 90,
-      "descenso": 5
+      "playoff": 0,
+      "permanencia": 96,
+      "descenso": 4
     },
     "34": {
       "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 92,
+      "playoff": 0,
+      "permanencia": 95,
       "descenso": 5
     },
     "35": {
       "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 91,
-      "descenso": 5
+      "playoff": 0,
+      "permanencia": 97,
+      "descenso": 3
     },
     "36": {
       "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 91,
+      "playoff": 0,
+      "permanencia": 95,
       "descenso": 5
     },
     "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 99,
+      "descenso": 1
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 99,
+      "descenso": 1
+    }
+  },
+  "Albacete": {
+    "0": {
+      "ascenso": 6,
+      "playoff": 18,
+      "permanencia": 69,
+      "descenso": 7
+    },
+    "1": {
+      "ascenso": 3,
+      "playoff": 17,
+      "permanencia": 73,
+      "descenso": 7
+    },
+    "2": {
+      "ascenso": 2,
+      "playoff": 18,
+      "permanencia": 73,
+      "descenso": 7
+    },
+    "3": {
+      "ascenso": 2,
+      "playoff": 10,
+      "permanencia": 76,
+      "descenso": 12
+    },
+    "4": {
+      "ascenso": 3,
+      "playoff": 13,
+      "permanencia": 72,
+      "descenso": 12
+    },
+    "5": {
+      "ascenso": 3,
+      "playoff": 17,
+      "permanencia": 72,
+      "descenso": 8
+    },
+    "6": {
+      "ascenso": 5,
+      "playoff": 30,
+      "permanencia": 61,
+      "descenso": 4
+    },
+    "7": {
+      "ascenso": 8,
+      "playoff": 22,
+      "permanencia": 65,
+      "descenso": 5
+    },
+    "8": {
+      "ascenso": 4,
+      "playoff": 27,
+      "permanencia": 60,
+      "descenso": 9
+    },
+    "9": {
+      "ascenso": 6,
+      "playoff": 29,
+      "permanencia": 61,
+      "descenso": 4
+    },
+    "10": {
+      "ascenso": 4,
+      "playoff": 20,
+      "permanencia": 67,
+      "descenso": 9
+    },
+    "11": {
+      "ascenso": 3,
+      "playoff": 21,
+      "permanencia": 71,
+      "descenso": 5
+    },
+    "12": {
+      "ascenso": 2,
+      "playoff": 26,
+      "permanencia": 63,
+      "descenso": 9
+    },
+    "13": {
+      "ascenso": 4,
+      "playoff": 23,
+      "permanencia": 68,
+      "descenso": 5
+    },
+    "14": {
+      "ascenso": 2,
+      "playoff": 20,
+      "permanencia": 72,
+      "descenso": 6
+    },
+    "15": {
+      "ascenso": 0,
+      "playoff": 14,
+      "permanencia": 73,
+      "descenso": 13
+    },
+    "16": {
+      "ascenso": 1,
+      "playoff": 28,
+      "permanencia": 69,
+      "descenso": 2
+    },
+    "17": {
+      "ascenso": 1,
+      "playoff": 19,
+      "permanencia": 70,
+      "descenso": 10
+    },
+    "18": {
+      "ascenso": 2,
+      "playoff": 15,
+      "permanencia": 75,
+      "descenso": 8
+    },
+    "19": {
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 78,
+      "descenso": 10
+    },
+    "20": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 83,
+      "descenso": 12
+    },
+    "21": {
+      "ascenso": 1,
+      "playoff": 14,
+      "permanencia": 80,
+      "descenso": 5
+    },
+    "22": {
+      "ascenso": 1,
+      "playoff": 20,
+      "permanencia": 77,
+      "descenso": 2
+    },
+    "23": {
+      "ascenso": 2,
+      "playoff": 23,
+      "permanencia": 75,
+      "descenso": 0
+    },
+    "24": {
+      "ascenso": 1,
+      "playoff": 7,
+      "permanencia": 90,
+      "descenso": 2
+    },
+    "25": {
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 86,
+      "descenso": 2
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 7,
+      "permanencia": 90,
+      "descenso": 3
+    },
+    "27": {
+      "ascenso": 0,
+      "playoff": 6,
+      "permanencia": 92,
+      "descenso": 2
+    },
+    "28": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 95,
+      "descenso": 2
+    },
+    "29": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 94,
+      "descenso": 2
+    },
+    "30": {
+      "ascenso": 0,
+      "playoff": 20,
+      "permanencia": 80,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 10,
+      "permanencia": 90,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 96,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 98,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "38": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 100,
@@ -231,225 +1889,225 @@
   },
   "Almería": {
     "0": {
-      "ascenso": 0,
-      "playoff": 24,
-      "permanencia": 76,
+      "ascenso": 35,
+      "playoff": 35,
+      "permanencia": 30,
       "descenso": 0
     },
     "1": {
-      "ascenso": 0,
-      "playoff": 20,
-      "permanencia": 75,
-      "descenso": 5
+      "ascenso": 39,
+      "playoff": 40,
+      "permanencia": 21,
+      "descenso": 0
     },
     "2": {
-      "ascenso": 0,
-      "playoff": 18,
-      "permanencia": 82,
-      "descenso": 0
-    },
-    "3": {
-      "ascenso": 2,
-      "playoff": 2,
-      "permanencia": 90,
-      "descenso": 6
-    },
-    "4": {
-      "ascenso": 4,
-      "playoff": 3,
-      "permanencia": 77,
-      "descenso": 16
-    },
-    "5": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 82,
-      "descenso": 11
-    },
-    "6": {
-      "ascenso": 3,
-      "playoff": 12,
-      "permanencia": 80,
-      "descenso": 5
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 14,
-      "permanencia": 83,
-      "descenso": 3
-    },
-    "8": {
-      "ascenso": 3,
-      "playoff": 66,
-      "permanencia": 31,
-      "descenso": 0
-    },
-    "9": {
-      "ascenso": 1,
-      "playoff": 68,
-      "permanencia": 26,
-      "descenso": 5
-    },
-    "10": {
-      "ascenso": 15,
-      "playoff": 63,
-      "permanencia": 18,
-      "descenso": 4
-    },
-    "11": {
-      "ascenso": 64,
-      "playoff": 22,
-      "permanencia": 12,
-      "descenso": 2
-    },
-    "12": {
-      "ascenso": 1,
-      "playoff": 67,
-      "permanencia": 30,
-      "descenso": 2
-    },
-    "13": {
-      "ascenso": 5,
-      "playoff": 66,
-      "permanencia": 29,
-      "descenso": 0
-    },
-    "14": {
-      "ascenso": 8,
-      "playoff": 73,
+      "ascenso": 44,
+      "playoff": 37,
       "permanencia": 19,
       "descenso": 0
     },
-    "15": {
-      "ascenso": 16,
-      "playoff": 69,
-      "permanencia": 15,
+    "3": {
+      "ascenso": 35,
+      "playoff": 42,
+      "permanencia": 23,
       "descenso": 0
     },
-    "16": {
-      "ascenso": 15,
-      "playoff": 72,
-      "permanencia": 13,
-      "descenso": 0
-    },
-    "17": {
-      "ascenso": 13,
-      "playoff": 72,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "18": {
-      "ascenso": 9,
-      "playoff": 76,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "19": {
-      "ascenso": 14,
-      "playoff": 73,
-      "permanencia": 13,
-      "descenso": 0
-    },
-    "20": {
-      "ascenso": 15,
-      "playoff": 70,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "21": {
-      "ascenso": 3,
-      "playoff": 72,
-      "permanencia": 22,
-      "descenso": 3
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 14,
-      "permanencia": 84,
-      "descenso": 2
-    },
-    "23": {
-      "ascenso": 6,
-      "playoff": 78,
-      "permanencia": 16,
-      "descenso": 0
-    },
-    "24": {
-      "ascenso": 6,
-      "playoff": 78,
-      "permanencia": 15,
+    "4": {
+      "ascenso": 24,
+      "playoff": 38,
+      "permanencia": 37,
       "descenso": 1
     },
-    "25": {
-      "ascenso": 15,
-      "playoff": 72,
-      "permanencia": 11,
-      "descenso": 2
+    "5": {
+      "ascenso": 37,
+      "playoff": 38,
+      "permanencia": 24,
+      "descenso": 1
     },
-    "26": {
-      "ascenso": 16,
-      "playoff": 71,
-      "permanencia": 11,
-      "descenso": 2
+    "6": {
+      "ascenso": 52,
+      "playoff": 34,
+      "permanencia": 14,
+      "descenso": 0
     },
-    "27": {
-      "ascenso": 16,
-      "playoff": 72,
+    "7": {
+      "ascenso": 44,
+      "playoff": 36,
+      "permanencia": 20,
+      "descenso": 0
+    },
+    "8": {
+      "ascenso": 58,
+      "playoff": 31,
+      "permanencia": 11,
+      "descenso": 0
+    },
+    "9": {
+      "ascenso": 55,
+      "playoff": 32,
+      "permanencia": 13,
+      "descenso": 0
+    },
+    "10": {
+      "ascenso": 63,
+      "playoff": 27,
       "permanencia": 10,
-      "descenso": 2
-    },
-    "28": {
-      "ascenso": 80,
-      "playoff": 15,
-      "permanencia": 5,
       "descenso": 0
     },
-    "29": {
-      "ascenso": 78,
-      "playoff": 16,
-      "permanencia": 6,
+    "11": {
+      "ascenso": 59,
+      "playoff": 30,
+      "permanencia": 11,
       "descenso": 0
     },
-    "30": {
+    "12": {
+      "ascenso": 73,
+      "playoff": 25,
+      "permanencia": 2,
+      "descenso": 0
+    },
+    "13": {
+      "ascenso": 73,
+      "playoff": 25,
+      "permanencia": 2,
+      "descenso": 0
+    },
+    "14": {
       "ascenso": 79,
-      "playoff": 14,
-      "permanencia": 6,
-      "descenso": 1
-    },
-    "31": {
-      "ascenso": 78,
-      "playoff": 14,
-      "permanencia": 6,
-      "descenso": 2
-    },
-    "32": {
-      "ascenso": 72,
-      "playoff": 18,
-      "permanencia": 8,
-      "descenso": 2
-    },
-    "33": {
-      "ascenso": 82,
-      "playoff": 13,
-      "permanencia": 5,
+      "playoff": 20,
+      "permanencia": 1,
       "descenso": 0
     },
-    "34": {
-      "ascenso": 82,
-      "playoff": 13,
-      "permanencia": 5,
-      "descenso": 0
-    },
-    "35": {
-      "ascenso": 84,
-      "playoff": 12,
+    "15": {
+      "ascenso": 64,
+      "playoff": 32,
       "permanencia": 4,
       "descenso": 0
     },
-    "36": {
-      "ascenso": 82,
-      "playoff": 13,
+    "16": {
+      "ascenso": 64,
+      "playoff": 35,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "17": {
+      "ascenso": 57,
+      "playoff": 36,
+      "permanencia": 7,
+      "descenso": 0
+    },
+    "18": {
+      "ascenso": 50,
+      "playoff": 43,
+      "permanencia": 7,
+      "descenso": 0
+    },
+    "19": {
+      "ascenso": 52,
+      "playoff": 45,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "20": {
+      "ascenso": 54,
+      "playoff": 40,
+      "permanencia": 6,
+      "descenso": 0
+    },
+    "21": {
+      "ascenso": 39,
+      "playoff": 52,
+      "permanencia": 9,
+      "descenso": 0
+    },
+    "22": {
+      "ascenso": 28,
+      "playoff": 50,
+      "permanencia": 22,
+      "descenso": 0
+    },
+    "23": {
+      "ascenso": 38,
+      "playoff": 45,
+      "permanencia": 17,
+      "descenso": 0
+    },
+    "24": {
+      "ascenso": 54,
+      "playoff": 45,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "25": {
+      "ascenso": 45,
+      "playoff": 51,
+      "permanencia": 4,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 58,
+      "playoff": 38,
+      "permanencia": 4,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 49,
+      "playoff": 49,
+      "permanencia": 2,
+      "descenso": 0
+    },
+    "28": {
+      "ascenso": 59,
+      "playoff": 39,
+      "permanencia": 2,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 37,
+      "playoff": 58,
       "permanencia": 5,
+      "descenso": 0
+    },
+    "30": {
+      "ascenso": 45,
+      "playoff": 53,
+      "permanencia": 2,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 61,
+      "playoff": 38,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 44,
+      "playoff": 51,
+      "permanencia": 5,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 53,
+      "playoff": 44,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 42,
+      "playoff": 54,
+      "permanencia": 4,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 53,
+      "playoff": 46,
+      "permanencia": 1,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 64,
+      "playoff": 35,
+      "permanencia": 1,
       "descenso": 0
     },
     "37": {
@@ -457,2069 +2115,235 @@
       "playoff": 34,
       "permanencia": 0,
       "descenso": 0
-    }
-  },
-  "Andorra": {
-    "0": {
-      "ascenso": 2,
-      "playoff": 11,
-      "permanencia": 83,
-      "descenso": 4
     },
-    "1": {
-      "ascenso": 2,
-      "playoff": 64,
-      "permanencia": 34,
-      "descenso": 0
-    },
-    "2": {
-      "ascenso": 15,
-      "playoff": 67,
-      "permanencia": 17,
-      "descenso": 1
-    },
-    "3": {
-      "ascenso": 0,
-      "playoff": 13,
-      "permanencia": 82,
-      "descenso": 5
-    },
-    "4": {
-      "ascenso": 7,
-      "playoff": 64,
-      "permanencia": 29,
-      "descenso": 0
-    },
-    "5": {
-      "ascenso": 7,
-      "playoff": 63,
-      "permanencia": 30,
-      "descenso": 0
-    },
-    "6": {
-      "ascenso": 17,
-      "playoff": 63,
-      "permanencia": 20,
-      "descenso": 0
-    },
-    "7": {
-      "ascenso": 9,
-      "playoff": 69,
-      "permanencia": 19,
-      "descenso": 3
-    },
-    "8": {
-      "ascenso": 3,
-      "playoff": 17,
-      "permanencia": 79,
-      "descenso": 1
-    },
-    "9": {
-      "ascenso": 1,
-      "playoff": 16,
-      "permanencia": 78,
-      "descenso": 5
-    },
-    "10": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 88,
-      "descenso": 7
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 94,
-      "descenso": 4
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 85,
-      "descenso": 8
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
-    },
-    "14": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 22,
-      "descenso": 78
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 22,
-      "descenso": 76
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 23,
-      "descenso": 77
-    },
-    "17": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 72,
-      "descenso": 28
-    },
-    "18": {
-      "ascenso": 1,
-      "playoff": 4,
-      "permanencia": 92,
-      "descenso": 3
-    },
-    "19": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 86,
-      "descenso": 13
-    },
-    "20": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 15
-    },
-    "21": {
-      "ascenso": 2,
-      "playoff": 4,
-      "permanencia": 89,
-      "descenso": 5
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 85,
-      "descenso": 13
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 86,
-      "descenso": 14
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 88,
-      "descenso": 12
-    },
-    "25": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 69,
-      "descenso": 30
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 79,
-      "descenso": 19
-    },
-    "27": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 92,
-      "descenso": 4
-    },
-    "28": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 92,
-      "descenso": 4
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
-      "descenso": 4
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 91,
-      "descenso": 8
-    },
-    "31": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 94,
-      "descenso": 3
-    },
-    "32": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 93,
-      "descenso": 3
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 92,
-      "descenso": 4
-    },
-    "34": {
-      "ascenso": 1,
-      "playoff": 2,
-      "permanencia": 94,
-      "descenso": 3
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 94,
-      "descenso": 3
-    },
-    "36": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 92,
-      "descenso": 4
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 100,
-      "descenso": 0
-    }
-  },
-  "Burgos": {
-    "0": {
-      "ascenso": 81,
-      "playoff": 17,
+    "38": {
+      "ascenso": 66,
+      "playoff": 34,
       "permanencia": 0,
-      "descenso": 2
-    },
-    "1": {
-      "ascenso": 9,
-      "playoff": 64,
-      "permanencia": 26,
-      "descenso": 1
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 92,
-      "descenso": 3
-    },
-    "3": {
-      "ascenso": 4,
-      "playoff": 4,
-      "permanencia": 85,
-      "descenso": 7
-    },
-    "4": {
-      "ascenso": 0,
-      "playoff": 15,
-      "permanencia": 82,
-      "descenso": 3
-    },
-    "5": {
-      "ascenso": 4,
-      "playoff": 8,
-      "permanencia": 77,
-      "descenso": 11
-    },
-    "6": {
-      "ascenso": 8,
-      "playoff": 65,
-      "permanencia": 27,
-      "descenso": 0
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 16,
-      "permanencia": 84,
-      "descenso": 0
-    },
-    "8": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 86,
-      "descenso": 7
-    },
-    "9": {
-      "ascenso": 1,
-      "playoff": 20,
-      "permanencia": 75,
-      "descenso": 4
-    },
-    "10": {
-      "ascenso": 3,
-      "playoff": 68,
-      "permanencia": 26,
-      "descenso": 3
-    },
-    "11": {
-      "ascenso": 13,
-      "playoff": 68,
-      "permanencia": 19,
-      "descenso": 0
-    },
-    "12": {
-      "ascenso": 8,
-      "playoff": 73,
-      "permanencia": 16,
-      "descenso": 3
-    },
-    "13": {
-      "ascenso": 8,
-      "playoff": 71,
-      "permanencia": 18,
-      "descenso": 3
-    },
-    "14": {
-      "ascenso": 6,
-      "playoff": 65,
-      "permanencia": 29,
-      "descenso": 0
-    },
-    "15": {
-      "ascenso": 4,
-      "playoff": 67,
-      "permanencia": 28,
-      "descenso": 1
-    },
-    "16": {
-      "ascenso": 2,
-      "playoff": 70,
-      "permanencia": 28,
-      "descenso": 0
-    },
-    "17": {
-      "ascenso": 4,
-      "playoff": 71,
-      "permanencia": 24,
-      "descenso": 1
-    },
-    "18": {
-      "ascenso": 1,
-      "playoff": 13,
-      "permanencia": 83,
-      "descenso": 3
-    },
-    "19": {
-      "ascenso": 0,
-      "playoff": 15,
-      "permanencia": 84,
-      "descenso": 1
-    },
-    "20": {
-      "ascenso": 1,
-      "playoff": 15,
-      "permanencia": 82,
-      "descenso": 2
-    },
-    "21": {
-      "ascenso": 3,
-      "playoff": 70,
-      "permanencia": 24,
-      "descenso": 3
-    },
-    "22": {
-      "ascenso": 1,
-      "playoff": 12,
-      "permanencia": 85,
-      "descenso": 2
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 11,
-      "permanencia": 87,
-      "descenso": 2
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 86,
-      "descenso": 4
-    },
-    "25": {
-      "ascenso": 1,
-      "playoff": 12,
-      "permanencia": 85,
-      "descenso": 2
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
-      "descenso": 4
-    },
-    "27": {
-      "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 89,
-      "descenso": 1
-    },
-    "28": {
-      "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 87,
-      "descenso": 3
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 11,
-      "permanencia": 86,
-      "descenso": 3
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 89,
-      "descenso": 2
-    },
-    "31": {
-      "ascenso": 1,
-      "playoff": 19,
-      "permanencia": 80,
-      "descenso": 0
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 18,
-      "permanencia": 82,
-      "descenso": 0
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 15,
-      "permanencia": 85,
-      "descenso": 0
-    },
-    "34": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 85,
-      "descenso": 0
-    },
-    "35": {
-      "ascenso": 1,
-      "playoff": 10,
-      "permanencia": 88,
-      "descenso": 1
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 89,
-      "descenso": 2
-    },
-    "37": {
-      "ascenso": 1,
-      "playoff": 43,
-      "permanencia": 56,
-      "descenso": 0
-    }
-  },
-  "Castellón": {
-    "0": {
-      "ascenso": 3,
-      "playoff": 2,
-      "permanencia": 27,
-      "descenso": 68
-    },
-    "1": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 64,
-      "descenso": 35
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 67,
-      "descenso": 33
-    },
-    "3": {
-      "ascenso": 2,
-      "playoff": 1,
-      "permanencia": 30,
-      "descenso": 67
-    },
-    "4": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 12,
-      "descenso": 86
-    },
-    "5": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 67,
-      "descenso": 33
-    },
-    "6": {
-      "ascenso": 4,
-      "playoff": 4,
-      "permanencia": 86,
-      "descenso": 6
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 85,
-      "descenso": 6
-    },
-    "8": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 86,
-      "descenso": 7
-    },
-    "9": {
-      "ascenso": 3,
-      "playoff": 2,
-      "permanencia": 69,
-      "descenso": 26
-    },
-    "10": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 71,
-      "descenso": 27
-    },
-    "11": {
-      "ascenso": 2,
-      "playoff": 9,
-      "permanencia": 81,
-      "descenso": 8
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 8,
-      "permanencia": 83,
-      "descenso": 9
-    },
-    "13": {
-      "ascenso": 2,
-      "playoff": 5,
-      "permanencia": 85,
-      "descenso": 8
-    },
-    "14": {
-      "ascenso": 4,
-      "playoff": 67,
-      "permanencia": 28,
-      "descenso": 1
-    },
-    "15": {
-      "ascenso": 1,
-      "playoff": 73,
-      "permanencia": 26,
-      "descenso": 0
-    },
-    "16": {
-      "ascenso": 3,
-      "playoff": 72,
-      "permanencia": 24,
-      "descenso": 1
-    },
-    "17": {
-      "ascenso": 6,
-      "playoff": 73,
-      "permanencia": 18,
-      "descenso": 3
-    },
-    "18": {
-      "ascenso": 2,
-      "playoff": 73,
-      "permanencia": 22,
-      "descenso": 3
-    },
-    "19": {
-      "ascenso": 8,
-      "playoff": 72,
-      "permanencia": 18,
-      "descenso": 2
-    },
-    "20": {
-      "ascenso": 5,
-      "playoff": 76,
-      "permanencia": 17,
-      "descenso": 2
-    },
-    "21": {
-      "ascenso": 74,
-      "playoff": 17,
-      "permanencia": 9,
-      "descenso": 0
-    },
-    "22": {
-      "ascenso": 76,
-      "playoff": 17,
-      "permanencia": 6,
-      "descenso": 1
-    },
-    "23": {
-      "ascenso": 74,
-      "playoff": 18,
-      "permanencia": 6,
-      "descenso": 2
-    },
-    "24": {
-      "ascenso": 74,
-      "playoff": 17,
-      "permanencia": 8,
-      "descenso": 1
-    },
-    "25": {
-      "ascenso": 85,
-      "playoff": 12,
-      "permanencia": 3,
-      "descenso": 0
-    },
-    "26": {
-      "ascenso": 69,
-      "playoff": 21,
-      "permanencia": 10,
-      "descenso": 0
-    },
-    "27": {
-      "ascenso": 70,
-      "playoff": 19,
-      "permanencia": 11,
-      "descenso": 0
-    },
-    "28": {
-      "ascenso": 10,
-      "playoff": 78,
-      "permanencia": 12,
-      "descenso": 0
-    },
-    "29": {
-      "ascenso": 1,
-      "playoff": 79,
-      "permanencia": 20,
-      "descenso": 0
-    },
-    "30": {
-      "ascenso": 1,
-      "playoff": 78,
-      "permanencia": 19,
-      "descenso": 2
-    },
-    "31": {
-      "ascenso": 1,
-      "playoff": 81,
-      "permanencia": 17,
-      "descenso": 1
-    },
-    "32": {
-      "ascenso": 3,
-      "playoff": 79,
-      "permanencia": 18,
-      "descenso": 0
-    },
-    "33": {
-      "ascenso": 3,
-      "playoff": 81,
-      "permanencia": 15,
-      "descenso": 1
-    },
-    "34": {
-      "ascenso": 1,
-      "playoff": 82,
-      "permanencia": 17,
-      "descenso": 0
-    },
-    "35": {
-      "ascenso": 3,
-      "playoff": 81,
-      "permanencia": 15,
-      "descenso": 1
-    },
-    "36": {
-      "ascenso": 3,
-      "playoff": 81,
-      "permanencia": 15,
-      "descenso": 1
-    },
-    "37": {
-      "ascenso": 2,
-      "playoff": 84,
-      "permanencia": 14,
-      "descenso": 0
-    }
-  },
-  "Ceuta": {
-    "0": {
-      "ascenso": 5,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 91
-    },
-    "1": {
-      "ascenso": 4,
-      "playoff": 3,
-      "permanencia": 12,
-      "descenso": 81
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 10,
-      "descenso": 90
-    },
-    "3": {
-      "ascenso": 4,
-      "playoff": 0,
-      "permanencia": 60,
-      "descenso": 36
-    },
-    "4": {
-      "ascenso": 5,
-      "playoff": 0,
-      "permanencia": 39,
-      "descenso": 56
-    },
-    "5": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 80,
-      "descenso": 19
-    },
-    "6": {
-      "ascenso": 3,
-      "playoff": 0,
-      "permanencia": 80,
-      "descenso": 17
-    },
-    "7": {
-      "ascenso": 3,
-      "playoff": 6,
-      "permanencia": 82,
-      "descenso": 9
-    },
-    "8": {
-      "ascenso": 2,
-      "playoff": 2,
-      "permanencia": 77,
-      "descenso": 19
-    },
-    "9": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 87,
-      "descenso": 10
-    },
-    "10": {
-      "ascenso": 0,
-      "playoff": 18,
-      "permanencia": 79,
-      "descenso": 3
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 86,
-      "descenso": 5
-    },
-    "12": {
-      "ascenso": 4,
-      "playoff": 65,
-      "permanencia": 27,
-      "descenso": 4
-    },
-    "13": {
-      "ascenso": 2,
-      "playoff": 69,
-      "permanencia": 27,
-      "descenso": 2
-    },
-    "14": {
-      "ascenso": 2,
-      "playoff": 14,
-      "permanencia": 84,
-      "descenso": 0
-    },
-    "15": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 84,
-      "descenso": 1
-    },
-    "16": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 82,
-      "descenso": 3
-    },
-    "17": {
-      "ascenso": 3,
-      "playoff": 12,
-      "permanencia": 83,
-      "descenso": 2
-    },
-    "18": {
-      "ascenso": 1,
-      "playoff": 15,
-      "permanencia": 83,
-      "descenso": 1
-    },
-    "19": {
-      "ascenso": 1,
-      "playoff": 74,
-      "permanencia": 25,
-      "descenso": 0
-    },
-    "20": {
-      "ascenso": 1,
-      "playoff": 12,
-      "permanencia": 83,
-      "descenso": 4
-    },
-    "21": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 88,
-      "descenso": 7
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 13,
-      "permanencia": 86,
-      "descenso": 1
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 89,
-      "descenso": 5
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 11,
-      "permanencia": 88,
-      "descenso": 1
-    },
-    "25": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 91,
-      "descenso": 6
-    },
-    "26": {
-      "ascenso": 1,
-      "playoff": 9,
-      "permanencia": 89,
-      "descenso": 1
-    },
-    "27": {
-      "ascenso": 1,
-      "playoff": 10,
-      "permanencia": 86,
-      "descenso": 3
-    },
-    "28": {
-      "ascenso": 1,
-      "playoff": 10,
-      "permanencia": 87,
-      "descenso": 2
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 92,
-      "descenso": 1
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 94,
-      "descenso": 3
-    },
-    "31": {
-      "ascenso": 1,
-      "playoff": 7,
-      "permanencia": 89,
-      "descenso": 3
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 92,
-      "descenso": 3
-    },
-    "33": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 92,
-      "descenso": 4
-    },
-    "34": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 94,
-      "descenso": 4
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 93,
-      "descenso": 4
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 94,
-      "descenso": 4
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 100,
-      "descenso": 0
-    }
-  },
-  "Cultural Leonesa": {
-    "0": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 11,
-      "descenso": 86
-    },
-    "1": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 95
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 16,
-      "descenso": 84
-    },
-    "3": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 10,
-      "descenso": 88
-    },
-    "4": {
-      "ascenso": 3,
-      "playoff": 0,
-      "permanencia": 64,
-      "descenso": 33
-    },
-    "5": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 14,
-      "descenso": 84
-    },
-    "6": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 66,
-      "descenso": 32
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 15,
-      "descenso": 85
-    },
-    "8": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 96
-    },
-    "9": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 38,
-      "descenso": 62
-    },
-    "10": {
-      "ascenso": 2,
-      "playoff": 2,
-      "permanencia": 24,
-      "descenso": 72
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 80,
-      "descenso": 20
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 22,
-      "descenso": 76
-    },
-    "13": {
-      "ascenso": 2,
-      "playoff": 3,
-      "permanencia": 79,
-      "descenso": 16
-    },
-    "14": {
-      "ascenso": 1,
-      "playoff": 8,
-      "permanencia": 85,
-      "descenso": 6
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 85,
-      "descenso": 8
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
-      "descenso": 4
-    },
-    "17": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 89,
-      "descenso": 9
-    },
-    "18": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 82,
-      "descenso": 17
-    },
-    "19": {
-      "ascenso": 2,
-      "playoff": 5,
-      "permanencia": 89,
-      "descenso": 4
-    },
-    "20": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 91,
-      "descenso": 5
-    },
-    "21": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 74,
-      "descenso": 24
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 30,
-      "descenso": 68
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 19,
-      "descenso": 79
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 11,
-      "descenso": 89
-    },
-    "25": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 10,
-      "descenso": 89
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 9,
-      "descenso": 91
-    },
-    "27": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 8,
-      "descenso": 91
-    },
-    "28": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 9,
-      "descenso": 90
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 95
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 95
-    },
-    "31": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 96
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 95
-    },
-    "33": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 95
-    },
-    "34": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 96
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 3,
-      "descenso": 96
-    },
-    "36": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 95
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 1,
-      "descenso": 99
-    }
-  },
-  "Cádiz": {
-    "0": {
-      "ascenso": 5,
-      "playoff": 61,
-      "permanencia": 34,
-      "descenso": 0
-    },
-    "1": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 89,
-      "descenso": 5
-    },
-    "2": {
-      "ascenso": 3,
-      "playoff": 62,
-      "permanencia": 35,
-      "descenso": 0
-    },
-    "3": {
-      "ascenso": 0,
-      "playoff": 65,
-      "permanencia": 35,
-      "descenso": 0
-    },
-    "4": {
-      "ascenso": 8,
-      "playoff": 66,
-      "permanencia": 26,
-      "descenso": 0
-    },
-    "5": {
-      "ascenso": 67,
-      "playoff": 27,
-      "permanencia": 6,
-      "descenso": 0
-    },
-    "6": {
-      "ascenso": 64,
-      "playoff": 29,
-      "permanencia": 7,
-      "descenso": 0
-    },
-    "7": {
-      "ascenso": 20,
-      "playoff": 60,
-      "permanencia": 20,
-      "descenso": 0
-    },
-    "8": {
-      "ascenso": 79,
-      "playoff": 15,
-      "permanencia": 6,
-      "descenso": 0
-    },
-    "9": {
-      "ascenso": 20,
-      "playoff": 64,
-      "permanencia": 14,
-      "descenso": 2
-    },
-    "10": {
-      "ascenso": 9,
-      "playoff": 73,
-      "permanencia": 18,
-      "descenso": 0
-    },
-    "11": {
-      "ascenso": 3,
-      "playoff": 66,
-      "permanencia": 27,
-      "descenso": 4
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 19,
-      "permanencia": 79,
-      "descenso": 2
-    },
-    "13": {
-      "ascenso": 1,
-      "playoff": 13,
-      "permanencia": 83,
-      "descenso": 3
-    },
-    "14": {
-      "ascenso": 0,
-      "playoff": 16,
-      "permanencia": 79,
-      "descenso": 5
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 15,
-      "permanencia": 82,
-      "descenso": 3
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 88,
-      "descenso": 8
-    },
-    "17": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 84,
-      "descenso": 1
-    },
-    "18": {
-      "ascenso": 3,
-      "playoff": 12,
-      "permanencia": 85,
-      "descenso": 0
-    },
-    "19": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 83,
-      "descenso": 2
-    },
-    "20": {
-      "ascenso": 1,
-      "playoff": 72,
-      "permanencia": 25,
-      "descenso": 2
-    },
-    "21": {
-      "ascenso": 1,
-      "playoff": 12,
-      "permanencia": 87,
-      "descenso": 0
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 89,
-      "descenso": 5
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 87,
-      "descenso": 7
-    },
-    "24": {
-      "ascenso": 1,
-      "playoff": 2,
-      "permanencia": 91,
-      "descenso": 6
-    },
-    "25": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 88,
-      "descenso": 8
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 87,
-      "descenso": 10
-    },
-    "27": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 82,
-      "descenso": 17
-    },
-    "28": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 81,
-      "descenso": 17
-    },
-    "29": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 79,
-      "descenso": 19
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 76,
-      "descenso": 23
-    },
-    "31": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 75,
-      "descenso": 23
-    },
-    "32": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 25,
-      "descenso": 74
-    },
-    "33": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 23,
-      "descenso": 75
-    },
-    "34": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 23,
-      "descenso": 76
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 21,
-      "descenso": 79
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 22,
-      "descenso": 78
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 45,
-      "descenso": 55
-    }
-  },
-  "Córdoba": {
-    "0": {
-      "ascenso": 5,
-      "playoff": 0,
-      "permanencia": 61,
-      "descenso": 34
-    },
-    "1": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 43,
-      "descenso": 54
-    },
-    "2": {
-      "ascenso": 4,
-      "playoff": 0,
-      "permanencia": 42,
-      "descenso": 54
-    },
-    "3": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 76,
-      "descenso": 24
-    },
-    "4": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 62,
-      "descenso": 37
-    },
-    "5": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 24,
-      "descenso": 75
-    },
-    "6": {
-      "ascenso": 3,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 93
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 69,
-      "descenso": 31
-    },
-    "8": {
-      "ascenso": 2,
-      "playoff": 5,
-      "permanencia": 85,
-      "descenso": 8
-    },
-    "9": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 79,
-      "descenso": 19
-    },
-    "10": {
-      "ascenso": 1,
-      "playoff": 6,
-      "permanencia": 90,
-      "descenso": 3
-    },
-    "11": {
-      "ascenso": 2,
-      "playoff": 17,
-      "permanencia": 81,
-      "descenso": 0
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 17,
-      "permanencia": 78,
-      "descenso": 5
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 8,
-      "permanencia": 88,
-      "descenso": 4
-    },
-    "14": {
-      "ascenso": 1,
-      "playoff": 18,
-      "permanencia": 80,
-      "descenso": 1
-    },
-    "15": {
-      "ascenso": 2,
-      "playoff": 4,
-      "permanencia": 89,
-      "descenso": 5
-    },
-    "16": {
-      "ascenso": 1,
-      "playoff": 8,
-      "permanencia": 83,
-      "descenso": 8
-    },
-    "17": {
-      "ascenso": 1,
-      "playoff": 6,
-      "permanencia": 90,
-      "descenso": 3
-    },
-    "18": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 91,
-      "descenso": 7
-    },
-    "19": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
-      "descenso": 4
-    },
-    "20": {
-      "ascenso": 2,
-      "playoff": 5,
-      "permanencia": 89,
-      "descenso": 4
-    },
-    "21": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 90,
-      "descenso": 5
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 90,
-      "descenso": 6
-    },
-    "23": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 85,
-      "descenso": 0
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 89,
-      "descenso": 5
-    },
-    "25": {
-      "ascenso": 1,
-      "playoff": 76,
-      "permanencia": 23,
-      "descenso": 0
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 12,
-      "permanencia": 86,
-      "descenso": 2
-    },
-    "27": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 91,
-      "descenso": 3
-    },
-    "28": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 90,
-      "descenso": 5
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 90,
-      "descenso": 4
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 90,
-      "descenso": 3
-    },
-    "31": {
-      "ascenso": 0,
-      "playoff": 8,
-      "permanencia": 90,
-      "descenso": 2
-    },
-    "32": {
-      "ascenso": 1,
-      "playoff": 6,
-      "permanencia": 92,
-      "descenso": 1
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 8,
-      "permanencia": 90,
-      "descenso": 2
-    },
-    "34": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 88,
-      "descenso": 3
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 89,
-      "descenso": 2
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 93,
-      "descenso": 0
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 99,
-      "descenso": 0
-    }
-  },
-  "Deportivo": {
-    "0": {
-      "ascenso": 18,
-      "playoff": 59,
-      "permanencia": 23,
-      "descenso": 0
-    },
-    "1": {
-      "ascenso": 0,
-      "playoff": 20,
-      "permanencia": 73,
-      "descenso": 7
-    },
-    "2": {
-      "ascenso": 2,
-      "playoff": 19,
-      "permanencia": 79,
-      "descenso": 0
-    },
-    "3": {
-      "ascenso": 11,
-      "playoff": 70,
-      "permanencia": 17,
-      "descenso": 2
-    },
-    "4": {
-      "ascenso": 66,
-      "playoff": 25,
-      "permanencia": 9,
-      "descenso": 0
-    },
-    "5": {
-      "ascenso": 80,
-      "playoff": 12,
-      "permanencia": 6,
-      "descenso": 2
-    },
-    "6": {
-      "ascenso": 83,
-      "playoff": 15,
-      "permanencia": 1,
-      "descenso": 1
-    },
-    "7": {
-      "ascenso": 66,
-      "playoff": 25,
-      "permanencia": 6,
-      "descenso": 3
-    },
-    "8": {
-      "ascenso": 19,
-      "playoff": 63,
-      "permanencia": 14,
-      "descenso": 4
-    },
-    "9": {
-      "ascenso": 7,
-      "playoff": 76,
-      "permanencia": 17,
-      "descenso": 0
-    },
-    "10": {
-      "ascenso": 1,
-      "playoff": 15,
-      "permanencia": 82,
-      "descenso": 2
-    },
-    "11": {
-      "ascenso": 6,
-      "playoff": 76,
-      "permanencia": 18,
-      "descenso": 0
-    },
-    "12": {
-      "ascenso": 68,
-      "playoff": 25,
-      "permanencia": 7,
-      "descenso": 0
-    },
-    "13": {
-      "ascenso": 69,
-      "playoff": 19,
-      "permanencia": 11,
-      "descenso": 1
-    },
-    "14": {
-      "ascenso": 68,
-      "playoff": 20,
-      "permanencia": 12,
-      "descenso": 0
-    },
-    "15": {
-      "ascenso": 66,
-      "playoff": 22,
-      "permanencia": 8,
-      "descenso": 4
-    },
-    "16": {
-      "ascenso": 67,
-      "playoff": 18,
-      "permanencia": 11,
-      "descenso": 4
-    },
-    "17": {
-      "ascenso": 75,
-      "playoff": 20,
-      "permanencia": 5,
-      "descenso": 0
-    },
-    "18": {
-      "ascenso": 17,
-      "playoff": 71,
-      "permanencia": 11,
-      "descenso": 1
-    },
-    "19": {
-      "ascenso": 3,
-      "playoff": 72,
-      "permanencia": 24,
-      "descenso": 1
-    },
-    "20": {
-      "ascenso": 1,
-      "playoff": 71,
-      "permanencia": 25,
-      "descenso": 3
-    },
-    "21": {
-      "ascenso": 6,
-      "playoff": 75,
-      "permanencia": 17,
-      "descenso": 2
-    },
-    "22": {
-      "ascenso": 2,
-      "playoff": 74,
-      "permanencia": 24,
-      "descenso": 0
-    },
-    "23": {
-      "ascenso": 14,
-      "playoff": 73,
-      "permanencia": 11,
-      "descenso": 2
-    },
-    "24": {
-      "ascenso": 12,
-      "playoff": 74,
-      "permanencia": 12,
-      "descenso": 2
-    },
-    "25": {
-      "ascenso": 8,
-      "playoff": 78,
-      "permanencia": 13,
-      "descenso": 1
-    },
-    "26": {
-      "ascenso": 7,
-      "playoff": 78,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "27": {
-      "ascenso": 8,
-      "playoff": 79,
-      "permanencia": 13,
-      "descenso": 0
-    },
-    "28": {
-      "ascenso": 7,
-      "playoff": 80,
-      "permanencia": 13,
-      "descenso": 0
-    },
-    "29": {
-      "ascenso": 11,
-      "playoff": 76,
-      "permanencia": 11,
-      "descenso": 2
-    },
-    "30": {
-      "ascenso": 12,
-      "playoff": 76,
-      "permanencia": 11,
-      "descenso": 1
-    },
-    "31": {
-      "ascenso": 11,
-      "playoff": 76,
-      "permanencia": 11,
-      "descenso": 2
-    },
-    "32": {
-      "ascenso": 18,
-      "playoff": 71,
-      "permanencia": 9,
-      "descenso": 2
-    },
-    "33": {
-      "ascenso": 11,
-      "playoff": 78,
-      "permanencia": 11,
-      "descenso": 0
-    },
-    "34": {
-      "ascenso": 10,
-      "playoff": 81,
-      "permanencia": 9,
-      "descenso": 0
-    },
-    "35": {
-      "ascenso": 9,
-      "playoff": 82,
-      "permanencia": 9,
-      "descenso": 0
-    },
-    "36": {
-      "ascenso": 10,
-      "playoff": 81,
-      "permanencia": 9,
-      "descenso": 0
-    },
-    "37": {
-      "ascenso": 30,
-      "playoff": 66,
-      "permanencia": 4,
       "descenso": 0
     }
   },
   "Eibar": {
     "0": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 88,
-      "descenso": 6
+      "ascenso": 5,
+      "playoff": 20,
+      "permanencia": 71,
+      "descenso": 4
     },
     "1": {
-      "ascenso": 3,
-      "playoff": 58,
-      "permanencia": 37,
+      "ascenso": 9,
+      "playoff": 24,
+      "permanencia": 65,
       "descenso": 2
     },
     "2": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 93,
+      "ascenso": 9,
+      "playoff": 20,
+      "permanencia": 67,
       "descenso": 4
     },
     "3": {
+      "ascenso": 7,
+      "playoff": 24,
+      "permanencia": 68,
+      "descenso": 1
+    },
+    "4": {
+      "ascenso": 5,
+      "playoff": 17,
+      "permanencia": 73,
+      "descenso": 5
+    },
+    "5": {
+      "ascenso": 8,
+      "playoff": 27,
+      "permanencia": 62,
+      "descenso": 3
+    },
+    "6": {
+      "ascenso": 5,
+      "playoff": 19,
+      "permanencia": 72,
+      "descenso": 4
+    },
+    "7": {
+      "ascenso": 2,
+      "playoff": 13,
+      "permanencia": 77,
+      "descenso": 8
+    },
+    "8": {
+      "ascenso": 6,
+      "playoff": 11,
+      "permanencia": 75,
+      "descenso": 8
+    },
+    "9": {
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 76,
+      "descenso": 12
+    },
+    "10": {
+      "ascenso": 3,
+      "playoff": 8,
+      "permanencia": 76,
+      "descenso": 13
+    },
+    "11": {
+      "ascenso": 1,
+      "playoff": 7,
+      "permanencia": 75,
+      "descenso": 17
+    },
+    "12": {
+      "ascenso": 0,
+      "playoff": 10,
+      "permanencia": 76,
+      "descenso": 14
+    },
+    "13": {
+      "ascenso": 1,
+      "playoff": 12,
+      "permanencia": 80,
+      "descenso": 7
+    },
+    "14": {
+      "ascenso": 0,
+      "playoff": 10,
+      "permanencia": 68,
+      "descenso": 22
+    },
+    "15": {
+      "ascenso": 0,
+      "playoff": 7,
+      "permanencia": 71,
+      "descenso": 22
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 72,
+      "descenso": 26
+    },
+    "17": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 67,
+      "descenso": 29
+    },
+    "18": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 82,
+      "descenso": 15
+    },
+    "19": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 79,
+      "descenso": 16
+    },
+    "20": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 78,
+      "descenso": 17
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 81,
+      "descenso": 16
+    },
+    "22": {
+      "ascenso": 1,
+      "playoff": 4,
+      "permanencia": 85,
+      "descenso": 10
+    },
+    "23": {
+      "ascenso": 0,
+      "playoff": 7,
+      "permanencia": 88,
+      "descenso": 5
+    },
+    "24": {
+      "ascenso": 1,
+      "playoff": 9,
+      "permanencia": 85,
+      "descenso": 5
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 9,
+      "permanencia": 89,
+      "descenso": 2
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 8,
+      "permanencia": 89,
+      "descenso": 3
+    },
+    "27": {
+      "ascenso": 0,
+      "playoff": 7,
+      "permanencia": 91,
+      "descenso": 2
+    },
+    "28": {
       "ascenso": 1,
       "playoff": 15,
       "permanencia": 84,
       "descenso": 0
     },
-    "4": {
-      "ascenso": 2,
-      "playoff": 1,
-      "permanencia": 87,
-      "descenso": 10
-    },
-    "5": {
-      "ascenso": 2,
-      "playoff": 17,
-      "permanencia": 81,
-      "descenso": 0
-    },
-    "6": {
-      "ascenso": 5,
-      "playoff": 63,
-      "permanencia": 32,
-      "descenso": 0
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 89,
-      "descenso": 4
-    },
-    "8": {
-      "ascenso": 3,
-      "playoff": 4,
-      "permanencia": 84,
-      "descenso": 9
-    },
-    "9": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 79,
-      "descenso": 21
-    },
-    "10": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 82,
-      "descenso": 17
-    },
-    "11": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 40,
-      "descenso": 56
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 85,
-      "descenso": 8
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 17
-    },
-    "14": {
-      "ascenso": 1,
-      "playoff": 2,
-      "permanencia": 35,
-      "descenso": 62
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 11,
-      "descenso": 89
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 14,
-      "descenso": 86
-    },
-    "17": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 14,
-      "descenso": 86
-    },
-    "18": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 35,
-      "descenso": 65
-    },
-    "19": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 84,
-      "descenso": 15
-    },
-    "20": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 75,
-      "descenso": 25
-    },
-    "21": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 77,
-      "descenso": 22
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 74,
-      "descenso": 26
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 91,
-      "descenso": 6
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 86,
-      "descenso": 13
-    },
-    "25": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 90,
-      "descenso": 5
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 91,
-      "descenso": 3
-    },
-    "27": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 89,
-      "descenso": 5
-    },
-    "28": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 89,
-      "descenso": 4
-    },
     "29": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
-      "descenso": 4
+      "ascenso": 1,
+      "playoff": 14,
+      "permanencia": 85,
+      "descenso": 0
     },
     "30": {
       "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 88,
-      "descenso": 2
+      "playoff": 17,
+      "permanencia": 83,
+      "descenso": 0
     },
     "31": {
       "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 89,
-      "descenso": 2
+      "playoff": 30,
+      "permanencia": 70,
+      "descenso": 0
     },
     "32": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 89,
-      "descenso": 2
+      "ascenso": 1,
+      "playoff": 37,
+      "permanencia": 62,
+      "descenso": 0
     },
     "33": {
-      "ascenso": 1,
-      "playoff": 10,
-      "permanencia": 88,
-      "descenso": 1
+      "ascenso": 2,
+      "playoff": 27,
+      "permanencia": 71,
+      "descenso": 0
     },
     "34": {
       "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 90,
+      "playoff": 29,
+      "permanencia": 71,
       "descenso": 0
     },
     "35": {
       "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 91,
+      "playoff": 30,
+      "permanencia": 70,
       "descenso": 0
     },
     "36": {
-      "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 90,
+      "ascenso": 1,
+      "playoff": 45,
+      "permanencia": 54,
       "descenso": 0
     },
     "37": {
@@ -2527,232 +2351,244 @@
       "playoff": 19,
       "permanencia": 81,
       "descenso": 0
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 19,
+      "permanencia": 81,
+      "descenso": 0
     }
   },
-  "Granada": {
+  "Andorra": {
     "0": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 16,
-      "descenso": 81
+      "ascenso": 1,
+      "playoff": 1,
+      "permanencia": 49,
+      "descenso": 49
     },
     "1": {
       "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 8,
-      "descenso": 88
+      "playoff": 0,
+      "permanencia": 63,
+      "descenso": 37
     },
     "2": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 3,
-      "descenso": 96
+      "playoff": 3,
+      "permanencia": 60,
+      "descenso": 37
     },
     "3": {
       "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 9,
-      "descenso": 88
+      "playoff": 2,
+      "permanencia": 66,
+      "descenso": 32
     },
     "4": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 4,
-      "descenso": 95
+      "ascenso": 1,
+      "playoff": 5,
+      "permanencia": 69,
+      "descenso": 25
     },
     "5": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 8,
-      "descenso": 89
+      "ascenso": 1,
+      "playoff": 6,
+      "permanencia": 76,
+      "descenso": 17
     },
     "6": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 7,
-      "descenso": 92
+      "ascenso": 4,
+      "playoff": 15,
+      "permanencia": 69,
+      "descenso": 12
     },
     "7": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 42,
-      "descenso": 57
+      "ascenso": 2,
+      "playoff": 8,
+      "permanencia": 73,
+      "descenso": 17
     },
     "8": {
-      "ascenso": 3,
-      "playoff": 0,
-      "permanencia": 17,
-      "descenso": 80
+      "ascenso": 1,
+      "playoff": 5,
+      "permanencia": 67,
+      "descenso": 27
     },
     "9": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 16,
-      "descenso": 83
+      "ascenso": 1,
+      "playoff": 3,
+      "permanencia": 69,
+      "descenso": 27
     },
     "10": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 13,
-      "descenso": 87
+      "playoff": 2,
+      "permanencia": 61,
+      "descenso": 37
     },
     "11": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 12,
-      "descenso": 88
+      "ascenso": 1,
+      "playoff": 4,
+      "permanencia": 61,
+      "descenso": 34
     },
     "12": {
       "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 15,
-      "descenso": 83
+      "playoff": 1,
+      "permanencia": 50,
+      "descenso": 49
     },
     "13": {
       "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 14,
-      "descenso": 84
+      "playoff": 1,
+      "permanencia": 60,
+      "descenso": 39
     },
     "14": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 15,
-      "descenso": 85
+      "playoff": 2,
+      "permanencia": 48,
+      "descenso": 50
     },
     "15": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 72,
-      "descenso": 26
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 51,
+      "descenso": 47
     },
     "16": {
-      "ascenso": 3,
-      "playoff": 3,
-      "permanencia": 80,
-      "descenso": 14
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 40,
+      "descenso": 59
     },
     "17": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 22,
-      "descenso": 78
+      "playoff": 1,
+      "permanencia": 45,
+      "descenso": 54
     },
     "18": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 23,
-      "descenso": 76
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 51,
+      "descenso": 48
     },
     "19": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 11,
-      "descenso": 88
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 56,
+      "descenso": 43
     },
     "20": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 12,
-      "descenso": 88
+      "playoff": 1,
+      "permanencia": 51,
+      "descenso": 48
     },
     "21": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 12,
-      "descenso": 88
+      "playoff": 2,
+      "permanencia": 68,
+      "descenso": 30
     },
     "22": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 75,
-      "descenso": 25
+      "permanencia": 71,
+      "descenso": 29
     },
     "23": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 75,
-      "descenso": 24
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 64,
+      "descenso": 35
     },
     "24": {
-      "ascenso": 1,
+      "ascenso": 0,
       "playoff": 0,
-      "permanencia": 76,
-      "descenso": 23
+      "permanencia": 57,
+      "descenso": 43
     },
     "25": {
-      "ascenso": 1,
+      "ascenso": 0,
       "playoff": 0,
-      "permanencia": 85,
-      "descenso": 14
+      "permanencia": 51,
+      "descenso": 49
     },
     "26": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 80,
-      "descenso": 19
+      "playoff": 0,
+      "permanencia": 62,
+      "descenso": 38
     },
     "27": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
+      "playoff": 1,
+      "permanencia": 81,
+      "descenso": 18
     },
     "28": {
       "ascenso": 0,
       "playoff": 1,
-      "permanencia": 82,
-      "descenso": 17
+      "permanencia": 87,
+      "descenso": 12
     },
     "29": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 17
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 87,
-      "descenso": 12
-    },
-    "31": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 88,
-      "descenso": 11
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 87,
-      "descenso": 12
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 89,
-      "descenso": 11
-    },
-    "34": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 92,
-      "descenso": 8
-    },
-    "35": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 88,
-      "descenso": 10
-    },
-    "36": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 90,
       "descenso": 10
     },
+    "30": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 80,
+      "descenso": 19
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 97,
+      "descenso": 3
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 96,
+      "descenso": 4
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 98,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
     "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "38": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 100,
@@ -2761,1805 +2597,195 @@
   },
   "Huesca": {
     "0": {
-      "ascenso": 5,
-      "playoff": 4,
-      "permanencia": 84,
-      "descenso": 7
+      "ascenso": 2,
+      "playoff": 11,
+      "permanencia": 76,
+      "descenso": 11
     },
     "1": {
-      "ascenso": 4,
-      "playoff": 11,
-      "permanencia": 81,
-      "descenso": 4
+      "ascenso": 3,
+      "playoff": 12,
+      "permanencia": 78,
+      "descenso": 7
     },
     "2": {
-      "ascenso": 8,
-      "playoff": 56,
-      "permanencia": 32,
+      "ascenso": 4,
+      "playoff": 17,
+      "permanencia": 75,
       "descenso": 4
     },
     "3": {
-      "ascenso": 1,
-      "playoff": 23,
-      "permanencia": 76,
-      "descenso": 0
-    },
-    "4": {
-      "ascenso": 8,
-      "playoff": 61,
-      "permanencia": 31,
-      "descenso": 0
-    },
-    "5": {
-      "ascenso": 4,
-      "playoff": 20,
-      "permanencia": 71,
+      "ascenso": 2,
+      "playoff": 15,
+      "permanencia": 78,
       "descenso": 5
     },
-    "6": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 88,
-      "descenso": 8
+    "4": {
+      "ascenso": 4,
+      "playoff": 18,
+      "permanencia": 73,
+      "descenso": 5
     },
-    "7": {
+    "5": {
       "ascenso": 2,
-      "playoff": 63,
-      "permanencia": 31,
+      "playoff": 15,
+      "permanencia": 79,
       "descenso": 4
     },
+    "6": {
+      "ascenso": 2,
+      "playoff": 5,
+      "permanencia": 84,
+      "descenso": 9
+    },
+    "7": {
+      "ascenso": 3,
+      "playoff": 14,
+      "permanencia": 74,
+      "descenso": 9
+    },
     "8": {
-      "ascenso": 0,
-      "playoff": 17,
-      "permanencia": 82,
-      "descenso": 1
+      "ascenso": 2,
+      "playoff": 13,
+      "permanencia": 76,
+      "descenso": 9
     },
     "9": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 83,
-      "descenso": 11
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 78,
+      "descenso": 10
     },
     "10": {
-      "ascenso": 3,
-      "playoff": 4,
-      "permanencia": 75,
-      "descenso": 18
+      "ascenso": 2,
+      "playoff": 14,
+      "permanencia": 69,
+      "descenso": 15
     },
     "11": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 69,
-      "descenso": 29
+      "ascenso": 1,
+      "playoff": 10,
+      "permanencia": 76,
+      "descenso": 13
     },
     "12": {
       "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 68,
+      "playoff": 3,
+      "permanencia": 67,
       "descenso": 30
     },
     "13": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 20,
-      "descenso": 78
-    },
-    "14": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
-    },
-    "15": {
-      "ascenso": 2,
-      "playoff": 3,
-      "permanencia": 79,
-      "descenso": 16
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
-    },
-    "17": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 82,
-      "descenso": 16
-    },
-    "18": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
-    },
-    "19": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
-    },
-    "20": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 19,
-      "descenso": 81
-    },
-    "21": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 20,
-      "descenso": 78
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 11,
-      "descenso": 87
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 30,
-      "descenso": 70
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 17,
-      "descenso": 81
-    },
-    "25": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 76,
-      "descenso": 24
-    },
-    "26": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 26,
-      "descenso": 73
-    },
-    "27": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 17,
-      "descenso": 83
-    },
-    "28": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 17,
-      "descenso": 83
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 16,
-      "descenso": 84
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 15,
-      "descenso": 85
-    },
-    "31": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 13,
-      "descenso": 86
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 12,
-      "descenso": 88
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 12,
-      "descenso": 87
-    },
-    "34": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 14,
-      "descenso": 86
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 13,
-      "descenso": 87
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 13,
-      "descenso": 87
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 21,
-      "descenso": 79
-    }
-  },
-  "Las Palmas": {
-    "0": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 91,
-      "descenso": 3
-    },
-    "1": {
-      "ascenso": 0,
-      "playoff": 18,
-      "permanencia": 76,
-      "descenso": 6
-    },
-    "2": {
-      "ascenso": 2,
-      "playoff": 3,
-      "permanencia": 85,
-      "descenso": 10
-    },
-    "3": {
-      "ascenso": 3,
-      "playoff": 9,
-      "permanencia": 76,
-      "descenso": 12
-    },
-    "4": {
-      "ascenso": 3,
-      "playoff": 22,
-      "permanencia": 75,
-      "descenso": 0
-    },
-    "5": {
-      "ascenso": 3,
-      "playoff": 65,
-      "permanencia": 27,
-      "descenso": 5
-    },
-    "6": {
-      "ascenso": 1,
-      "playoff": 16,
-      "permanencia": 82,
-      "descenso": 1
-    },
-    "7": {
-      "ascenso": 1,
-      "playoff": 68,
-      "permanencia": 31,
-      "descenso": 0
-    },
-    "8": {
-      "ascenso": 7,
-      "playoff": 60,
-      "permanencia": 29,
-      "descenso": 4
-    },
-    "9": {
-      "ascenso": 68,
-      "playoff": 18,
-      "permanencia": 11,
-      "descenso": 3
-    },
-    "10": {
-      "ascenso": 63,
-      "playoff": 25,
-      "permanencia": 11,
-      "descenso": 1
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 72,
-      "permanencia": 26,
-      "descenso": 2
-    },
-    "12": {
-      "ascenso": 14,
-      "playoff": 67,
-      "permanencia": 17,
-      "descenso": 2
-    },
-    "13": {
-      "ascenso": 14,
-      "playoff": 67,
-      "permanencia": 16,
-      "descenso": 3
-    },
-    "14": {
-      "ascenso": 20,
-      "playoff": 67,
-      "permanencia": 13,
-      "descenso": 0
-    },
-    "15": {
-      "ascenso": 8,
-      "playoff": 71,
-      "permanencia": 17,
-      "descenso": 4
-    },
-    "16": {
-      "ascenso": 10,
-      "playoff": 67,
-      "permanencia": 20,
-      "descenso": 3
-    },
-    "17": {
-      "ascenso": 4,
-      "playoff": 70,
-      "permanencia": 26,
-      "descenso": 0
-    },
-    "18": {
-      "ascenso": 71,
-      "playoff": 18,
-      "permanencia": 11,
-      "descenso": 0
-    },
-    "19": {
-      "ascenso": 72,
-      "playoff": 21,
-      "permanencia": 6,
-      "descenso": 1
-    },
-    "20": {
-      "ascenso": 75,
-      "playoff": 18,
-      "permanencia": 7,
-      "descenso": 0
-    },
-    "21": {
-      "ascenso": 13,
-      "playoff": 72,
-      "permanencia": 14,
-      "descenso": 1
-    },
-    "22": {
-      "ascenso": 9,
-      "playoff": 76,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "23": {
-      "ascenso": 2,
-      "playoff": 76,
-      "permanencia": 22,
-      "descenso": 0
-    },
-    "24": {
-      "ascenso": 3,
-      "playoff": 77,
-      "permanencia": 19,
-      "descenso": 1
-    },
-    "25": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 84,
-      "descenso": 1
-    },
-    "26": {
-      "ascenso": 3,
-      "playoff": 77,
-      "permanencia": 19,
-      "descenso": 1
-    },
-    "27": {
-      "ascenso": 4,
-      "playoff": 75,
-      "permanencia": 19,
-      "descenso": 2
-    },
-    "28": {
-      "ascenso": 4,
-      "playoff": 77,
-      "permanencia": 18,
-      "descenso": 1
-    },
-    "29": {
-      "ascenso": 2,
-      "playoff": 81,
-      "permanencia": 17,
-      "descenso": 0
-    },
-    "30": {
-      "ascenso": 5,
-      "playoff": 80,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "31": {
-      "ascenso": 2,
-      "playoff": 23,
-      "permanencia": 74,
-      "descenso": 1
-    },
-    "32": {
-      "ascenso": 3,
-      "playoff": 72,
-      "permanencia": 23,
-      "descenso": 2
-    },
-    "33": {
-      "ascenso": 4,
-      "playoff": 75,
-      "permanencia": 20,
-      "descenso": 1
-    },
-    "34": {
-      "ascenso": 4,
-      "playoff": 79,
-      "permanencia": 16,
-      "descenso": 1
-    },
-    "35": {
-      "ascenso": 4,
-      "playoff": 82,
-      "permanencia": 14,
-      "descenso": 0
-    },
-    "36": {
-      "ascenso": 6,
-      "playoff": 83,
-      "permanencia": 10,
-      "descenso": 1
-    },
-    "37": {
-      "ascenso": 9,
-      "playoff": 84,
-      "permanencia": 7,
-      "descenso": 0
-    }
-  },
-  "Leganés": {
-    "0": {
-      "ascenso": 5,
-      "playoff": 0,
-      "permanencia": 76,
-      "descenso": 19
-    },
-    "1": {
-      "ascenso": 3,
-      "playoff": 5,
-      "permanencia": 77,
-      "descenso": 15
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 75,
-      "descenso": 25
-    },
-    "3": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 64,
-      "descenso": 36
-    },
-    "4": {
-      "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 78,
-      "descenso": 12
-    },
-    "5": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 78,
-      "descenso": 21
-    },
-    "6": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 45,
-      "descenso": 55
-    },
-    "7": {
-      "ascenso": 2,
-      "playoff": 8,
-      "permanencia": 84,
-      "descenso": 6
-    },
-    "8": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 65,
-      "descenso": 35
-    },
-    "9": {
-      "ascenso": 3,
-      "playoff": 7,
-      "permanencia": 87,
-      "descenso": 3
-    },
-    "10": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 88,
-      "descenso": 6
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 81,
-      "descenso": 15
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 35,
-      "descenso": 62
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 8,
-      "permanencia": 88,
-      "descenso": 4
-    },
-    "14": {
-      "ascenso": 2,
-      "playoff": 1,
-      "permanencia": 72,
-      "descenso": 25
-    },
-    "15": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 38,
-      "descenso": 60
-    },
-    "16": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 72,
-      "descenso": 26
-    },
-    "17": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 34,
-      "descenso": 64
-    },
-    "18": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 10,
-      "descenso": 88
-    },
-    "19": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 33,
-      "descenso": 65
-    },
-    "20": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 89,
-      "descenso": 7
-    },
-    "21": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 85,
-      "descenso": 15
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 91,
-      "descenso": 4
-    },
-    "23": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 84,
-      "descenso": 14
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 91,
-      "descenso": 5
-    },
-    "25": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 86,
-      "descenso": 13
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 85,
-      "descenso": 14
-    },
-    "27": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 79,
-      "descenso": 21
-    },
-    "28": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 79,
-      "descenso": 21
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 81,
-      "descenso": 19
-    },
-    "31": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 81,
-      "descenso": 19
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 81,
-      "descenso": 19
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 17
-    },
-    "34": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 83,
-      "descenso": 15
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 84,
-      "descenso": 16
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 83,
-      "descenso": 16
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 94,
-      "descenso": 6
-    }
-  },
-  "Mirandés": {
-    "0": {
-      "ascenso": 4,
-      "playoff": 3,
-      "permanencia": 61,
-      "descenso": 32
-    },
-    "1": {
-      "ascenso": 4,
-      "playoff": 0,
-      "permanencia": 63,
-      "descenso": 33
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 77,
-      "descenso": 18
-    },
-    "3": {
-      "ascenso": 4,
-      "playoff": 4,
-      "permanencia": 84,
-      "descenso": 8
-    },
-    "4": {
-      "ascenso": 3,
-      "playoff": 11,
-      "permanencia": 77,
-      "descenso": 9
-    },
-    "5": {
-      "ascenso": 4,
-      "playoff": 9,
-      "permanencia": 76,
-      "descenso": 11
-    },
-    "6": {
       "ascenso": 0,
       "playoff": 2,
       "permanencia": 64,
       "descenso": 34
     },
-    "7": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 68,
-      "descenso": 29
-    },
-    "8": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 26,
-      "descenso": 72
-    },
-    "9": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 91
-    },
-    "10": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 10,
-      "descenso": 90
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 95
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
     "14": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 96
+      "ascenso": 1,
+      "playoff": 3,
+      "permanencia": 74,
+      "descenso": 22
     },
     "15": {
       "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 6,
-      "descenso": 92
+      "playoff": 6,
+      "permanencia": 76,
+      "descenso": 18
     },
     "16": {
       "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 3,
-      "descenso": 95
-    },
-    "17": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "18": {
-      "ascenso": 0,
       "playoff": 3,
-      "permanencia": 4,
-      "descenso": 93
-    },
-    "19": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 6,
-      "descenso": 93
-    },
-    "20": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 95
-    },
-    "21": {
-      "ascenso": 2,
-      "playoff": 1,
-      "permanencia": 5,
-      "descenso": 92
-    },
-    "22": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 94
-    },
-    "23": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 6,
-      "descenso": 94
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 3,
-      "descenso": 95
-    },
-    "25": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 95
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 6,
-      "descenso": 94
-    },
-    "27": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "28": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "31": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 94
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 6,
-      "descenso": 94
-    },
-    "34": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 8,
-      "descenso": 91
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 6,
-      "descenso": 94
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 9,
-      "descenso": 91
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 38,
-      "descenso": 62
-    }
-  },
-  "Málaga": {
-    "0": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 77,
-      "descenso": 18
-    },
-    "1": {
-      "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 79,
-      "descenso": 11
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 20,
-      "permanencia": 75,
-      "descenso": 5
-    },
-    "3": {
-      "ascenso": 5,
-      "playoff": 64,
-      "permanencia": 29,
-      "descenso": 2
-    },
-    "4": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 82,
-      "descenso": 12
-    },
-    "5": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 87,
-      "descenso": 6
-    },
-    "6": {
-      "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 85,
-      "descenso": 6
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 23,
-      "descenso": 75
-    },
-    "8": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 15
-    },
-    "9": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 21,
-      "descenso": 79
-    },
-    "10": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 85,
-      "descenso": 8
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 69,
-      "descenso": 30
-    },
-    "12": {
-      "ascenso": 2,
-      "playoff": 3,
-      "permanencia": 78,
-      "descenso": 17
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 68,
-      "descenso": 30
-    },
-    "14": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 81,
-      "descenso": 18
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 88,
-      "descenso": 5
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 84,
-      "descenso": 15
-    },
-    "17": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 89,
-      "descenso": 8
-    },
-    "18": {
-      "ascenso": 2,
-      "playoff": 6,
-      "permanencia": 85,
-      "descenso": 7
-    },
-    "19": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 88,
-      "descenso": 5
-    },
-    "20": {
-      "ascenso": 0,
-      "playoff": 13,
-      "permanencia": 85,
-      "descenso": 2
-    },
-    "21": {
-      "ascenso": 0,
-      "playoff": 13,
-      "permanencia": 86,
-      "descenso": 1
-    },
-    "22": {
-      "ascenso": 15,
-      "playoff": 70,
-      "permanencia": 14,
-      "descenso": 1
-    },
-    "23": {
-      "ascenso": 5,
-      "playoff": 73,
-      "permanencia": 22,
-      "descenso": 0
-    },
-    "24": {
-      "ascenso": 4,
-      "playoff": 74,
-      "permanencia": 21,
-      "descenso": 1
-    },
-    "25": {
-      "ascenso": 2,
-      "playoff": 76,
-      "permanencia": 22,
-      "descenso": 0
-    },
-    "26": {
-      "ascenso": 3,
-      "playoff": 76,
-      "permanencia": 20,
-      "descenso": 1
-    },
-    "27": {
-      "ascenso": 2,
-      "playoff": 76,
-      "permanencia": 20,
-      "descenso": 2
-    },
-    "28": {
-      "ascenso": 2,
-      "playoff": 77,
-      "permanencia": 19,
-      "descenso": 2
-    },
-    "29": {
-      "ascenso": 5,
-      "playoff": 78,
-      "permanencia": 16,
-      "descenso": 1
-    },
-    "30": {
-      "ascenso": 3,
-      "playoff": 79,
-      "permanencia": 16,
-      "descenso": 2
-    },
-    "31": {
-      "ascenso": 5,
-      "playoff": 80,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "32": {
-      "ascenso": 4,
-      "playoff": 80,
-      "permanencia": 14,
-      "descenso": 2
-    },
-    "33": {
-      "ascenso": 1,
-      "playoff": 82,
-      "permanencia": 16,
-      "descenso": 1
-    },
-    "34": {
-      "ascenso": 2,
-      "playoff": 83,
-      "permanencia": 15,
-      "descenso": 0
-    },
-    "35": {
-      "ascenso": 3,
-      "playoff": 81,
-      "permanencia": 15,
-      "descenso": 1
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 82,
-      "permanencia": 18,
-      "descenso": 0
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 61,
-      "permanencia": 39,
-      "descenso": 0
-    }
-  },
-  "Racing": {
-    "0": {
-      "ascenso": 11,
-      "playoff": 61,
-      "permanencia": 28,
-      "descenso": 0
-    },
-    "1": {
-      "ascenso": 55,
-      "playoff": 31,
-      "permanencia": 14,
-      "descenso": 0
-    },
-    "2": {
-      "ascenso": 88,
-      "playoff": 10,
-      "permanencia": 1,
-      "descenso": 1
-    },
-    "3": {
-      "ascenso": 83,
-      "playoff": 10,
-      "permanencia": 5,
-      "descenso": 2
-    },
-    "4": {
-      "ascenso": 86,
-      "playoff": 14,
-      "permanencia": 0,
-      "descenso": 0
-    },
-    "5": {
-      "ascenso": 18,
-      "playoff": 61,
-      "permanencia": 21,
-      "descenso": 0
-    },
-    "6": {
-      "ascenso": 10,
-      "playoff": 64,
-      "permanencia": 22,
-      "descenso": 4
-    },
-    "7": {
-      "ascenso": 81,
-      "playoff": 15,
-      "permanencia": 1,
-      "descenso": 3
-    },
-    "8": {
-      "ascenso": 67,
-      "playoff": 24,
-      "permanencia": 9,
-      "descenso": 0
-    },
-    "9": {
-      "ascenso": 82,
-      "playoff": 11,
-      "permanencia": 7,
-      "descenso": 0
-    },
-    "10": {
-      "ascenso": 86,
-      "playoff": 9,
-      "permanencia": 5,
-      "descenso": 0
-    },
-    "11": {
-      "ascenso": 81,
-      "playoff": 11,
-      "permanencia": 6,
-      "descenso": 2
-    },
-    "12": {
-      "ascenso": 88,
-      "playoff": 11,
-      "permanencia": 1,
-      "descenso": 0
-    },
-    "13": {
-      "ascenso": 90,
-      "playoff": 9,
-      "permanencia": 1,
-      "descenso": 0
-    },
-    "14": {
-      "ascenso": 88,
-      "playoff": 11,
-      "permanencia": 1,
-      "descenso": 0
-    },
-    "15": {
-      "ascenso": 87,
-      "playoff": 12,
-      "permanencia": 1,
-      "descenso": 0
-    },
-    "16": {
-      "ascenso": 87,
-      "playoff": 11,
-      "permanencia": 2,
-      "descenso": 0
-    },
-    "17": {
-      "ascenso": 85,
-      "playoff": 12,
-      "permanencia": 3,
-      "descenso": 0
-    },
-    "18": {
-      "ascenso": 83,
-      "playoff": 13,
-      "permanencia": 2,
-      "descenso": 2
-    },
-    "19": {
-      "ascenso": 89,
-      "playoff": 9,
-      "permanencia": 1,
-      "descenso": 1
-    },
-    "20": {
-      "ascenso": 84,
-      "playoff": 10,
-      "permanencia": 4,
-      "descenso": 2
-    },
-    "21": {
-      "ascenso": 89,
-      "playoff": 8,
-      "permanencia": 3,
-      "descenso": 0
-    },
-    "22": {
-      "ascenso": 89,
-      "playoff": 9,
-      "permanencia": 2,
-      "descenso": 0
-    },
-    "23": {
-      "ascenso": 88,
-      "playoff": 8,
-      "permanencia": 3,
-      "descenso": 1
-    },
-    "24": {
-      "ascenso": 86,
-      "playoff": 10,
-      "permanencia": 4,
-      "descenso": 0
-    },
-    "25": {
-      "ascenso": 78,
-      "playoff": 17,
-      "permanencia": 5,
-      "descenso": 0
-    },
-    "26": {
-      "ascenso": 87,
-      "playoff": 10,
-      "permanencia": 2,
-      "descenso": 1
-    },
-    "27": {
-      "ascenso": 87,
-      "playoff": 10,
-      "permanencia": 3,
-      "descenso": 0
-    },
-    "28": {
-      "ascenso": 89,
-      "playoff": 10,
-      "permanencia": 1,
-      "descenso": 0
-    },
-    "29": {
-      "ascenso": 88,
-      "playoff": 10,
-      "permanencia": 1,
-      "descenso": 1
-    },
-    "30": {
-      "ascenso": 92,
-      "playoff": 7,
-      "permanencia": 1,
-      "descenso": 0
-    },
-    "31": {
-      "ascenso": 90,
-      "playoff": 8,
-      "permanencia": 1,
-      "descenso": 1
-    },
-    "32": {
-      "ascenso": 88,
-      "playoff": 9,
-      "permanencia": 3,
-      "descenso": 0
-    },
-    "33": {
-      "ascenso": 89,
-      "playoff": 9,
-      "permanencia": 2,
-      "descenso": 0
-    },
-    "34": {
-      "ascenso": 91,
-      "playoff": 6,
-      "permanencia": 3,
-      "descenso": 0
-    },
-    "35": {
-      "ascenso": 90,
-      "playoff": 8,
-      "permanencia": 1,
-      "descenso": 1
-    },
-    "36": {
-      "ascenso": 89,
-      "playoff": 8,
-      "permanencia": 2,
-      "descenso": 1
-    },
-    "37": {
-      "ascenso": 92,
-      "playoff": 8,
-      "permanencia": 0,
-      "descenso": 0
-    }
-  },
-  "Real Sociedad B": {
-    "0": {
-      "ascenso": 2,
-      "playoff": 67,
-      "permanencia": 31,
-      "descenso": 0
-    },
-    "1": {
-      "ascenso": 1,
-      "playoff": 7,
-      "permanencia": 81,
-      "descenso": 11
-    },
-    "2": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 94,
-      "descenso": 3
-    },
-    "3": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 80,
-      "descenso": 18
-    },
-    "4": {
-      "ascenso": 4,
-      "playoff": 5,
-      "permanencia": 73,
-      "descenso": 18
-    },
-    "5": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 66,
+      "permanencia": 64,
       "descenso": 33
     },
-    "6": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 23,
-      "descenso": 74
-    },
-    "7": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 10,
-      "descenso": 90
-    },
-    "8": {
-      "ascenso": 4,
-      "playoff": 0,
-      "permanencia": 40,
-      "descenso": 56
-    },
-    "9": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 67,
-      "descenso": 33
-    },
-    "10": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 39,
-      "descenso": 57
-    },
-    "11": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 24,
-      "descenso": 74
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 69,
-      "descenso": 31
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 39,
-      "descenso": 61
-    },
-    "14": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 84,
-      "descenso": 14
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 73,
-      "descenso": 27
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 35,
-      "descenso": 65
-    },
     "17": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 75,
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 72,
       "descenso": 23
     },
     "18": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 72,
-      "descenso": 26
+      "ascenso": 1,
+      "playoff": 5,
+      "permanencia": 71,
+      "descenso": 23
     },
     "19": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 22,
-      "descenso": 78
+      "playoff": 1,
+      "permanencia": 73,
+      "descenso": 26
     },
     "20": {
       "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 34,
-      "descenso": 66
+      "playoff": 1,
+      "permanencia": 59,
+      "descenso": 40
     },
     "21": {
       "ascenso": 0,
       "playoff": 1,
-      "permanencia": 31,
-      "descenso": 68
+      "permanencia": 60,
+      "descenso": 39
     },
     "22": {
-      "ascenso": 2,
+      "ascenso": 0,
       "playoff": 0,
-      "permanencia": 19,
-      "descenso": 79
+      "permanencia": 55,
+      "descenso": 45
     },
     "23": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 9,
-      "descenso": 90
+      "playoff": 0,
+      "permanencia": 66,
+      "descenso": 34
     },
     "24": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 60,
+      "descenso": 40
+    },
+    "25": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 75,
       "descenso": 25
     },
-    "25": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 74,
-      "descenso": 24
-    },
     "26": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 89,
-      "descenso": 7
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 57,
+      "descenso": 43
     },
     "27": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 85,
-      "descenso": 15
-    },
-    "28": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 86,
-      "descenso": 11
-    },
-    "29": {
-      "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 87,
-      "descenso": 11
-    },
-    "30": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 87,
-      "descenso": 12
-    },
-    "31": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 17
-    },
-    "32": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 17
-    },
-    "33": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 83,
-      "descenso": 17
-    },
-    "34": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 82,
-      "descenso": 18
-    },
-    "35": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 84,
-      "descenso": 16
-    },
-    "36": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 82,
-      "descenso": 18
-    },
-    "37": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 99,
-      "descenso": 1
-    }
-  },
-  "Real Zaragoza": {
-    "0": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 45,
-      "descenso": 51
-    },
-    "1": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 26,
-      "descenso": 74
-    },
-    "2": {
-      "ascenso": 4,
-      "playoff": 2,
-      "permanencia": 24,
-      "descenso": 70
-    },
-    "3": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 47,
       "descenso": 53
     },
-    "4": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 23,
-      "descenso": 77
-    },
-    "5": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 5,
-      "descenso": 92
-    },
-    "6": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 16,
-      "descenso": 81
-    },
-    "7": {
-      "ascenso": 1,
-      "playoff": 2,
-      "permanencia": 10,
-      "descenso": 87
-    },
-    "8": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "9": {
-      "ascenso": 2,
-      "playoff": 2,
-      "permanencia": 3,
-      "descenso": 93
-    },
-    "10": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "11": {
-      "ascenso": 2,
-      "playoff": 0,
-      "permanencia": 6,
-      "descenso": 92
-    },
-    "12": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 6,
-      "descenso": 93
-    },
-    "14": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 6,
-      "descenso": 94
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 8,
-      "descenso": 92
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "17": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 8,
-      "descenso": 92
-    },
-    "18": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 7,
-      "descenso": 92
-    },
-    "19": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 5,
-      "descenso": 93
-    },
-    "20": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 7,
-      "descenso": 93
-    },
-    "21": {
-      "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 3,
-      "descenso": 96
-    },
-    "22": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 96
-    },
-    "23": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 95
-    },
-    "24": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 96
-    },
-    "25": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 96
-    },
-    "26": {
-      "ascenso": 0,
-      "playoff": 0,
-      "permanencia": 5,
-      "descenso": 95
-    },
-    "27": {
-      "ascenso": 1,
-      "playoff": 0,
-      "permanencia": 4,
-      "descenso": 95
-    },
     "28": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 5,
-      "descenso": 93
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 38,
+      "descenso": 62
     },
     "29": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 8,
-      "descenso": 91
+      "playoff": 0,
+      "permanencia": 28,
+      "descenso": 72
     },
     "30": {
-      "ascenso": 1,
+      "ascenso": 0,
       "playoff": 0,
-      "permanencia": 6,
-      "descenso": 93
+      "permanencia": 28,
+      "descenso": 72
     },
     "31": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 9,
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 11,
       "descenso": 89
     },
     "32": {
@@ -4571,420 +2797,2320 @@
     "33": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 8,
-      "descenso": 92
+      "permanencia": 10,
+      "descenso": 90
     },
     "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 11,
+      "descenso": 89
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 16,
+      "descenso": 84
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 17,
+      "descenso": 83
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 21,
+      "descenso": 79
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 21,
+      "descenso": 79
+    }
+  },
+  "Leganés": {
+    "0": {
+      "ascenso": 16,
+      "playoff": 32,
+      "permanencia": 51,
+      "descenso": 1
+    },
+    "1": {
+      "ascenso": 16,
+      "playoff": 32,
+      "permanencia": 52,
+      "descenso": 0
+    },
+    "2": {
+      "ascenso": 13,
+      "playoff": 30,
+      "permanencia": 57,
+      "descenso": 0
+    },
+    "3": {
+      "ascenso": 11,
+      "playoff": 31,
+      "permanencia": 57,
+      "descenso": 1
+    },
+    "4": {
+      "ascenso": 20,
+      "playoff": 35,
+      "permanencia": 44,
+      "descenso": 1
+    },
+    "5": {
+      "ascenso": 14,
+      "playoff": 37,
+      "permanencia": 48,
+      "descenso": 1
+    },
+    "6": {
+      "ascenso": 13,
+      "playoff": 35,
+      "permanencia": 51,
+      "descenso": 1
+    },
+    "7": {
+      "ascenso": 12,
+      "playoff": 35,
+      "permanencia": 51,
+      "descenso": 2
+    },
+    "8": {
+      "ascenso": 8,
+      "playoff": 36,
+      "permanencia": 55,
+      "descenso": 1
+    },
+    "9": {
+      "ascenso": 17,
+      "playoff": 39,
+      "permanencia": 42,
+      "descenso": 2
+    },
+    "10": {
+      "ascenso": 12,
+      "playoff": 39,
+      "permanencia": 49,
+      "descenso": 0
+    },
+    "11": {
+      "ascenso": 4,
+      "playoff": 33,
+      "permanencia": 61,
+      "descenso": 2
+    },
+    "12": {
+      "ascenso": 1,
+      "playoff": 32,
+      "permanencia": 65,
+      "descenso": 2
+    },
+    "13": {
+      "ascenso": 5,
+      "playoff": 33,
+      "permanencia": 61,
+      "descenso": 1
+    },
+    "14": {
+      "ascenso": 3,
+      "playoff": 26,
+      "permanencia": 68,
+      "descenso": 3
+    },
+    "15": {
+      "ascenso": 2,
+      "playoff": 22,
+      "permanencia": 72,
+      "descenso": 4
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 11,
+      "permanencia": 79,
+      "descenso": 10
+    },
+    "17": {
+      "ascenso": 1,
+      "playoff": 13,
+      "permanencia": 80,
+      "descenso": 6
+    },
+    "18": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 80,
+      "descenso": 15
+    },
+    "19": {
+      "ascenso": 1,
+      "playoff": 12,
+      "permanencia": 84,
+      "descenso": 3
+    },
+    "20": {
+      "ascenso": 1,
+      "playoff": 13,
+      "permanencia": 84,
+      "descenso": 2
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 8,
+      "permanencia": 89,
+      "descenso": 3
+    },
+    "22": {
+      "ascenso": 1,
+      "playoff": 9,
+      "permanencia": 88,
+      "descenso": 2
+    },
+    "23": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 91,
+      "descenso": 4
+    },
+    "24": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 92,
+      "descenso": 5
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 9,
+      "permanencia": 90,
+      "descenso": 1
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 92,
+      "descenso": 3
+    },
+    "27": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 93,
+      "descenso": 3
+    },
+    "28": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 93,
+      "descenso": 6
+    },
+    "29": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 87,
+      "descenso": 12
+    },
+    "30": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 94,
+      "descenso": 6
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 97,
+      "descenso": 3
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 93,
+      "descenso": 7
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 92,
+      "descenso": 8
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 98,
+      "descenso": 2
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 98,
+      "descenso": 2
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 94,
+      "descenso": 6
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 94,
+      "descenso": 6
+    }
+  },
+  "Málaga": {
+    "0": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 58,
+      "descenso": 41
+    },
+    "1": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 58,
+      "descenso": 39
+    },
+    "2": {
+      "ascenso": 1,
+      "playoff": 3,
+      "permanencia": 72,
+      "descenso": 24
+    },
+    "3": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 80,
+      "descenso": 15
+    },
+    "4": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 65,
+      "descenso": 31
+    },
+    "5": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 63,
+      "descenso": 34
+    },
+    "6": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 49,
+      "descenso": 50
+    },
+    "7": {
+      "ascenso": 1,
+      "playoff": 1,
+      "permanencia": 49,
+      "descenso": 49
+    },
+    "8": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 53,
+      "descenso": 46
+    },
+    "9": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 52,
+      "descenso": 46
+    },
+    "10": {
+      "ascenso": 1,
+      "playoff": 3,
+      "permanencia": 62,
+      "descenso": 34
+    },
+    "11": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 58,
+      "descenso": 40
+    },
+    "12": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 61,
+      "descenso": 36
+    },
+    "13": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 54,
+      "descenso": 44
+    },
+    "14": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 74,
+      "descenso": 24
+    },
+    "15": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 69,
+      "descenso": 29
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 62,
+      "descenso": 37
+    },
+    "17": {
+      "ascenso": 0,
+      "playoff": 6,
+      "permanencia": 67,
+      "descenso": 27
+    },
+    "18": {
+      "ascenso": 1,
+      "playoff": 6,
+      "permanencia": 83,
+      "descenso": 10
+    },
+    "19": {
+      "ascenso": 1,
+      "playoff": 10,
+      "permanencia": 81,
+      "descenso": 8
+    },
+    "20": {
+      "ascenso": 1,
+      "playoff": 14,
+      "permanencia": 81,
+      "descenso": 4
+    },
+    "21": {
+      "ascenso": 3,
+      "playoff": 20,
+      "permanencia": 75,
+      "descenso": 2
+    },
+    "22": {
+      "ascenso": 9,
+      "playoff": 30,
+      "permanencia": 61,
+      "descenso": 0
+    },
+    "23": {
+      "ascenso": 6,
+      "playoff": 30,
+      "permanencia": 63,
+      "descenso": 1
+    },
+    "24": {
+      "ascenso": 1,
+      "playoff": 35,
+      "permanencia": 64,
+      "descenso": 0
+    },
+    "25": {
+      "ascenso": 1,
+      "playoff": 23,
+      "permanencia": 76,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 1,
+      "playoff": 34,
+      "permanencia": 65,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 3,
+      "playoff": 43,
+      "permanencia": 54,
+      "descenso": 0
+    },
+    "28": {
+      "ascenso": 3,
+      "playoff": 46,
+      "permanencia": 51,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 4,
+      "playoff": 51,
+      "permanencia": 45,
+      "descenso": 0
+    },
+    "30": {
+      "ascenso": 13,
+      "playoff": 64,
+      "permanencia": 23,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 11,
+      "playoff": 58,
+      "permanencia": 31,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 2,
+      "playoff": 57,
+      "permanencia": 41,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 6,
+      "playoff": 48,
+      "permanencia": 46,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 8,
+      "playoff": 67,
+      "permanencia": 25,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 2,
+      "playoff": 57,
+      "permanencia": 41,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 31,
+      "permanencia": 69,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 61,
+      "permanencia": 39,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 61,
+      "permanencia": 39,
+      "descenso": 0
+    }
+  },
+  "Las Palmas": {
+    "0": {
+      "ascenso": 24,
+      "playoff": 34,
+      "permanencia": 41,
+      "descenso": 1
+    },
+    "1": {
+      "ascenso": 19,
+      "playoff": 31,
+      "permanencia": 49,
+      "descenso": 1
+    },
+    "2": {
+      "ascenso": 11,
+      "playoff": 29,
+      "permanencia": 60,
+      "descenso": 0
+    },
+    "3": {
+      "ascenso": 16,
+      "playoff": 25,
+      "permanencia": 59,
+      "descenso": 0
+    },
+    "4": {
+      "ascenso": 19,
+      "playoff": 37,
+      "permanencia": 44,
+      "descenso": 0
+    },
+    "5": {
+      "ascenso": 15,
+      "playoff": 36,
+      "permanencia": 48,
+      "descenso": 1
+    },
+    "6": {
+      "ascenso": 12,
+      "playoff": 36,
+      "permanencia": 51,
+      "descenso": 1
+    },
+    "7": {
+      "ascenso": 17,
+      "playoff": 41,
+      "permanencia": 41,
+      "descenso": 1
+    },
+    "8": {
+      "ascenso": 17,
+      "playoff": 38,
+      "permanencia": 44,
+      "descenso": 1
+    },
+    "9": {
+      "ascenso": 26,
+      "playoff": 40,
+      "permanencia": 34,
+      "descenso": 0
+    },
+    "10": {
+      "ascenso": 24,
+      "playoff": 43,
+      "permanencia": 33,
+      "descenso": 0
+    },
+    "11": {
+      "ascenso": 20,
+      "playoff": 40,
+      "permanencia": 39,
+      "descenso": 1
+    },
+    "12": {
+      "ascenso": 37,
+      "playoff": 50,
+      "permanencia": 13,
+      "descenso": 0
+    },
+    "13": {
+      "ascenso": 30,
+      "playoff": 52,
+      "permanencia": 18,
+      "descenso": 0
+    },
+    "14": {
+      "ascenso": 26,
+      "playoff": 57,
+      "permanencia": 17,
+      "descenso": 0
+    },
+    "15": {
+      "ascenso": 20,
+      "playoff": 70,
+      "permanencia": 10,
+      "descenso": 0
+    },
+    "16": {
+      "ascenso": 17,
+      "playoff": 70,
+      "permanencia": 13,
+      "descenso": 0
+    },
+    "17": {
+      "ascenso": 22,
+      "playoff": 59,
+      "permanencia": 19,
+      "descenso": 0
+    },
+    "18": {
+      "ascenso": 24,
+      "playoff": 60,
+      "permanencia": 15,
+      "descenso": 1
+    },
+    "19": {
+      "ascenso": 32,
+      "playoff": 56,
+      "permanencia": 12,
+      "descenso": 0
+    },
+    "20": {
+      "ascenso": 29,
+      "playoff": 56,
+      "permanencia": 15,
+      "descenso": 0
+    },
+    "21": {
+      "ascenso": 23,
+      "playoff": 62,
+      "permanencia": 15,
+      "descenso": 0
+    },
+    "22": {
+      "ascenso": 20,
+      "playoff": 56,
+      "permanencia": 24,
+      "descenso": 0
+    },
+    "23": {
+      "ascenso": 11,
+      "playoff": 49,
+      "permanencia": 40,
+      "descenso": 0
+    },
+    "24": {
+      "ascenso": 4,
+      "playoff": 55,
+      "permanencia": 40,
+      "descenso": 1
+    },
+    "25": {
+      "ascenso": 9,
+      "playoff": 46,
+      "permanencia": 45,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 4,
+      "playoff": 54,
+      "permanencia": 42,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 4,
+      "playoff": 66,
+      "permanencia": 30,
+      "descenso": 0
+    },
+    "28": {
+      "ascenso": 11,
+      "playoff": 70,
+      "permanencia": 19,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 14,
+      "playoff": 70,
+      "permanencia": 16,
+      "descenso": 0
+    },
+    "30": {
+      "ascenso": 9,
+      "playoff": 65,
+      "permanencia": 26,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 5,
+      "playoff": 56,
+      "permanencia": 39,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 3,
+      "playoff": 73,
+      "permanencia": 24,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 8,
+      "playoff": 67,
+      "permanencia": 25,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 4,
+      "playoff": 50,
+      "permanencia": 46,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 4,
+      "playoff": 58,
+      "permanencia": 38,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 4,
+      "playoff": 72,
+      "permanencia": 24,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 9,
+      "playoff": 84,
+      "permanencia": 7,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 9,
+      "playoff": 84,
+      "permanencia": 7,
+      "descenso": 0
+    }
+  },
+  "Córdoba": {
+    "0": {
+      "ascenso": 3,
+      "playoff": 10,
+      "permanencia": 80,
+      "descenso": 7
+    },
+    "1": {
+      "ascenso": 5,
+      "playoff": 16,
+      "permanencia": 70,
+      "descenso": 9
+    },
+    "2": {
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 76,
+      "descenso": 12
+    },
+    "3": {
+      "ascenso": 4,
+      "playoff": 17,
+      "permanencia": 72,
+      "descenso": 7
+    },
+    "4": {
+      "ascenso": 2,
+      "playoff": 7,
+      "permanencia": 76,
+      "descenso": 15
+    },
+    "5": {
+      "ascenso": 1,
+      "playoff": 10,
+      "permanencia": 73,
+      "descenso": 16
+    },
+    "6": {
+      "ascenso": 1,
+      "playoff": 10,
+      "permanencia": 69,
+      "descenso": 20
+    },
+    "7": {
+      "ascenso": 5,
+      "playoff": 11,
+      "permanencia": 76,
+      "descenso": 8
+    },
+    "8": {
+      "ascenso": 3,
+      "playoff": 17,
+      "permanencia": 70,
+      "descenso": 10
+    },
+    "9": {
+      "ascenso": 2,
+      "playoff": 15,
+      "permanencia": 68,
+      "descenso": 15
+    },
+    "10": {
+      "ascenso": 5,
+      "playoff": 24,
+      "permanencia": 65,
+      "descenso": 6
+    },
+    "11": {
+      "ascenso": 6,
+      "playoff": 29,
+      "permanencia": 62,
+      "descenso": 3
+    },
+    "12": {
+      "ascenso": 1,
+      "playoff": 23,
+      "permanencia": 68,
+      "descenso": 8
+    },
+    "13": {
+      "ascenso": 2,
+      "playoff": 19,
+      "permanencia": 73,
+      "descenso": 6
+    },
+    "14": {
+      "ascenso": 1,
+      "playoff": 27,
+      "permanencia": 65,
+      "descenso": 7
+    },
+    "15": {
+      "ascenso": 1,
+      "playoff": 16,
+      "permanencia": 73,
+      "descenso": 10
+    },
+    "16": {
+      "ascenso": 1,
+      "playoff": 19,
+      "permanencia": 74,
+      "descenso": 6
+    },
+    "17": {
+      "ascenso": 1,
+      "playoff": 14,
+      "permanencia": 77,
+      "descenso": 8
+    },
+    "18": {
+      "ascenso": 1,
+      "playoff": 24,
+      "permanencia": 71,
+      "descenso": 4
+    },
+    "19": {
+      "ascenso": 2,
+      "playoff": 30,
+      "permanencia": 63,
+      "descenso": 5
+    },
+    "20": {
+      "ascenso": 6,
+      "playoff": 32,
+      "permanencia": 61,
+      "descenso": 1
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 23,
+      "permanencia": 74,
+      "descenso": 3
+    },
+    "22": {
+      "ascenso": 3,
+      "playoff": 31,
+      "permanencia": 66,
+      "descenso": 0
+    },
+    "23": {
+      "ascenso": 5,
+      "playoff": 37,
+      "permanencia": 58,
+      "descenso": 0
+    },
+    "24": {
+      "ascenso": 4,
+      "playoff": 46,
+      "permanencia": 50,
+      "descenso": 0
+    },
+    "25": {
+      "ascenso": 12,
+      "playoff": 49,
+      "permanencia": 39,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 3,
+      "playoff": 53,
+      "permanencia": 44,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 1,
+      "playoff": 26,
+      "permanencia": 73,
+      "descenso": 0
+    },
+    "28": {
+      "ascenso": 1,
+      "playoff": 19,
+      "permanencia": 80,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 0,
+      "playoff": 8,
+      "permanencia": 91,
+      "descenso": 1
+    },
+    "30": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 95,
+      "descenso": 1
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 99,
+      "descenso": 1
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 99,
+      "descenso": 1
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 98,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    }
+  },
+  "Mirandés": {
+    "0": {
+      "ascenso": 7,
+      "playoff": 22,
+      "permanencia": 68,
+      "descenso": 3
+    },
+    "1": {
+      "ascenso": 3,
+      "playoff": 23,
+      "permanencia": 68,
+      "descenso": 6
+    },
+    "2": {
+      "ascenso": 8,
+      "playoff": 23,
+      "permanencia": 67,
+      "descenso": 2
+    },
+    "3": {
+      "ascenso": 11,
+      "playoff": 40,
+      "permanencia": 46,
+      "descenso": 3
+    },
+    "4": {
+      "ascenso": 11,
+      "playoff": 23,
+      "permanencia": 63,
+      "descenso": 3
+    },
+    "5": {
+      "ascenso": 12,
+      "playoff": 35,
+      "permanencia": 52,
+      "descenso": 1
+    },
+    "6": {
+      "ascenso": 11,
+      "playoff": 31,
+      "permanencia": 56,
+      "descenso": 2
+    },
+    "7": {
+      "ascenso": 7,
+      "playoff": 21,
+      "permanencia": 70,
+      "descenso": 2
+    },
+    "8": {
+      "ascenso": 5,
+      "playoff": 22,
+      "permanencia": 69,
+      "descenso": 4
+    },
+    "9": {
+      "ascenso": 2,
+      "playoff": 15,
+      "permanencia": 74,
+      "descenso": 9
+    },
+    "10": {
+      "ascenso": 2,
+      "playoff": 14,
+      "permanencia": 74,
+      "descenso": 10
+    },
+    "11": {
+      "ascenso": 1,
+      "playoff": 7,
+      "permanencia": 72,
+      "descenso": 20
+    },
+    "12": {
+      "ascenso": 2,
+      "playoff": 3,
+      "permanencia": 61,
+      "descenso": 34
+    },
+    "13": {
+      "ascenso": 1,
+      "playoff": 5,
+      "permanencia": 77,
+      "descenso": 17
+    },
+    "14": {
+      "ascenso": 1,
+      "playoff": 3,
+      "permanencia": 62,
+      "descenso": 34
+    },
+    "15": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 67,
+      "descenso": 28
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 70,
+      "descenso": 28
+    },
+    "17": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 65,
+      "descenso": 32
+    },
+    "18": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 46,
+      "descenso": 53
+    },
+    "19": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 39,
+      "descenso": 60
+    },
+    "20": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 42,
+      "descenso": 58
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 26,
+      "descenso": 74
+    },
+    "22": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 21,
+      "descenso": 79
+    },
+    "23": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 29,
+      "descenso": 71
+    },
+    "24": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 35,
+      "descenso": 65
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 22,
+      "descenso": 78
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 44,
+      "descenso": 56
+    },
+    "27": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 27,
+      "descenso": 73
+    },
+    "28": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 12,
+      "descenso": 88
+    },
+    "29": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 6,
       "descenso": 94
     },
+    "30": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 7,
+      "descenso": 93
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 6,
+      "descenso": 94
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 9,
+      "descenso": 91
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 18,
+      "descenso": 82
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 20,
+      "descenso": 80
+    },
     "35": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 18,
+      "descenso": 82
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 27,
+      "descenso": 73
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 38,
+      "descenso": 62
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 38,
+      "descenso": 62
+    }
+  },
+  "Real Zaragoza": {
+    "0": {
+      "ascenso": 1,
+      "playoff": 6,
+      "permanencia": 77,
+      "descenso": 16
+    },
+    "1": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 74,
+      "descenso": 22
+    },
+    "2": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 68,
+      "descenso": 28
+    },
+    "3": {
+      "ascenso": 1,
+      "playoff": 5,
+      "permanencia": 66,
+      "descenso": 28
+    },
+    "4": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 67,
+      "descenso": 30
+    },
+    "5": {
+      "ascenso": 1,
+      "playoff": 1,
+      "permanencia": 40,
+      "descenso": 58
+    },
+    "6": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 52,
+      "descenso": 45
+    },
+    "7": {
+      "ascenso": 1,
+      "playoff": 1,
+      "permanencia": 41,
+      "descenso": 57
+    },
+    "8": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 38,
+      "descenso": 60
+    },
+    "9": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 27,
+      "descenso": 73
+    },
+    "10": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 15,
+      "descenso": 85
+    },
+    "11": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 15,
+      "descenso": 85
+    },
+    "12": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 27,
+      "descenso": 73
+    },
+    "13": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 11,
+      "descenso": 89
+    },
+    "14": {
+      "ascenso": 1,
+      "playoff": 0,
+      "permanencia": 26,
+      "descenso": 73
+    },
+    "15": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 30,
+      "descenso": 70
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 34,
+      "descenso": 66
+    },
+    "17": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 19,
+      "descenso": 81
+    },
+    "18": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 23,
+      "descenso": 77
+    },
+    "19": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 16,
+      "descenso": 84
+    },
+    "20": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 35,
+      "descenso": 65
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 23,
+      "descenso": 77
+    },
+    "22": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 28,
+      "descenso": 72
+    },
+    "23": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 19,
+      "descenso": 81
+    },
+    "24": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 12,
+      "descenso": 88
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 20,
+      "descenso": 80
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 8,
+      "descenso": 92
+    },
+    "27": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 5,
       "descenso": 95
     },
-    "36": {
-      "ascenso": 1,
+    "28": {
+      "ascenso": 0,
       "playoff": 0,
-      "permanencia": 5,
-      "descenso": 94
+      "permanencia": 10,
+      "descenso": 90
+    },
+    "29": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 19,
+      "descenso": 81
+    },
+    "30": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 15,
+      "descenso": 85
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 32,
+      "descenso": 68
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 37,
+      "descenso": 63
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 30,
+      "descenso": 70
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 19,
+      "descenso": 81
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 27,
+      "descenso": 73
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 16,
+      "descenso": 84
     },
     "37": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 5,
       "descenso": 95
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 5,
+      "descenso": 95
     }
   },
-  "Sporting": {
+  "Castellón": {
     "0": {
-      "ascenso": 5,
-      "playoff": 14,
-      "permanencia": 77,
-      "descenso": 4
+      "ascenso": 3,
+      "playoff": 16,
+      "permanencia": 73,
+      "descenso": 8
     },
     "1": {
-      "ascenso": 20,
-      "playoff": 58,
-      "permanencia": 20,
-      "descenso": 2
+      "ascenso": 2,
+      "playoff": 13,
+      "permanencia": 71,
+      "descenso": 14
     },
     "2": {
-      "ascenso": 60,
-      "playoff": 34,
-      "permanencia": 6,
-      "descenso": 0
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 78,
+      "descenso": 10
     },
     "3": {
-      "ascenso": 57,
-      "playoff": 27,
-      "permanencia": 11,
-      "descenso": 5
+      "ascenso": 0,
+      "playoff": 8,
+      "permanencia": 69,
+      "descenso": 23
     },
     "4": {
-      "ascenso": 0,
-      "playoff": 22,
-      "permanencia": 72,
-      "descenso": 6
+      "ascenso": 1,
+      "playoff": 5,
+      "permanencia": 70,
+      "descenso": 24
     },
     "5": {
-      "ascenso": 0,
-      "playoff": 16,
-      "permanencia": 77,
-      "descenso": 7
+      "ascenso": 4,
+      "playoff": 9,
+      "permanencia": 68,
+      "descenso": 19
     },
     "6": {
-      "ascenso": 3,
-      "playoff": 7,
-      "permanencia": 85,
-      "descenso": 5
+      "ascenso": 2,
+      "playoff": 14,
+      "permanencia": 70,
+      "descenso": 14
     },
     "7": {
-      "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 78,
-      "descenso": 17
+      "ascenso": 7,
+      "playoff": 23,
+      "permanencia": 63,
+      "descenso": 7
     },
     "8": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 84,
-      "descenso": 1
+      "ascenso": 5,
+      "playoff": 26,
+      "permanencia": 65,
+      "descenso": 4
     },
     "9": {
-      "ascenso": 6,
-      "playoff": 64,
-      "permanencia": 30,
-      "descenso": 0
+      "ascenso": 2,
+      "playoff": 15,
+      "permanencia": 70,
+      "descenso": 13
     },
     "10": {
       "ascenso": 2,
-      "playoff": 66,
-      "permanencia": 31,
-      "descenso": 1
+      "playoff": 13,
+      "permanencia": 71,
+      "descenso": 14
     },
     "11": {
-      "ascenso": 2,
-      "playoff": 14,
-      "permanencia": 77,
-      "descenso": 7
+      "ascenso": 3,
+      "playoff": 15,
+      "permanencia": 72,
+      "descenso": 10
     },
     "12": {
       "ascenso": 2,
-      "playoff": 5,
-      "permanencia": 89,
-      "descenso": 4
-    },
-    "13": {
-      "ascenso": 0,
-      "playoff": 13,
-      "permanencia": 87,
-      "descenso": 0
-    },
-    "14": {
-      "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 87,
-      "descenso": 7
-    },
-    "15": {
-      "ascenso": 0,
-      "playoff": 14,
-      "permanencia": 85,
-      "descenso": 1
-    },
-    "16": {
-      "ascenso": 0,
-      "playoff": 16,
-      "permanencia": 79,
+      "playoff": 39,
+      "permanencia": 54,
       "descenso": 5
     },
+    "13": {
+      "ascenso": 3,
+      "playoff": 21,
+      "permanencia": 72,
+      "descenso": 4
+    },
+    "14": {
+      "ascenso": 4,
+      "playoff": 35,
+      "permanencia": 58,
+      "descenso": 3
+    },
+    "15": {
+      "ascenso": 4,
+      "playoff": 36,
+      "permanencia": 57,
+      "descenso": 3
+    },
+    "16": {
+      "ascenso": 10,
+      "playoff": 51,
+      "permanencia": 38,
+      "descenso": 1
+    },
     "17": {
-      "ascenso": 0,
-      "playoff": 14,
-      "permanencia": 85,
+      "ascenso": 18,
+      "playoff": 51,
+      "permanencia": 30,
       "descenso": 1
     },
     "18": {
-      "ascenso": 4,
-      "playoff": 71,
-      "permanencia": 25,
+      "ascenso": 14,
+      "playoff": 52,
+      "permanencia": 34,
       "descenso": 0
     },
     "19": {
-      "ascenso": 1,
-      "playoff": 14,
-      "permanencia": 82,
-      "descenso": 3
+      "ascenso": 14,
+      "playoff": 55,
+      "permanencia": 31,
+      "descenso": 0
     },
     "20": {
-      "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 92,
-      "descenso": 4
+      "ascenso": 20,
+      "playoff": 49,
+      "permanencia": 31,
+      "descenso": 0
     },
     "21": {
-      "ascenso": 0,
-      "playoff": 12,
-      "permanencia": 87,
-      "descenso": 1
+      "ascenso": 24,
+      "playoff": 54,
+      "permanencia": 22,
+      "descenso": 0
     },
     "22": {
-      "ascenso": 4,
-      "playoff": 73,
+      "ascenso": 28,
+      "playoff": 49,
       "permanencia": 23,
       "descenso": 0
     },
     "23": {
-      "ascenso": 0,
+      "ascenso": 33,
+      "playoff": 48,
+      "permanencia": 19,
+      "descenso": 0
+    },
+    "24": {
+      "ascenso": 42,
+      "playoff": 53,
+      "permanencia": 5,
+      "descenso": 0
+    },
+    "25": {
+      "ascenso": 48,
+      "playoff": 45,
+      "permanencia": 7,
+      "descenso": 0
+    },
+    "26": {
+      "ascenso": 42,
+      "playoff": 53,
+      "permanencia": 5,
+      "descenso": 0
+    },
+    "27": {
+      "ascenso": 30,
+      "playoff": 57,
+      "permanencia": 13,
+      "descenso": 0
+    },
+    "28": {
+      "ascenso": 15,
+      "playoff": 67,
+      "permanencia": 18,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 15,
+      "playoff": 68,
+      "permanencia": 17,
+      "descenso": 0
+    },
+    "30": {
+      "ascenso": 4,
+      "playoff": 55,
+      "permanencia": 41,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 4,
+      "playoff": 65,
+      "permanencia": 31,
+      "descenso": 0
+    },
+    "32": {
+      "ascenso": 12,
+      "playoff": 68,
+      "permanencia": 20,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 14,
+      "playoff": 70,
+      "permanencia": 16,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 14,
+      "playoff": 65,
+      "permanencia": 21,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 11,
+      "playoff": 81,
+      "permanencia": 8,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 19,
+      "playoff": 78,
+      "permanencia": 3,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 2,
+      "playoff": 84,
+      "permanencia": 14,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 2,
+      "playoff": 84,
+      "permanencia": 14,
+      "descenso": 0
+    }
+  },
+  "Granada": {
+    "0": {
+      "ascenso": 22,
+      "playoff": 39,
+      "permanencia": 38,
+      "descenso": 1
+    },
+    "1": {
+      "ascenso": 16,
+      "playoff": 30,
+      "permanencia": 53,
+      "descenso": 1
+    },
+    "2": {
+      "ascenso": 12,
+      "playoff": 26,
+      "permanencia": 60,
+      "descenso": 2
+    },
+    "3": {
+      "ascenso": 9,
+      "playoff": 24,
+      "permanencia": 65,
+      "descenso": 2
+    },
+    "4": {
+      "ascenso": 6,
+      "playoff": 24,
+      "permanencia": 66,
+      "descenso": 4
+    },
+    "5": {
+      "ascenso": 3,
       "playoff": 11,
-      "permanencia": 86,
+      "permanencia": 76,
+      "descenso": 10
+    },
+    "6": {
+      "ascenso": 4,
+      "playoff": 20,
+      "permanencia": 70,
+      "descenso": 6
+    },
+    "7": {
+      "ascenso": 7,
+      "playoff": 25,
+      "permanencia": 63,
+      "descenso": 5
+    },
+    "8": {
+      "ascenso": 9,
+      "playoff": 21,
+      "permanencia": 64,
+      "descenso": 6
+    },
+    "9": {
+      "ascenso": 5,
+      "playoff": 23,
+      "permanencia": 68,
+      "descenso": 4
+    },
+    "10": {
+      "ascenso": 3,
+      "playoff": 19,
+      "permanencia": 69,
+      "descenso": 9
+    },
+    "11": {
+      "ascenso": 1,
+      "playoff": 16,
+      "permanencia": 78,
+      "descenso": 5
+    },
+    "12": {
+      "ascenso": 1,
+      "playoff": 17,
+      "permanencia": 77,
+      "descenso": 5
+    },
+    "13": {
+      "ascenso": 3,
+      "playoff": 26,
+      "permanencia": 64,
+      "descenso": 7
+    },
+    "14": {
+      "ascenso": 1,
+      "playoff": 16,
+      "permanencia": 75,
+      "descenso": 8
+    },
+    "15": {
+      "ascenso": 1,
+      "playoff": 23,
+      "permanencia": 70,
+      "descenso": 6
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 15,
+      "permanencia": 79,
+      "descenso": 6
+    },
+    "17": {
+      "ascenso": 1,
+      "playoff": 14,
+      "permanencia": 76,
+      "descenso": 9
+    },
+    "18": {
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 79,
+      "descenso": 9
+    },
+    "19": {
+      "ascenso": 0,
+      "playoff": 7,
+      "permanencia": 81,
+      "descenso": 12
+    },
+    "20": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 79,
+      "descenso": 18
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 78,
+      "descenso": 20
+    },
+    "22": {
+      "ascenso": 1,
+      "playoff": 6,
+      "permanencia": 82,
+      "descenso": 11
+    },
+    "23": {
+      "ascenso": 1,
+      "playoff": 8,
+      "permanencia": 88,
       "descenso": 3
     },
     "24": {
       "ascenso": 0,
-      "playoff": 12,
-      "permanencia": 87,
-      "descenso": 1
+      "playoff": 3,
+      "permanencia": 89,
+      "descenso": 8
     },
     "25": {
-      "ascenso": 0,
-      "playoff": 10,
-      "permanencia": 88,
+      "ascenso": 1,
+      "playoff": 6,
+      "permanencia": 91,
       "descenso": 2
     },
     "26": {
-      "ascenso": 1,
-      "playoff": 11,
-      "permanencia": 86,
-      "descenso": 2
+      "ascenso": 0,
+      "playoff": 8,
+      "permanencia": 84,
+      "descenso": 8
     },
     "27": {
       "ascenso": 0,
-      "playoff": 9,
-      "permanencia": 89,
-      "descenso": 2
+      "playoff": 1,
+      "permanencia": 87,
+      "descenso": 12
     },
     "28": {
-      "ascenso": 1,
-      "playoff": 8,
-      "permanencia": 88,
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 95,
       "descenso": 3
     },
     "29": {
       "ascenso": 0,
-      "playoff": 8,
-      "permanencia": 90,
-      "descenso": 2
+      "playoff": 1,
+      "permanencia": 92,
+      "descenso": 7
     },
     "30": {
       "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 89,
-      "descenso": 4
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
     },
     "31": {
-      "ascenso": 1,
-      "playoff": 3,
-      "permanencia": 91,
-      "descenso": 5
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
     },
     "32": {
       "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 92,
-      "descenso": 3
+      "playoff": 1,
+      "permanencia": 98,
+      "descenso": 1
     },
     "33": {
       "ascenso": 0,
-      "playoff": 5,
-      "permanencia": 92,
-      "descenso": 3
+      "playoff": 0,
+      "permanencia": 99,
+      "descenso": 1
     },
     "34": {
       "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 95,
-      "descenso": 2
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
     },
     "35": {
       "ascenso": 0,
-      "playoff": 4,
-      "permanencia": 93,
-      "descenso": 3
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
     },
     "36": {
       "ascenso": 0,
-      "playoff": 2,
-      "permanencia": 94,
-      "descenso": 4
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
     },
     "37": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 100,
       "descenso": 0
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
     }
   },
-  "Valladolid": {
+  "Ceuta": {
     "0": {
-      "ascenso": 61,
-      "playoff": 29,
-      "permanencia": 8,
-      "descenso": 2
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 27,
+      "descenso": 71
     },
     "1": {
-      "ascenso": 84,
-      "playoff": 13,
-      "permanencia": 3,
-      "descenso": 0
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 28,
+      "descenso": 71
     },
     "2": {
-      "ascenso": 21,
-      "playoff": 56,
-      "permanencia": 22,
-      "descenso": 1
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 18,
+      "descenso": 82
     },
     "3": {
-      "ascenso": 20,
-      "playoff": 60,
-      "permanencia": 18,
-      "descenso": 2
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 27,
+      "descenso": 72
     },
     "4": {
-      "ascenso": 24,
-      "playoff": 62,
-      "permanencia": 14,
-      "descenso": 0
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 36,
+      "descenso": 64
     },
     "5": {
-      "ascenso": 9,
-      "playoff": 71,
-      "permanencia": 18,
-      "descenso": 2
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 47,
+      "descenso": 53
     },
     "6": {
-      "ascenso": 1,
-      "playoff": 15,
-      "permanencia": 80,
-      "descenso": 4
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 38,
+      "descenso": 60
     },
     "7": {
-      "ascenso": 0,
-      "playoff": 20,
-      "permanencia": 76,
-      "descenso": 4
+      "ascenso": 1,
+      "playoff": 2,
+      "permanencia": 55,
+      "descenso": 42
     },
     "8": {
-      "ascenso": 11,
-      "playoff": 67,
-      "permanencia": 21,
-      "descenso": 1
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 57,
+      "descenso": 39
     },
     "9": {
-      "ascenso": 0,
-      "playoff": 16,
-      "permanencia": 83,
-      "descenso": 1
+      "ascenso": 2,
+      "playoff": 3,
+      "permanencia": 64,
+      "descenso": 31
     },
     "10": {
-      "ascenso": 4,
-      "playoff": 12,
-      "permanencia": 82,
-      "descenso": 2
+      "ascenso": 1,
+      "playoff": 6,
+      "permanencia": 74,
+      "descenso": 19
     },
     "11": {
-      "ascenso": 3,
-      "playoff": 16,
-      "permanencia": 76,
-      "descenso": 5
+      "ascenso": 1,
+      "playoff": 4,
+      "permanencia": 74,
+      "descenso": 21
     },
     "12": {
-      "ascenso": 2,
-      "playoff": 16,
-      "permanencia": 77,
-      "descenso": 5
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 68,
+      "descenso": 28
     },
     "13": {
       "ascenso": 0,
-      "playoff": 13,
-      "permanencia": 82,
-      "descenso": 5
+      "playoff": 4,
+      "permanencia": 62,
+      "descenso": 34
     },
     "14": {
-      "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 84,
-      "descenso": 9
+      "ascenso": 1,
+      "playoff": 2,
+      "permanencia": 63,
+      "descenso": 34
     },
     "15": {
-      "ascenso": 0,
-      "playoff": 3,
-      "permanencia": 90,
-      "descenso": 7
+      "ascenso": 1,
+      "playoff": 11,
+      "permanencia": 71,
+      "descenso": 17
     },
     "16": {
       "ascenso": 0,
-      "playoff": 15,
-      "permanencia": 82,
-      "descenso": 3
+      "playoff": 5,
+      "permanencia": 76,
+      "descenso": 19
     },
     "17": {
       "ascenso": 0,
-      "playoff": 7,
-      "permanencia": 88,
-      "descenso": 5
+      "playoff": 5,
+      "permanencia": 78,
+      "descenso": 17
     },
     "18": {
       "ascenso": 1,
-      "playoff": 2,
-      "permanencia": 92,
-      "descenso": 5
+      "playoff": 17,
+      "permanencia": 70,
+      "descenso": 12
     },
     "19": {
+      "ascenso": 1,
+      "playoff": 16,
+      "permanencia": 78,
+      "descenso": 5
+    },
+    "20": {
       "ascenso": 2,
-      "playoff": 7,
-      "permanencia": 87,
+      "playoff": 13,
+      "permanencia": 81,
       "descenso": 4
+    },
+    "21": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 80,
+      "descenso": 15
+    },
+    "22": {
+      "ascenso": 0,
+      "playoff": 6,
+      "permanencia": 86,
+      "descenso": 8
+    },
+    "23": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 89,
+      "descenso": 8
+    },
+    "24": {
+      "ascenso": 1,
+      "playoff": 12,
+      "permanencia": 86,
+      "descenso": 1
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 86,
+      "descenso": 9
+    },
+    "26": {
+      "ascenso": 0,
+      "playoff": 7,
+      "permanencia": 89,
+      "descenso": 4
+    },
+    "27": {
+      "ascenso": 1,
+      "playoff": 21,
+      "permanencia": 77,
+      "descenso": 1
+    },
+    "28": {
+      "ascenso": 1,
+      "playoff": 12,
+      "permanencia": 87,
+      "descenso": 0
+    },
+    "29": {
+      "ascenso": 1,
+      "playoff": 5,
+      "permanencia": 93,
+      "descenso": 1
+    },
+    "30": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 96,
+      "descenso": 0
+    },
+    "31": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 95,
+      "descenso": 1
+    },
+    "32": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 96,
+      "descenso": 0
+    },
+    "33": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 99,
+      "descenso": 0
+    },
+    "34": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "35": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "36": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "37": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 100,
+      "descenso": 0
+    }
+  },
+  "Cultural Leonesa": {
+    "0": {
+      "ascenso": 1,
+      "playoff": 0,
+      "permanencia": 23,
+      "descenso": 76
+    },
+    "1": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 13,
+      "descenso": 87
+    },
+    "2": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 14,
+      "descenso": 86
+    },
+    "3": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 10,
+      "descenso": 90
+    },
+    "4": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 24,
+      "descenso": 76
+    },
+    "5": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 20,
+      "descenso": 80
+    },
+    "6": {
+      "ascenso": 1,
+      "playoff": 0,
+      "permanencia": 24,
+      "descenso": 75
+    },
+    "7": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 25,
+      "descenso": 75
+    },
+    "8": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 32,
+      "descenso": 68
+    },
+    "9": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 38,
+      "descenso": 60
+    },
+    "10": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 32,
+      "descenso": 67
+    },
+    "11": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 40,
+      "descenso": 60
+    },
+    "12": {
+      "ascenso": 0,
+      "playoff": 3,
+      "permanencia": 60,
+      "descenso": 37
+    },
+    "13": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 50,
+      "descenso": 50
+    },
+    "14": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 65,
+      "descenso": 33
+    },
+    "15": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 59,
+      "descenso": 40
+    },
+    "16": {
+      "ascenso": 0,
+      "playoff": 4,
+      "permanencia": 75,
+      "descenso": 21
+    },
+    "17": {
+      "ascenso": 0,
+      "playoff": 5,
+      "permanencia": 62,
+      "descenso": 33
+    },
+    "18": {
+      "ascenso": 0,
+      "playoff": 2,
+      "permanencia": 62,
+      "descenso": 36
+    },
+    "19": {
+      "ascenso": 0,
+      "playoff": 1,
+      "permanencia": 60,
+      "descenso": 39
     },
     "20": {
       "ascenso": 0,
       "playoff": 1,
-      "permanencia": 82,
-      "descenso": 17
+      "permanencia": 59,
+      "descenso": 40
     },
     "21": {
       "ascenso": 0,
-      "playoff": 6,
-      "permanencia": 89,
-      "descenso": 5
+      "playoff": 0,
+      "permanencia": 52,
+      "descenso": 48
     },
     "22": {
-      "ascenso": 1,
+      "ascenso": 0,
       "playoff": 0,
-      "permanencia": 87,
-      "descenso": 12
+      "permanencia": 45,
+      "descenso": 55
     },
     "23": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 75,
-      "descenso": 25
+      "permanencia": 30,
+      "descenso": 70
     },
     "24": {
-      "ascenso": 1,
-      "playoff": 1,
-      "permanencia": 31,
-      "descenso": 67
-    },
-    "25": {
       "ascenso": 0,
       "playoff": 0,
       "permanencia": 21,
       "descenso": 79
+    },
+    "25": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 19,
+      "descenso": 81
     },
     "26": {
       "ascenso": 0,
@@ -4995,68 +5121,74 @@
     "27": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 81,
-      "descenso": 19
+      "permanencia": 17,
+      "descenso": 83
     },
     "28": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 77,
-      "descenso": 23
+      "permanencia": 13,
+      "descenso": 87
     },
     "29": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 82,
-      "descenso": 17
+      "playoff": 0,
+      "permanencia": 3,
+      "descenso": 97
     },
     "30": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 81,
-      "descenso": 19
+      "permanencia": 8,
+      "descenso": 92
     },
     "31": {
-      "ascenso": 1,
+      "ascenso": 0,
       "playoff": 0,
-      "permanencia": 81,
-      "descenso": 18
+      "permanencia": 5,
+      "descenso": 95
     },
     "32": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 85,
-      "descenso": 15
+      "permanencia": 2,
+      "descenso": 98
     },
     "33": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 87,
-      "descenso": 13
+      "permanencia": 11,
+      "descenso": 89
     },
     "34": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 88,
-      "descenso": 11
+      "playoff": 0,
+      "permanencia": 8,
+      "descenso": 92
     },
     "35": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 87,
-      "descenso": 12
+      "playoff": 0,
+      "permanencia": 3,
+      "descenso": 97
     },
     "36": {
       "ascenso": 0,
-      "playoff": 1,
-      "permanencia": 88,
-      "descenso": 11
+      "playoff": 0,
+      "permanencia": 2,
+      "descenso": 98
     },
     "37": {
       "ascenso": 0,
       "playoff": 0,
-      "permanencia": 98,
-      "descenso": 2
+      "permanencia": 1,
+      "descenso": 99
+    },
+    "38": {
+      "ascenso": 0,
+      "playoff": 0,
+      "permanencia": 1,
+      "descenso": 99
     }
   }
 }

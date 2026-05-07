@@ -74,6 +74,9 @@ BS_MAP = {
 }
 
 URL = 'https://es.besoccer.com/competicion/clasificacion/segunda/prediction'
+AJAX_URL = 'https://es.besoccer.com/ajax/reloadTable'
+# Parámetros fijos del data-* del HTML de BeSoccer (Segunda División 2025/26)
+AJAX_PARAMS = 'type=competition&itemId=2&competitionId=2&year=2026&group=1'
 
 
 def fetch_html(url):
@@ -82,48 +85,44 @@ def fetch_html(url):
         return resp.read().decode('utf-8', errors='ignore')
 
 
+def fetch_round_ajax(round_num):
+    """Obtiene el HTML de la tabla de predicciones para una jornada específica via AJAX."""
+    url = f'{AJAX_URL}?{AJAX_PARAMS}&round={round_num}'
+    req = urllib.request.Request(url, headers={**HEADERS, 'Accept': 'application/json'})
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        data = json.loads(resp.read().decode('utf-8', errors='ignore'))
+    return data.get('table', '')
+
+
 def parse_percent(cell_html):
     """Extrae el número entero de un <td> de predicción. Devuelve 0 si vacío."""
     m = re.search(r'(\d+)\s*%', cell_html)
     return int(m.group(1)) if m else 0
 
 
-def parse_besoccer_round(html):
-    """Extrae el número de jornada actualmente seleccionada en el dropdown de BeSoccer."""
-    m = re.search(r'<option[^>]+value="(\d+)"[^>]*selected[^>]*>', html)
+def get_current_round():
+    """Lee data-round del HTML principal de BeSoccer (jornada activa/próxima)."""
+    html = fetch_html(URL)
+    # data-round en el div classificationTables
+    m = re.search(r'id="classificationTables"[^>]*data-round="(\d+)"', html)
     if m:
         return int(m.group(1))
-    # Fallback: última opción disponible
+    # Fallback: último option del dropdown de jornadas
     rounds = re.findall(r'<option[^>]+value="(\d+)"', html)
     return int(rounds[-1]) if rounds else None
 
 
-def scrape_predictions():
-    html = fetch_html(URL)
-
-    # Jornada que BeSoccer tiene seleccionada en su dropdown
-    besoccer_round = parse_besoccer_round(html)
-    print(f"  BeSoccer jornada seleccionada: {besoccer_round}")
-
-    # Localizar el bloque de predicciones
-    m = re.search(r'id="tab_predictions\d+"[^>]*>(.*)', html, re.DOTALL)
-    if not m:
-        raise ValueError("No se encontró el bloque tab_predictions en la página")
-    pred_html = m.group(1)
-
-    # Extraer filas <tr>
-    rows = re.findall(r'<tr[^>]*>(.*?)</tr>', pred_html, re.DOTALL)
-
+def parse_predictions_html(table_html):
+    """Parsea la tabla HTML de predicciones y devuelve dict {equipo: {ascenso,playoff,permanencia,descenso}}."""
+    rows = re.findall(r'<tr[^>]*>(.*?)</tr>', table_html, re.DOTALL)
     results = {}
     for row in rows:
-        # Nombre completo (name-desktop)
         name_m = re.search(r'class="team-name name-desktop">([^<]+)<', row)
         if not name_m:
             continue
         bs_name = name_m.group(1).strip()
         internal_name = BS_MAP.get(bs_name)
         if not internal_name:
-            # Intentar limpiar acentos manualmente
             for k, v in BS_MAP.items():
                 if k.lower() == bs_name.lower():
                     internal_name = v
@@ -132,24 +131,31 @@ def scrape_predictions():
             print(f"  [WARN] Nombre no mapeado: '{bs_name}'")
             internal_name = bs_name
 
-        # Las 4 celdas de predicción (td-bg br-right) en orden: Ascenso, Playoff, Permanencia, Descenso
         cells = re.findall(r'<td class="td-bg br-right"[^>]*>(.*?)</td>', row, re.DOTALL)
         if len(cells) < 4:
-            # Algunas filas tienen menos; rellenar con 0
             cells = cells + [''] * (4 - len(cells))
 
-        ascenso    = parse_percent(cells[0])
-        playoff    = parse_percent(cells[1])
-        permanencia = parse_percent(cells[2])
-        descenso   = parse_percent(cells[3])
-
         results[internal_name] = {
-            'ascenso':     ascenso,
-            'playoff':     playoff,
-            'permanencia': permanencia,
-            'descenso':    descenso,
+            'ascenso':      parse_percent(cells[0]),
+            'playoff':      parse_percent(cells[1]),
+            'permanencia':  parse_percent(cells[2]),
+            'descenso':     parse_percent(cells[3]),
         }
-        print(f"  {internal_name}: ascenso={ascenso} playoff={playoff} permanencia={permanencia} descenso={descenso}")
+        print(f"  {internal_name}: ascenso={results[internal_name]['ascenso']} playoff={results[internal_name]['playoff']} permanencia={results[internal_name]['permanencia']} descenso={results[internal_name]['descenso']}")
+    return results
+
+
+def scrape_predictions():
+    # Obtener la jornada actual de BeSoccer
+    besoccer_round = get_current_round()
+    print(f"  BeSoccer jornada activa: {besoccer_round}")
+
+    # Descargar predicciones vía AJAX para esa jornada
+    table_html = fetch_round_ajax(besoccer_round)
+    if not table_html:
+        raise ValueError("No se obtuvo tabla del endpoint AJAX")
+
+    results = parse_predictions_html(table_html)
 
     return results, besoccer_round
 
