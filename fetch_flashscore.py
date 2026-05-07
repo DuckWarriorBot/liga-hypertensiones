@@ -410,11 +410,13 @@ def scrape_fixtures(page):
 
 # ── Actualizadores de datos ──────────────────────────────────────────────────
 
-def update_scores(liga, scores, result_list):
+def update_scores(liga, scores, result_list, rdb=None):
     """
     Actualiza scores_data.json con los resultados scrapeados.
+    Si se pasa rdb (results_db), los resultados locked no se sobreescriben.
     Retorna número de entradas actualizadas.
     """
+    import results_db as _rdb_mod
     updated = 0
     for m in result_list:
         home, away = m['home'], m['away']
@@ -426,6 +428,18 @@ def update_scores(liga, scores, result_list):
             idx = find_idx(liga, home, away)
         if idx is None:
             continue
+
+        # ── BD persistente ────────────────────────────────────────────────
+        if rdb is not None:
+            locked = _rdb_mod.get_locked(rdb, home, away, idx)
+            if locked:
+                # Resultado ya confirmado por ambas fuentes: usar el locked
+                hg_l, ag_l = map(int, locked[0].split('-'))
+                hg, ag = hg_l, ag_l
+            else:
+                res_h = 'V' if hg > ag else ('E' if hg == ag else 'D')
+                _rdb_mod.confirm_source(rdb, 'flashscore', home, away, idx,
+                                        f'{hg}-{ag}', f'{ag}-{hg}', res_h)
 
         idx_str = str(idx)
         # Home team: score gf-ga, venue H
@@ -499,6 +513,15 @@ def main():
     scores.setdefault('scores_by_team', {})
     scores.setdefault('venue_by_team', {})
 
+    # ── Cargar BD de resultados persistentes ─────────────────────────────
+    try:
+        import results_db as _rdb_mod
+        rdb = _rdb_mod.load()
+    except Exception as _e:
+        print(f'  ⚠ results_db no disponible: {_e}')
+        rdb = None
+        _rdb_mod = None
+
     with sync_playwright() as pw:
         browser, page = make_page(pw)
         try:
@@ -508,13 +531,23 @@ def main():
         finally:
             browser.close()
 
-    n_scores = update_scores(liga, scores, result_list)
+    n_scores = update_scores(liga, scores, result_list, rdb)
     n_fix    = update_fixtures(liga, fixture_list)
     n_live   = update_live_scores(scores, live_list)
 
     print(f'  Scores actualizados/añadidos  : {n_scores}', flush=True)
     print(f'  Fixtures actualizados/añadidos: {n_fix}', flush=True)
     print(f'  Partidos en vivo              : {n_live}', flush=True)
+
+    # ── Restaurar resultados locked + guardar BD ──────────────────────────
+    if rdb is not None and _rdb_mod is not None:
+        try:
+            _rdb_mod.apply_locked_to_scores(rdb, scores, liga)
+            _rdb_mod.save(rdb)
+            locked_count = sum(1 for v in rdb['locked'].values() if v.get('locked'))
+            print(f'  Resultados locked en BD       : {locked_count}', flush=True)
+        except Exception as _e:
+            print(f'  ⚠ results_db save error: {_e}')
 
     SCORES_F.write_text(json.dumps(scores, ensure_ascii=False, indent=2), encoding='utf-8')
     LIGA_F.write_text(json.dumps(liga, ensure_ascii=False, indent=2), encoding='utf-8')

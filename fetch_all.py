@@ -439,6 +439,19 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
 
         situacion_by_team[t['name']] = sit
 
+    # ── h2h_data: resultados directos (perspectiva del equipo local) ──────────
+    h2h_data = {}  # {home: {away: {'score': 'hg-ag', 'res': 'V/E/D'}}}
+    for r_idx, rnd in enumerate(rounds):
+        for m in rnd:
+            if not m['played']:
+                continue
+            home_m, away_m = m['home'], m['away']
+            hg_m, ag_m = map(int, m['score'].split('-'))
+            res_m = 'V' if hg_m > ag_m else ('E' if hg_m == ag_m else 'D')
+            h2h_data.setdefault(home_m, {})[away_m] = {
+                'score': f'{hg_m}-{ag_m}', 'res': res_m
+            }
+
     # ── opponents_by_team ─────────────────────────────────────────────────────
     opponents_by_team = {t: [None] * total_season_rounds for t in teams}
     for r_idx, rnd in enumerate(rounds):
@@ -492,6 +505,7 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
         'opponents_by_team':   opponents_by_team,
         'fixtures':            fixtures,
         'match_days':          match_days,
+        'h2h_data':            h2h_data,
     }
 
     return liga_data, dict(scores_data)
@@ -611,6 +625,28 @@ def main():
     # Paso 3: Computar datos y guardar JSONs
     print('\n[3/4] Computando datos del sistema ...')
     liga_data, scores_data = compute_data(rounds, TOTAL_SEASON_ROUNDS, extra_stats)
+
+    # ── BD de resultados persistentes ────────────────────────────────────────
+    try:
+        import results_db as _rdb
+        _db = _rdb.load()
+
+        # 1) Confirmar todos los resultados de Marca en la BD
+        for r_idx, rnd in enumerate(rounds):
+            for m in rnd:
+                if not m['played']:
+                    continue
+                hm, am = m['home'], m['away']
+                hg_r, ag_r = map(int, m['score'].split('-'))
+                res_r = 'V' if hg_r > ag_r else ('E' if hg_r == ag_r else 'D')
+                _rdb.confirm_source(_db, 'marca', hm, am, r_idx,
+                                    f'{hg_r}-{ag_r}', f'{ag_r}-{hg_r}', res_r)
+
+        # 2) Restaurar cualquier resultado locked que Marca haya scrapeado mal
+        _rdb.apply_locked_to_scores(_db, scores_data, liga_data)
+        _rdb.save(_db)
+    except Exception as _e:
+        print(f'  ⚠ results_db error (no crítico): {_e}')
 
     out_dir = os.path.dirname(os.path.abspath(__file__))
     liga_path   = os.path.join(out_dir, 'liga_data.json')

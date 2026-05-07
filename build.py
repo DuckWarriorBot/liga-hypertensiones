@@ -305,6 +305,10 @@ header {{
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow);
+}}
+.header-inner {{
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
 }}
@@ -400,7 +404,9 @@ nav {{
   gap: 2px;
   padding: 0 16px;
   overflow-x: auto;
+  scrollbar-width: none;
 }}
+nav::-webkit-scrollbar {{ display: none; }}
 nav button {{
   background: none;
   border: none;
@@ -1255,9 +1261,9 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 .mt-20 {{ margin-top: 20px; }}
 .gap-section {{ display: flex; flex-direction: column; gap: 20px; }}
 
-/* ===== HEATMAP & H2H ===== */
-#heatmapGrid table, #h2hGrid table {{ border-collapse: collapse; }}
-#heatmapGrid td, #h2hGrid td {{ border: 1px solid #0a0a0a; }}
+/* ===== H2H ===== */
+#h2hGrid table {{ border-collapse: collapse; }}
+#h2hGrid td {{ border: 1px solid #0a0a0a; }}
 
 /* ===== STATUS BAR (inline en header-meta) ===== */
 .status-bar {{
@@ -1426,6 +1432,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 
 <!-- HEADER UNIFICADO (sticky) -->
 <header>
+  <div class="header-inner">
   <div class="header-top">
     <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleNav()" aria-label="Menú">
       <span></span><span></span><span></span>
@@ -1459,6 +1466,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
     <button data-tab="analisis" onclick="switchTab('analisis')">📊 Análisis</button>
   </nav>
+  </div>
 </header>
 
 <!-- LIVE MATCH BAR -->
@@ -1655,12 +1663,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
       <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Puntos obtenidos como local y como visitante · ordenados por total de puntos</div>
       <div class="chart-container" style="height:480px"><canvas id="localVisitanteChart"></canvas></div>
     </div>
-    <!-- Mapa de resultados -->
-    <div class="card">
-      <div class="card-title">🗓 Mapa de resultados</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Jornadas 1→{total_rounds} · <span style="color:#22c55e;font-weight:700">■</span> Victoria &nbsp; <span style="color:#f59e0b;font-weight:700">■</span> Empate &nbsp; <span style="color:#ef4444;font-weight:700">■</span> Derrota · equipos ordenados por clasificación final</div>
-      <div id="heatmapGrid" style="overflow-x:auto"></div>
-    </div>
+
     <!-- Head-to-head matrix -->
     <div class="card">
       <div class="card-title">⚔️ Resultados directos (todos vs todos)</div>
@@ -2602,7 +2605,6 @@ function initAnalysisTab() {{
   renderRanking(rankingMode);
   renderScenarios();
   buildLocalVisitanteChart();
-  if (!document.getElementById('heatmapGrid').hasChildNodes()) renderHeatmap();
   if (!document.getElementById('h2hGrid').hasChildNodes()) renderH2H();
 }}
 
@@ -2761,17 +2763,28 @@ function buildLocalVisitanteChart() {{
   const awayPts   = standings.map(t => TEAM_EXTRA_STATS[t.name]?.away_pts||0);
   const homeGF    = standings.map(t => TEAM_EXTRA_STATS[t.name]?.home_gf||0);
   const awayGF    = standings.map(t => TEAM_EXTRA_STATS[t.name]?.away_gf||0);
+  const _glowPlugin = {{
+    id: 'glowBars',
+    beforeDatasetDraw(chart, args) {{
+      const col = chart.data.datasets[args.index].borderColor;
+      chart.ctx.save();
+      chart.ctx.shadowColor = col;
+      chart.ctx.shadowBlur = 18;
+    }},
+    afterDatasetDraw(chart) {{ chart.ctx.restore(); }}
+  }};
   localVisitanteChart = new Chart(ctx.getContext('2d'), {{
     type: 'bar',
     data: {{
       labels,
       datasets: [
-        {{ label: '🏠 Pts Local',    data: homePts, backgroundColor: '#22c55e99', borderColor: '#22c55e', borderWidth: 1 }},
-        {{ label: '✈️ Pts Visitante', data: awayPts, backgroundColor: '#60a5fa99', borderColor: '#60a5fa', borderWidth: 1 }},
-        {{ label: '🏠 GF Local',     data: homeGF,  backgroundColor: '#4ade8044', borderColor: '#4ade80', borderWidth: 1, borderDash: [4,2] }},
-        {{ label: '✈️ GF Visitante',  data: awayGF,  backgroundColor: '#93c5fd44', borderColor: '#93c5fd', borderWidth: 1, borderDash: [4,2] }},
+        {{ label: '🏠 Pts Local',    data: homePts, backgroundColor: '#39FF1455', borderColor: '#39FF14', borderWidth: 2 }},
+        {{ label: '✈️ Pts Visitante', data: awayPts, backgroundColor: '#00F5FF55', borderColor: '#00F5FF', borderWidth: 2 }},
+        {{ label: '🏠 GF Local',     data: homeGF,  backgroundColor: '#FF00FF33', borderColor: '#FF00FF', borderWidth: 2 }},
+        {{ label: '✈️ GF Visitante',  data: awayGF,  backgroundColor: '#FFE00033', borderColor: '#FFE000', borderWidth: 2 }},
       ]
     }},
+    plugins: [_glowPlugin],
     options: {{
       responsive: true,
       maintainAspectRatio: false,
@@ -2788,77 +2801,33 @@ function buildLocalVisitanteChart() {{
   }});
 }}
 
-// ===== HEATMAP DE RESULTADOS =====
-function renderHeatmap() {{
-  const el = document.getElementById('heatmapGrid');
-  if (!el) return;
-  const teams = (LIGA_DATA.final_standings || LIGA_DATA.teams.map(n=>({{name:n}}))).map(t=>t.name);
-  const resMap = LIGA_DATA.results_by_team || {{}};
-  const total  = LIGA_DATA.total_rounds;
-  let html = '<table style="border-collapse:collapse;font-size:9px"><thead><tr>';
-  html += '<th style="min-width:100px;text-align:right;padding-right:6px;font-size:10px;color:var(--muted)">Equipo</th>';
-  for (let r=1; r<=total; r++) {{
-    html += `<th style="width:14px;min-width:14px;text-align:center;font-size:8px;color:var(--muted);padding:0 1px">${{r}}</th>`;
-  }}
-  html += '</tr></thead><tbody>';
-  teams.forEach(team => {{
-    const res = resMap[team] || [];
-    html += `<tr><td style="font-size:10px;color:var(--muted);padding-right:6px;white-space:nowrap;text-align:right;padding-top:1px;padding-bottom:1px">${{team}}</td>`;
-    for (let i=0; i<total; i++) {{
-      const r  = res[i];
-      const bg = r==='V'?'#22c55e':r==='E'?'#f59e0b':r==='D'?'#ef4444':'#2a2a2a';
-      html += `<td style="width:14px;min-width:14px;height:14px;background:${{bg}};border:1px solid #0a0a0a" title="J${{i+1}}: ${{r||'–'}}"></td>`;
-    }}
-    html += '</tr>';
-  }});
-  html += '</tbody></table>';
-  el.innerHTML = html;
-}}
-
 // ===== HEAD-TO-HEAD MATRIX =====
 function renderH2H() {{
   const el = document.getElementById('h2hGrid');
   if (!el) return;
-  const teams  = (LIGA_DATA.final_standings || LIGA_DATA.teams.map(n=>({{name:n}}))).map(t=>t.name);
-  const oppsMap = LIGA_DATA.opponents_by_team || {{}};
-  const resMap  = LIGA_DATA.results_by_team   || {{}};
-  const scMap   = (SCORES_DATA.scores_by_team || {{}});
-  const vnMap   = (SCORES_DATA.venue_by_team  || {{}});
-  // h2h[home][away] = {{ res, score }} para el partido de casa
-  const h2h = {{}};
-  teams.forEach(home => {{
-    h2h[home] = {{}};
-    const opps = oppsMap[home] || [];
-    const res  = resMap[home]  || [];
-    const sc   = scMap[home]   || {{}};
-    const vn   = vnMap[home]   || {{}};
-    teams.forEach(away => {{
-      if (home === away) {{ h2h[home][away] = null; return; }}
-      const idx = opps.findIndex((o,i) => o===away && vn[String(i)]==='H');
-      h2h[home][away] = idx>=0 ? {{ res: res[idx]||'?', score: sc[String(idx)]||'-' }} : {{ res:'?', score:'-' }};
-    }});
-  }});
-  const abbr = n => n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,3);
-  const bg   = r => r==='V'?'rgba(34,197,94,.7)':r==='E'?'rgba(245,158,11,.6)':r==='D'?'rgba(239,68,68,.6)':'var(--card2)';
-  const tc   = r => r==='V'?'#fff':r==='E'?'#111':r==='D'?'#fff':'var(--muted)';
-  let html = '<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#22c55e">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
+  const teams = (LIGA_DATA.final_standings || LIGA_DATA.teams.map(n=>({{name:n}}))).map(t=>t.name);
+  const h2h   = LIGA_DATA.h2h_data || {{}};
+  const abbr  = n => n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,3);
+  const bg    = r => r==='V'?'rgba(57,255,20,.70)':r==='E'?'rgba(245,158,11,.70)':r==='D'?'rgba(239,68,68,.70)':'var(--card2)';
+  const tc    = r => r==='V'?'#0a0a0a':r==='E'?'#0a0a0a':r==='D'?'#fff':'var(--muted)';
+  let html = '<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
   html += '<table style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
   html += '<th style="min-width:95px;text-align:right;padding-right:6px;font-size:9px;color:var(--muted);white-space:nowrap">Local \\ Visitante</th>';
   teams.forEach(t => {{
-    html += `<th style="width:22px;min-width:22px;writing-mode:vertical-lr;transform:rotate(180deg);font-size:8px;color:var(--muted);padding:2px;text-align:center" title="${{t}}">${{abbr(t)}}</th>`;
+    html += `<th style="width:24px;min-width:24px;writing-mode:vertical-lr;transform:rotate(180deg);font-size:8px;color:var(--muted);padding:2px;text-align:center" title="${{t}}">${{abbr(t)}}</th>`;
   }});
   html += '</tr></thead><tbody>';
   teams.forEach(home => {{
-    html += `<tr><td style="font-size:9px;color:var(--muted);padding-right:6px;white-space:nowrap;text-align:right;padding-top:2px;padding-bottom:2px">${{home}}</td>`;
+    html += `<tr><td style="font-size:9px;color:var(--muted);padding-right:8px;white-space:nowrap;text-align:right;padding-top:2px;padding-bottom:2px">${{home}}</td>`;
     teams.forEach(away => {{
-      if (home===away) {{
-        html += '<td style="background:var(--border);width:22px;min-width:22px;height:18px"></td>';
+      if (home === away) {{
+        html += '<td style="background:var(--border);width:24px;min-width:24px;height:20px"></td>';
       }} else {{
-        const cell = h2h[home][away];
-        const r    = cell?.res||'?';
-        const s    = cell?.score||'-';
-        const disp = (s!=='-'&&s!=='?') ? s : '';
-        html += `<td style="background:${{bg(r)}};color:${{tc(r)}};width:22px;min-width:22px;height:18px;text-align:center;font-weight:700;font-size:8px" title="${{home}} vs ${{away}}: ${{s}}">${{disp}}</td>`;
+        const cell = (h2h[home] || {{}})[away];
+        const r    = cell?.res || '?';
+        const s    = cell?.score || '-';
+        const disp = (s !== '-' && s !== '?') ? s : '';
+        html += `<td style="background:${{bg(r)}};color:${{tc(r)}};width:24px;min-width:24px;height:20px;text-align:center;font-weight:700;font-size:8px" title="${{home}} vs ${{away}}: ${{s}}">${{disp}}</td>`;
       }}
     }});
     html += '</tr>';

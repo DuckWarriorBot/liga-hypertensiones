@@ -35,6 +35,28 @@ jobs:
           restore-keys: |
             predictions-history-
 
+      - name: Descargar results_db desde hosting
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_SERVER }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_USER: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASS: ${{ secrets.SFTP_PASSWORD }}
+        run: |
+          python - <<'EOF'
+          import paramiko, os, json
+          try:
+              t = paramiko.Transport((os.environ['SFTP_HOST'], int(os.environ.get('SFTP_PORT', 22))))
+              t.connect(username=os.environ['SFTP_USER'], password=os.environ['SFTP_PASS'])
+              s = paramiko.SFTPClient.from_transport(t)
+              s.get('results_db.json', 'results_db.json')
+              s.close(); t.close()
+              print('OK results_db.json descargado del hosting')
+          except FileNotFoundError:
+              print('results_db.json no existe aún en hosting — iniciando BD vacía')
+          except Exception as e:
+              print(f'No se pudo descargar results_db.json: {e} — iniciando BD vacía')
+          EOF
+
       - name: fetch_all
         run: python fetch_all.py
 
@@ -59,7 +81,7 @@ jobs:
         run: |
           python - <<'EOF'
           import paramiko, os
-          files = ['index.html','version.json','liga_data.json','scores_data.json','predictions.json','predictions_history.json','logo.png']
+          files = ['index.html','version.json','liga_data.json','scores_data.json','predictions.json','predictions_history.json','logo.png','results_db.json']
           t = paramiko.Transport((os.environ['SFTP_HOST'], int(os.environ.get('SFTP_PORT', 22))))
           t.connect(username=os.environ['SFTP_USER'], password=os.environ['SFTP_PASS'])
           s = paramiko.SFTPClient.from_transport(t)
