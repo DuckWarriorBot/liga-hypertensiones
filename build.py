@@ -289,16 +289,17 @@ header {{
   box-shadow: var(--shadow);
 }}
 .logo {{
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, #3d3d3d, #1e1e1e);
-  border: 1px solid #555;
-  border-radius: 50%;
+  height: 52px;
+  width: auto;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
+}}
+.logo img {{
+  height: 52px;
+  width: auto;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 0 6px rgba(57,255,20,.5));
 }}
 header h1 {{
   font-size: 1.3rem;
@@ -1293,17 +1294,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 <!-- HEADER -->
 <header>
   <div class="logo">
-    <svg width="72" height="90" viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" style="display:block">
-      <defs>
-        <filter id="hglow">
-          <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
-          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <path d="M225 30 L315 30 L262 128 L340 128 L185 265 L238 148 L158 148 Z" fill="#39ff14" stroke="#39ff14" stroke-width="4" stroke-linejoin="round" filter="url(#hglow)"/>
-      <text x="250" y="320" font-family="Arial, sans-serif" font-weight="bold" font-size="68" fill="white" text-anchor="middle" letter-spacing="2">LALIGA</text>
-      <text x="250" y="400" font-family="Arial, sans-serif" font-weight="bold" font-size="28" fill="#39ff14" text-anchor="middle" letter-spacing="1">HYPERTENSIONES</text>
-    </svg>
+    <img src="logo.png" alt="Liga Hypertensiones" />
   </div>
   <h1>Liga Hypertensiones 25/26</h1>
   <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>

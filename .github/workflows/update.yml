@@ -56,7 +56,7 @@ jobs:
         run: |
           python - <<'EOF'
           import paramiko, os
-          files = ['index.html','version.json','liga_data.json','scores_data.json','predictions.json','predictions_history.json']
+          files = ['index.html','version.json','liga_data.json','scores_data.json','predictions.json','predictions_history.json','logo.png']
           t = paramiko.Transport((os.environ['SFTP_HOST'], int(os.environ.get('SFTP_PORT', 22))))
           t.connect(username=os.environ['SFTP_USER'], password=os.environ['SFTP_PASS'])
           s = paramiko.SFTPClient.from_transport(t)
