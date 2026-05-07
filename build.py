@@ -1875,6 +1875,11 @@ function getInitials(name) {{
   return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,3);
 }}
 function getColor(name) {{ return TEAM_COLORS[name] || '#6b7280'; }}
+function readable(hex) {{
+  if (!hex || hex.length < 7) return '#f0f0f0';
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return (r*299+g*587+b*114)/1000 < 100 ? '#f0f0f0' : hex;
+}}
 function crestHTML(name, size=28) {{
   const kit     = TEAM_KIT_FULL[name] || {{}};
   const primary   = kit.primary   || getColor(name);
@@ -2776,7 +2781,7 @@ function renderRanking(mode) {{
     }} else {{
       barStyle = `background:linear-gradient(180deg,${{kfPri}} 50%,${{kfSec}} 50%);box-shadow:0 0 0 1.5px ${{kfPri}};box-sizing:border-box;width:${{bar}}%`;
     }}
-    const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : color;
+    const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : readable(color);
     return `<div style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
       <span style="width:18px;text-align:right;font-size:11px;color:var(--muted)">${{i+1}}</span>
       ${{crestHTML(t.name,22)}}
