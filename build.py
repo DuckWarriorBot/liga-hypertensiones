@@ -396,6 +396,89 @@ nav button {{
 nav button:hover {{ color: var(--text); background: rgba(255,255,255,.04); }}
 nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }}
 
+/* ===== HAMBURGER BUTTON ===== */
+.hamburger-btn {{
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+  flex-shrink: 0;
+  transition: border-color .2s;
+}}
+.hamburger-btn:hover {{ border-color: var(--accent); }}
+.hamburger-btn span {{
+  display: block;
+  width: 18px; height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all .25s;
+}}
+.hamburger-btn.open span:nth-child(1) {{ transform: translateY(7px) rotate(45deg); }}
+.hamburger-btn.open span:nth-child(2) {{ opacity: 0; transform: scaleX(0); }}
+.hamburger-btn.open span:nth-child(3) {{ transform: translateY(-7px) rotate(-45deg); }}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 640px) {{
+  .hamburger-btn {{ display: flex; position: absolute; top: 12px; right: 16px; }}
+  header {{ position: sticky; }}
+  .header-top {{
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    padding: 12px 16px 0;
+    position: relative;
+    gap: 0;
+  }}
+  .logo {{
+    margin: 0;
+    justify-content: center;
+  }}
+  .logo img {{
+    width: 230px;
+    padding-top: 8px;
+  }}
+  .header-meta {{
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding-left: 0;
+    padding-top: 10px;
+    padding-bottom: 12px;
+    align-items: center;
+    text-align: center;
+  }}
+  #nextMatchBanner {{ justify-content: center; flex-wrap: wrap; gap: 5px; }}
+  .status-bar {{ justify-content: center; }}
+  .rounds-badge {{ display: none; }}
+  nav {{
+    display: none;
+    flex-direction: column;
+    padding: 4px 0;
+    border-top: 1px solid var(--border);
+  }}
+  nav.nav-open {{ display: flex; }}
+  nav button {{
+    padding: 13px 20px;
+    border-bottom: none;
+    border-left: 3px solid transparent;
+    justify-content: flex-start;
+  }}
+  nav button.active {{
+    border-bottom-color: transparent;
+    border-left-color: var(--accent);
+    background: rgba(0,212,255,.05);
+  }}
+  main {{ padding: 16px 12px; }}
+}}
+
 /* ===== MAIN CONTENT ===== */
 main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 .tab-panel {{ display: none; }}
@@ -1311,6 +1394,9 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 <!-- HEADER UNIFICADO (sticky) -->
 <header>
   <div class="header-top">
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleNav()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
     <div class="logo">
       <img src="logo.png" alt="Liga Hypertensiones" />
     </div>
@@ -1686,10 +1772,22 @@ function switchTab(name) {{
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelector(`[data-tab="${{name}}"]`).classList.add('active');
+  // Cerrar menú hamburguesa al cambiar de tab en móvil
+  const nav = document.getElementById('mainNav');
+  const btn = document.getElementById('hamburgerBtn');
+  if (nav) nav.classList.remove('nav-open');
+  if (btn) btn.classList.remove('open');
   if (name === 'evolucion' && !evolutionChart) initEvolutionChart();
   if (name === 'resultados') renderRoundResults();
   if (name === 'predicciones') renderPredictions();
   if (name === 'analisis') initAnalysisTab();
+}}
+
+function toggleNav() {{
+  const nav = document.getElementById('mainNav');
+  const btn = document.getElementById('hamburgerBtn');
+  nav.classList.toggle('nav-open');
+  btn.classList.toggle('open');
 }}
 
 // ===== HELPERS =====
