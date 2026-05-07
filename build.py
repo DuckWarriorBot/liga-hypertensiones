@@ -1576,7 +1576,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
         <span style="color:var(--muted); font-size:12px" id="roundProgressLabel">de {total_rounds} jugadas · 42 en temporada</span>
       </div>
       <div class="results-grid" id="resultsGrid"></div>
-      <div class="card-legend">Resultados de la jornada seleccionada · <b>local</b> a la izquierda · <b>visitante</b> a la derecha · navega con las flechas o escribe directamente el número de jornada</div>
+      <div class="card-legend">Cada partido muestra: <b>equipo</b> (el de la fila) a la izquierda · <b>rival</b> a la derecha · <b>resultado</b> al centro (goles del equipo – goles del rival) · <b>condición</b> si jugó de local (🏠) o visitante (✈️) · <span style="color:#4ade80">■</span> victoria &nbsp;<span style="color:#fbbf24">■</span> empate &nbsp;<span style="color:#ef4444">■</span> derrota · navega con las flechas o escribe directamente el número de jornada</div>
     </div>
     <div class="card">
       <div class="card-title">📊 Historial completo (V/E/D por equipo)</div>
@@ -1643,7 +1643,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
         <div class="card-title">⚡ Ataque vs Defensa</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">GF (eje X) · GC (eje Y) · líneas = media liga</div>
         <div class="chart-container" style="height:320px"><canvas id="scatterChart"></canvas></div>
-        <div class="card-legend"><b>Eje X</b> Goles a favor (GF) &nbsp;·&nbsp; <b>Eje Y</b> Goles en contra (GC, mayor = peor) &nbsp;·&nbsp; La línea vertical = media de GF de la liga · La línea horizontal = media de GC · <b>Cuadrante superior-izq.</b> buen ataque / mala defensa &nbsp;·&nbsp; <b>inferior-dcha.</b> mal ataque / buena defensa &nbsp;·&nbsp; Pasa el cursor sobre un punto para ver el equipo</div>
+        <div class="card-legend"><b>Eje X</b> Goles a favor (GF) · <b>Eje Y</b> Goles en contra (GC, mayor = peor) · Líneas = media de la liga · <b>🔥 Coladero</b> (arriba-izq) mucho gol a favor pero también encajan muchos · <b>Sólidos 📊</b> (arriba-dcha) buen ataque y buena defensa · <b>🛡 Robustos</b> (abajo-izq) poco gol pero también encajan poco · <b>Killers ⚡</b> (abajo-dcha) marcan mucho y no encajan: el ideal</div>
       </div>
       <div class="card">
         <div class="card-title">🏅 Rankings</div>
@@ -1656,7 +1656,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
           <button class="chart-tab" id="rank-xpts" onclick="switchRanking('xpts')" title="Puntos pitagóricos esperados basados en GF/GC · diferencia con puntos reales = suerte">📐 xPts</button>
         </div>
         <div id="rankingList" style="max-height:290px;overflow-y:auto"></div>
-        <div class="card-legend"><b>Ataque</b> GF por partido &nbsp;·&nbsp; <b>Defensa</b> GC por partido (menos = mejor) &nbsp;·&nbsp; <b>PPG</b> puntos por partido (media general) &nbsp;·&nbsp; <b>Local/Visitante</b> PPG jugando en casa / fuera &nbsp;·&nbsp; <b>xPts</b> puntos pitagóricos = GF²÷(GF²+GC²)×PJ×3 · diferencia con Pts reales indica suerte/mala suerte estadística</div>
+        <div class="card-legend"><b>Ataque</b> GF por partido &nbsp;·&nbsp; <b>Defensa</b> GC por partido (menos = mejor) &nbsp;·&nbsp; <b>PPG</b> puntos por partido (media general) &nbsp;·&nbsp; <b>Local/Visitante</b> PPG jugando en casa / fuera &nbsp;·&nbsp; <b>xPts</b> puntos pitagóricos = GF²÷(GF²+GC²)×PJ×3 · Estima los puntos que “merece” el equipo por sus goles · <b>xPts &gt; Pts reales</b> → infrapuntuado (mala suerte, puede remontar) · <b>xPts &lt; Pts reales</b> → sobrepuntuado (ha tenido suerte, puede bajar)</div>
       </div>
     </div>
     <div class="card">
@@ -2658,10 +2658,10 @@ function buildScatterChart() {{
       c.setLineDash([]);
       c.font = 'bold 9px Segoe UI,system-ui,sans-serif';
       c.fillStyle = 'rgba(148,163,184,.45)';
-      c.textAlign = 'left';  c.fillText('Goleadores', chartArea.left+4, chartArea.top+12);
-      c.textAlign = 'right'; c.fillText('Sólidos', chartArea.right-4, chartArea.top+12);
-      c.textAlign = 'left';  c.fillText('Vulnerables', chartArea.left+4, chartArea.bottom-4);
-      c.textAlign = 'right'; c.fillText('Equilibrados', chartArea.right-4, chartArea.bottom-4);
+      c.textAlign = 'left';  c.fillText('\uD83D\uDD25 Coladero', chartArea.left+4, chartArea.top+12);
+      c.textAlign = 'right'; c.fillText('Sólidos \uD83D\uDCCA', chartArea.right-4, chartArea.top+12);
+      c.textAlign = 'left';  c.fillText('\uD83D\uDEE1 Robustos', chartArea.left+4, chartArea.bottom-4);
+      c.textAlign = 'right'; c.fillText('Killers \u26A1', chartArea.right-4, chartArea.bottom-4);
       c.restore();
     }}
   }};
