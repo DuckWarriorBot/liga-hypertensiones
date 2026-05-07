@@ -3178,6 +3178,48 @@ function renderTeams() {{
   }}).join('');
 }}
 
+// ===== TEAM MODAL: helper para círculos de historial =====
+function buildHistoryDots(name, results) {{
+  var oppArr = (LIGA_DATA.opponents_by_team || {{}})[name] || [];
+  var scMap  = SCORES_DATA.scores_by_team || SCORES_DATA;
+  var venMap = SCORES_DATA.venue_by_team  || {{}};
+  var scArr  = scMap[name]  || {{}};
+  var venArr = venMap[name] || {{}};
+  var total  = LIGA_DATA.total_season_rounds || 42;
+  var played = LIGA_DATA.total_rounds || 0;
+  var html   = '';
+  for (var row = 0; row < Math.ceil(total / 21); row++) {{
+    html += '<div style="display:flex;gap:2px;margin-bottom:2px;">';
+    for (var col = 0; col < 21; col++) {{
+      var i = row * 21 + col;
+      if (i >= total) {{ html += '<div style="width:18px;height:18px;"></div>'; continue; }}
+      var opp   = oppArr[i] || '';
+      var badge = opp ? (TEAM_BADGES[opp] || '') : '';
+      var esc   = opp.replace(/"/g, '&quot;');
+      if (i >= played) {{
+        var inner = badge
+          ? '<img src="' + badge + '" alt="' + esc + '" style="width:14px;height:14px;object-fit:contain;display:block;margin:auto;opacity:.4;">'
+          : '<span style="font-size:7px;color:var(--muted);">' + (opp ? opp.substring(0,3).toUpperCase() : '\u2013') + '</span>';
+        html += '<div title="J' + (i+1) + (opp ? ' \u00b7 vs ' + esc : '') + '" class="cell-future" style="width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;">' + inner + '</div>';
+        continue;
+      }}
+      var r = results[i];
+      if (!r) {{ html += '<div style="width:18px;height:18px;border-radius:3px;background:rgba(255,255,255,.03);"></div>'; continue; }}
+      var score = scArr[String(i)] || '';
+      var venue = venArr[String(i)] || '';
+      var lbl   = r === 'V' ? 'Victoria' : r === 'E' ? 'Empate' : 'Derrota';
+      var vTxt  = venue === 'H' ? ' (Casa)' : venue === 'A' ? ' (Fuera)' : '';
+      var tip   = 'J' + (i+1) + ': ' + lbl + (score ? ' ' + score : '') + (opp ? ' \u00b7 vs ' + esc : '') + vTxt;
+      var inner = badge
+        ? '<img src="' + badge + '" alt="' + esc + '" style="width:14px;height:14px;object-fit:contain;display:block;margin:auto;">'
+        : '<span style="font-size:9px;font-weight:700;">' + r + '</span>';
+      html += '<div title="' + tip + '" class="cell-' + r + '" style="width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;cursor:default;">' + inner + '</div>';
+    }}
+    html += '</div>';
+  }}
+  return html;
+}}
+
 // ===== TEAM MODAL =====
 function openTeamModal(name) {{
   const standings = computeStandings().map((t,i)=>({{...t,pos:i+1}}));
@@ -3234,48 +3276,9 @@ function openTeamModal(name) {{
         </div>
       </div>
     </div>`:''}}`;}})()}}
-    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Historial completo:</div>
-    <div style="margin-bottom:12px;">
-    ${{(()=>{{
-      const oppArr  = (LIGA_DATA.opponents_by_team||{{}})[name] || [];
-      const scMap   = SCORES_DATA.scores_by_team || SCORES_DATA;
-      const venMap  = SCORES_DATA.venue_by_team  || {{}};
-      const scArr   = scMap[name]  || {{}};
-      const venArr  = venMap[name] || {{}};
-      const total   = LIGA_DATA.total_season_rounds || 42;
-      const played  = LIGA_DATA.total_rounds || 0;
-      let rows = '';
-      for(let row=0; row<Math.ceil(total/21); row++){{
-        rows += '<div style="display:flex;gap:3px;margin-bottom:3px;">';
-        for(let col=0;col<21;col++){{
-          const i = row*21+col;
-          if(i>=total){{ rows+='<div style="width:22px;height:22px;"></div>'; continue; }}
-          const opp   = oppArr[i] || '';
-          const badge = opp ? TEAM_BADGES[opp] : null;
-          if(i >= played){{
-            // Jornada futura
-            const inner = badge
-              ? `<img src="${{badge}}" alt="${{opp}}" onerror="this.style.display='none'">`
-              : `<span style="font-size:8px">${{opp?opp.substring(0,3).toUpperCase():'–'}}</span>`;
-            rows+=`<div title="J${{i+1}}${{opp?' · vs '+opp:''}}" class="cell-future" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;">${{inner}}</div>`;
-            continue;
-          }}
-          const r = results[i];
-          if(!r){{ rows+=`<div style="width:22px;height:22px;border-radius:4px;background:rgba(255,255,255,.03);"></div>`; continue; }}
-          const score = scArr[String(i)] || '';
-          const venue = venArr[String(i)] || '';
-          const lbl   = r==='V'?'Victoria':r==='E'?'Empate':'Derrota';
-          const vTxt  = venue==='H'?' (Casa)':venue==='A'?' (Fuera)':'';
-          const tip   = `J${{i+1}}: ${{lbl}}${{score?' '+score:''}}${{opp?' · vs '+opp:''}}${{vTxt}}`;
-          const inner = badge
-            ? `<img src="${{badge}}" alt="${{opp}}" onerror="this.parentNode.innerHTML='<span style=\\'font-size:10px;font-weight:700\\'>${{r}}</span>'">`
-            : `<span style="font-size:10px;font-weight:700">${{r}}</span>`;
-          rows+=`<div title="${{tip}}" class="cell-${{r}}" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:default;">${{inner}}</div>`;
-        }}
-        rows += '</div>';
-      }}
-      return rows;
-    }}())}}
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px;margin-bottom:14px;overflow:hidden;">
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Historial completo</div>
+      <div id="historyDots"></div>
     </div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:10px;">
       <span>Evolución de posición</span>
@@ -3283,6 +3286,8 @@ function openTeamModal(name) {{
     </div>
     <canvas id="miniChart" height="120"></canvas>`;
   document.getElementById('teamModal').classList.add('open');
+  // Rellenar círculos de historial (función separada para no romper el template literal)
+  document.getElementById('historyDots').innerHTML = buildHistoryDots(name, results);
   // mini chart: barras de predicción + línea de posición
   setTimeout(()=>{{
     const ctx = document.getElementById('miniChart').getContext('2d');
