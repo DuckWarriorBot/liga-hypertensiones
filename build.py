@@ -193,7 +193,6 @@ else:
 
 colors_js = json.dumps(TEAM_COLORS)
 badges_js = json.dumps(TEAM_BADGES)
-extra_js = json.dumps(TEAM_EXTRA_STATS)
 predictions_js = json.dumps(TEAM_PREDICTIONS)
 besoccer_map_js = json.dumps(BESOCCER_NAME_MAP)
 kit_js = json.dumps(TEAM_KIT)
@@ -207,9 +206,41 @@ if os.path.exists(_scores_path):
     with open(_scores_path, 'r', encoding='utf-8') as _f:
         _scores_raw = json.load(_f)
     scores_js = json.dumps(_scores_raw, ensure_ascii=False)
+    # Recalcular TEAM_EXTRA_STATS dinámicamente desde scores_data.json
+    _sc_map = _scores_raw.get('scores_by_team', {})
+    _vn_map = _scores_raw.get('venue_by_team', {})
+    _computed = {}
+    for _t in data['teams']:
+        _sc = _sc_map.get(_t, {})
+        _vn = _vn_map.get(_t, {})
+        _gf=_gc=_hp=_hpj=_hpg=_hpe=_hpp=_hgf=_hgc=_ap=_apj=_apg=_ape=_app=_agf=_agc=0
+        for _k, _s in _sc.items():
+            try: _tg, _og = map(int, _s.split('-'))
+            except: continue
+            _gf+=_tg; _gc+=_og
+            _ven = _vn.get(str(_k), '')
+            if _ven == 'H':
+                _hpj+=1; _hgf+=_tg; _hgc+=_og
+                if _tg>_og: _hpg+=1; _hp+=3
+                elif _tg==_og: _hpe+=1; _hp+=1
+                else: _hpp+=1
+            elif _ven == 'A':
+                _apj+=1; _agf+=_tg; _agc+=_og
+                if _tg>_og: _apg+=1; _ap+=3
+                elif _tg==_og: _ape+=1; _ap+=1
+                else: _app+=1
+        _computed[_t] = {
+            'gf':_gf,'gc':_gc,
+            'home_pts':_hp,'home_pj':_hpj,'home_pg':_hpg,'home_pe':_hpe,'home_pp':_hpp,'home_gf':_hgf,'home_gc':_hgc,
+            'away_pts':_ap,'away_pj':_apj,'away_pg':_apg,'away_pe':_ape,'away_pp':_app,'away_gf':_agf,'away_gc':_agc,
+        }
+    if _computed:
+        TEAM_EXTRA_STATS = _computed
+        print(f'[build] TEAM_EXTRA_STATS recalculado dinámicamente ({len(_computed)} equipos)')
 else:
     scores_js = '{"scores_by_team":{}}'
     print('  ⚠ scores_data.json no encontrado – ejecuta fetch_all.py')
+extra_js = json.dumps(TEAM_EXTRA_STATS)
 
 # Predicciones históricas jornada a jornada (generadas por fetch_predictions_history.py)
 _preds_hist_path = os.path.join(os.path.dirname(__file__), 'predictions_history.json')
@@ -1224,6 +1255,10 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 .mt-20 {{ margin-top: 20px; }}
 .gap-section {{ display: flex; flex-direction: column; gap: 20px; }}
 
+/* ===== HEATMAP & H2H ===== */
+#heatmapGrid table, #h2hGrid table {{ border-collapse: collapse; }}
+#heatmapGrid td, #h2hGrid td {{ border: 1px solid #0a0a0a; }}
+
 /* ===== STATUS BAR (inline en header-meta) ===== */
 .status-bar {{
   display: flex;
@@ -1589,6 +1624,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
           <button class="chart-tab" id="rank-ppg" onclick="switchRanking('ppg')">📊 PPG</button>
           <button class="chart-tab" id="rank-home" onclick="switchRanking('home')">🏠 Local</button>
           <button class="chart-tab" id="rank-away" onclick="switchRanking('away')">✈️ Visitante</button>
+          <button class="chart-tab" id="rank-xpts" onclick="switchRanking('xpts')" title="Puntos pitagóricos esperados basados en GF/GC · diferencia con puntos reales = suerte">📐 xPts</button>
         </div>
         <div id="rankingList" style="max-height:290px;overflow-y:auto"></div>
       </div>
@@ -1612,6 +1648,24 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
           <tbody id="scenariosBody"></tbody>
         </table>
       </div>
+    </div>
+    <!-- Local vs Visitante -->
+    <div class="card">
+      <div class="card-title">🏠✈️ Rendimiento Local vs Visitante</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Puntos obtenidos como local y como visitante · ordenados por total de puntos</div>
+      <div class="chart-container" style="height:480px"><canvas id="localVisitanteChart"></canvas></div>
+    </div>
+    <!-- Mapa de resultados -->
+    <div class="card">
+      <div class="card-title">🗓 Mapa de resultados</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Jornadas 1→{total_rounds} · <span style="color:#22c55e;font-weight:700">■</span> Victoria &nbsp; <span style="color:#f59e0b;font-weight:700">■</span> Empate &nbsp; <span style="color:#ef4444;font-weight:700">■</span> Derrota · equipos ordenados por clasificación final</div>
+      <div id="heatmapGrid" style="overflow-x:auto"></div>
+    </div>
+    <!-- Head-to-head matrix -->
+    <div class="card">
+      <div class="card-title">⚔️ Resultados directos (todos vs todos)</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Fila = equipo local · Columna = equipo visitante · marcador del partido de ida (local → visitante)</div>
+      <div id="h2hGrid" style="overflow-x:auto"></div>
     </div>
   </div>
 </div>
@@ -1894,6 +1948,16 @@ function drawStandingsTable() {{
   tbody.innerHTML = standingsData.map(t => {{
     const zone = getZoneClass(t.pos);
     const results = LIGA_DATA.results_by_team[t.name] || [];
+    // Momentum: PPG últimas 5J vs PPG global
+    const recent5 = results.slice(Math.max(0, standingsRound-5), standingsRound);
+    const pts5 = recent5.filter(x=>x==='V').length*3 + recent5.filter(x=>x==='E').length;
+    const ppg5 = recent5.length>0 ? pts5/recent5.length : 0;
+    const ppgAll = parseFloat(t.ppg);
+    const mDiff = ppg5 - ppgAll;
+    const mArrow = recent5.length < 3 ? '' :
+      mDiff > 0.25  ? '<span style="color:#4ade80;font-size:11px;margin-left:3px" title="Tendencia ascendente (PPG\u00fab5J=' + ppg5.toFixed(2) + ')">▲</span>' :
+      mDiff < -0.25 ? '<span style="color:#f87171;font-size:11px;margin-left:3px" title="Tendencia descendente (PPG\u00fab5J=' + ppg5.toFixed(2) + ')">▼</span>' :
+                      '<span style="color:#94a3b8;font-size:11px;margin-left:3px" title="Tendencia estable (PPG\u00fab5J=' + ppg5.toFixed(2) + ')">▬</span>';
     const pct = maxPts > 0 ? (t.pts/maxPts*100).toFixed(1) : 0;
     const color = getColor(t.name);
     const kit = TEAM_KIT[t.name] || color;
@@ -1909,7 +1973,7 @@ function drawStandingsTable() {{
         <div class="team-cell">
           ${{crestHTML(t.name)}}
           <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
-            <span class="team-name-text">${{t.name}}</span>
+            <span class="team-name-text">${{t.name}}</span>${{mArrow}}
             ${{isCurrent ? predMiniBar(t.name) : ''}}
           </div>
         </div>
@@ -2530,12 +2594,16 @@ function setFormMode(n) {{
 
 // ===== ANÁLISIS TAB =====
 let scatterChart = null;
+let localVisitanteChart = null;
 let rankingMode = 'off';
 
 function initAnalysisTab() {{
   buildScatterChart();
   renderRanking(rankingMode);
   renderScenarios();
+  buildLocalVisitanteChart();
+  if (!document.getElementById('heatmapGrid').hasChildNodes()) renderHeatmap();
+  if (!document.getElementById('h2hGrid').hasChildNodes()) renderH2H();
 }}
 
 function buildScatterChart() {{
@@ -2612,19 +2680,23 @@ function switchRanking(mode) {{
 
 function renderRanking(mode) {{
   const standings = computeStandings();
+  const xPtsCalc = t => {{ const d = t.gf*t.gf + t.gc*t.gc || 1; return t.gf*t.gf/d*t.played*3; }};
   let sorted;
   if      (mode === 'off')  sorted = [...standings].sort((a,b)=>b.gf-a.gf||a.gc-b.gc);
   else if (mode === 'def')  sorted = [...standings].sort((a,b)=>a.gc-b.gc||b.gf-a.gf);
   else if (mode === 'ppg')  sorted = [...standings].sort((a,b)=>parseFloat(b.ppg)-parseFloat(a.ppg));
   else if (mode === 'home') sorted = [...standings].sort((a,b)=>(TEAM_EXTRA_STATS[b.name]?.home_pts||0)-(TEAM_EXTRA_STATS[a.name]?.home_pts||0));
-  else                      sorted = [...standings].sort((a,b)=>(TEAM_EXTRA_STATS[b.name]?.away_pts||0)-(TEAM_EXTRA_STATS[a.name]?.away_pts||0));
+  else if (mode === 'away') sorted = [...standings].sort((a,b)=>(TEAM_EXTRA_STATS[b.name]?.away_pts||0)-(TEAM_EXTRA_STATS[a.name]?.away_pts||0));
+  else                      sorted = [...standings].sort((a,b)=>xPtsCalc(b)-xPtsCalc(a));
   const getVal = t => {{
     const ex = TEAM_EXTRA_STATS[t.name]||{{}};
-    if (mode==='off')  return {{ v: t.gf,               lbl: `${{t.gf}} GF`  }};
-    if (mode==='def')  return {{ v: t.gc,               lbl: `${{t.gc}} GC`  }};
-    if (mode==='ppg')  return {{ v: parseFloat(t.ppg),  lbl: `${{t.ppg}}`   }};
-    if (mode==='home') return {{ v: ex.home_pts||0,     lbl: `${{ex.home_pts||0}}pts · ${{ex.home_pg||0}}V${{ex.home_pe||0}}E${{ex.home_pp||0}}D` }};
-    return                    {{ v: ex.away_pts||0,     lbl: `${{ex.away_pts||0}}pts · ${{ex.away_pg||0}}V${{ex.away_pe||0}}E${{ex.away_pp||0}}D` }};
+    if (mode==='off')  return {{ v: t.gf,              lbl: `${{t.gf}} GF`  }};
+    if (mode==='def')  return {{ v: t.gc,              lbl: `${{t.gc}} GC`  }};
+    if (mode==='ppg')  return {{ v: parseFloat(t.ppg), lbl: `${{t.ppg}}`   }};
+    if (mode==='home') return {{ v: ex.home_pts||0,    lbl: `${{ex.home_pts||0}}pts · ${{ex.home_pg||0}}V${{ex.home_pe||0}}E${{ex.home_pp||0}}D` }};
+    if (mode==='away') return {{ v: ex.away_pts||0,    lbl: `${{ex.away_pts||0}}pts · ${{ex.away_pg||0}}V${{ex.away_pe||0}}E${{ex.away_pp||0}}D` }};
+    const xp = xPtsCalc(t); const luck = t.pts - xp;
+    return {{ v: xp, lbl: `${{xp.toFixed(1)}} xPts (${{luck>=0?'+':''}}${{luck.toFixed(1)}})` }};
   }};
   const maxV = Math.max(...sorted.map(t=>getVal(t).v), 1);
   const el = document.getElementById('rankingList');
@@ -2676,6 +2748,123 @@ function renderScenarios() {{
       <td style="font-size:11px">${{canRelegate?'<span style="color:#f87171;font-weight:700">⚠</span>':'<span style="color:#4ade80;font-weight:700">✓</span>'}}</td>
     </tr>`;
   }}).join('');
+}}
+
+// ===== LOCAL VS VISITANTE CHART =====
+function buildLocalVisitanteChart() {{
+  const ctx = document.getElementById('localVisitanteChart');
+  if (!ctx) return;
+  if (localVisitanteChart) localVisitanteChart.destroy();
+  const standings = computeStandings().sort((a,b)=>b.pts-a.pts);
+  const labels    = standings.map(t => t.name);
+  const homePts   = standings.map(t => TEAM_EXTRA_STATS[t.name]?.home_pts||0);
+  const awayPts   = standings.map(t => TEAM_EXTRA_STATS[t.name]?.away_pts||0);
+  const homeGF    = standings.map(t => TEAM_EXTRA_STATS[t.name]?.home_gf||0);
+  const awayGF    = standings.map(t => TEAM_EXTRA_STATS[t.name]?.away_gf||0);
+  localVisitanteChart = new Chart(ctx.getContext('2d'), {{
+    type: 'bar',
+    data: {{
+      labels,
+      datasets: [
+        {{ label: '🏠 Pts Local',    data: homePts, backgroundColor: '#22c55e99', borderColor: '#22c55e', borderWidth: 1 }},
+        {{ label: '✈️ Pts Visitante', data: awayPts, backgroundColor: '#60a5fa99', borderColor: '#60a5fa', borderWidth: 1 }},
+        {{ label: '🏠 GF Local',     data: homeGF,  backgroundColor: '#4ade8044', borderColor: '#4ade80', borderWidth: 1, borderDash: [4,2] }},
+        {{ label: '✈️ GF Visitante',  data: awayGF,  backgroundColor: '#93c5fd44', borderColor: '#93c5fd', borderWidth: 1, borderDash: [4,2] }},
+      ]
+    }},
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {{
+        legend: {{ position: 'top', labels: {{ color: '#94a3b8', boxWidth: 12, font: {{size:11}} }} }},
+        tooltip: {{ callbacks: {{ label: c => ` ${{c.dataset.label}}: ${{c.parsed.x}}` }} }}
+      }},
+      scales: {{
+        x: {{ grid: {{ color: '#2d3f5f44' }}, ticks: {{ color: '#94a3b8' }} }},
+        y: {{ grid: {{ display: false }}, ticks: {{ color: '#94a3b8', font: {{size:10}} }} }}
+      }}
+    }}
+  }});
+}}
+
+// ===== HEATMAP DE RESULTADOS =====
+function renderHeatmap() {{
+  const el = document.getElementById('heatmapGrid');
+  if (!el) return;
+  const teams = (LIGA_DATA.final_standings || LIGA_DATA.teams.map(n=>({{name:n}}))).map(t=>t.name);
+  const resMap = LIGA_DATA.results_by_team || {{}};
+  const total  = LIGA_DATA.total_rounds;
+  let html = '<table style="border-collapse:collapse;font-size:9px"><thead><tr>';
+  html += '<th style="min-width:100px;text-align:right;padding-right:6px;font-size:10px;color:var(--muted)">Equipo</th>';
+  for (let r=1; r<=total; r++) {{
+    html += `<th style="width:14px;min-width:14px;text-align:center;font-size:8px;color:var(--muted);padding:0 1px">${{r}}</th>`;
+  }}
+  html += '</tr></thead><tbody>';
+  teams.forEach(team => {{
+    const res = resMap[team] || [];
+    html += `<tr><td style="font-size:10px;color:var(--muted);padding-right:6px;white-space:nowrap;text-align:right;padding-top:1px;padding-bottom:1px">${{team}}</td>`;
+    for (let i=0; i<total; i++) {{
+      const r  = res[i];
+      const bg = r==='V'?'#22c55e':r==='E'?'#f59e0b':r==='D'?'#ef4444':'#2a2a2a';
+      html += `<td style="width:14px;min-width:14px;height:14px;background:${{bg}};border:1px solid #0a0a0a" title="J${{i+1}}: ${{r||'–'}}"></td>`;
+    }}
+    html += '</tr>';
+  }});
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}}
+
+// ===== HEAD-TO-HEAD MATRIX =====
+function renderH2H() {{
+  const el = document.getElementById('h2hGrid');
+  if (!el) return;
+  const teams  = (LIGA_DATA.final_standings || LIGA_DATA.teams.map(n=>({{name:n}}))).map(t=>t.name);
+  const oppsMap = LIGA_DATA.opponents_by_team || {{}};
+  const resMap  = LIGA_DATA.results_by_team   || {{}};
+  const scMap   = (SCORES_DATA.scores_by_team || {{}});
+  const vnMap   = (SCORES_DATA.venue_by_team  || {{}});
+  // h2h[home][away] = {{ res, score }} para el partido de casa
+  const h2h = {{}};
+  teams.forEach(home => {{
+    h2h[home] = {{}};
+    const opps = oppsMap[home] || [];
+    const res  = resMap[home]  || [];
+    const sc   = scMap[home]   || {{}};
+    const vn   = vnMap[home]   || {{}};
+    teams.forEach(away => {{
+      if (home === away) {{ h2h[home][away] = null; return; }}
+      const idx = opps.findIndex((o,i) => o===away && vn[String(i)]==='H');
+      h2h[home][away] = idx>=0 ? {{ res: res[idx]||'?', score: sc[String(idx)]||'-' }} : {{ res:'?', score:'-' }};
+    }});
+  }});
+  const abbr = n => n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,3);
+  const bg   = r => r==='V'?'rgba(34,197,94,.7)':r==='E'?'rgba(245,158,11,.6)':r==='D'?'rgba(239,68,68,.6)':'var(--card2)';
+  const tc   = r => r==='V'?'#fff':r==='E'?'#111':r==='D'?'#fff':'var(--muted)';
+  let html = '<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#22c55e">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
+  html += '<table style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
+  html += '<th style="min-width:95px;text-align:right;padding-right:6px;font-size:9px;color:var(--muted);white-space:nowrap">Local \\ Visitante</th>';
+  teams.forEach(t => {{
+    html += `<th style="width:22px;min-width:22px;writing-mode:vertical-lr;transform:rotate(180deg);font-size:8px;color:var(--muted);padding:2px;text-align:center" title="${{t}}">${{abbr(t)}}</th>`;
+  }});
+  html += '</tr></thead><tbody>';
+  teams.forEach(home => {{
+    html += `<tr><td style="font-size:9px;color:var(--muted);padding-right:6px;white-space:nowrap;text-align:right;padding-top:2px;padding-bottom:2px">${{home}}</td>`;
+    teams.forEach(away => {{
+      if (home===away) {{
+        html += '<td style="background:var(--border);width:22px;min-width:22px;height:18px"></td>';
+      }} else {{
+        const cell = h2h[home][away];
+        const r    = cell?.res||'?';
+        const s    = cell?.score||'-';
+        const disp = (s!=='-'&&s!=='?') ? s : '';
+        html += `<td style="background:${{bg(r)}};color:${{tc(r)}};width:22px;min-width:22px;height:18px;text-align:center;font-weight:700;font-size:8px" title="${{home}} vs ${{away}}: ${{s}}">${{disp}}</td>`;
+      }}
+    }});
+    html += '</tr>';
+  }});
+  html += '</tbody></table>';
+  el.innerHTML = html;
 }}
 
 // ===== AUTO-UPDATE =====
