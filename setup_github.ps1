@@ -81,33 +81,42 @@ Write-Host "── [4/5] Configurando secretos FTP de IONOS..." -ForegroundColor
 Write-Host "  (Se guardan cifrados en GitHub - nunca visibles en logs)" -ForegroundColor DarkGray
 Write-Host ""
 
-Write-Host "  Necesito los datos FTP de IONOS." -ForegroundColor Yellow
-Write-Host "  Los encuentras en: panel.ionos.es → Hosting → FTP" -ForegroundColor DarkGray
+Write-Host "  Datos SFTP de IONOS (pulsa Enter para aceptar el valor por defecto)." -ForegroundColor Yellow
 Write-Host ""
 
-$ftpServer   = Read-Host "  Host FTP (ej: homepageXXXXX.1and1.es o ftp.alejandrobeltran.es)"
-$ftpUser     = Read-Host "  Usuario FTP"
-$ftpPassword = Read-Host "  Contraseña FTP" -AsSecureString
-$ftpPath     = Read-Host "  Ruta en servidor (ej: /hypertensiones.alejandrobeltran.es/ o /)"
+$defaultServer = "home559128403.1and1-data.host"
+$defaultPort   = "22"
+$defaultUser   = "acc147683744"
+
+$inputServer = Read-Host "  Host SFTP [$defaultServer]"
+$inputPort   = Read-Host "  Puerto SFTP [$defaultPort]"
+$inputUser   = Read-Host "  Usuario SFTP [$defaultUser]"
+$sftpPassword = Read-Host "  Contraseña SFTP" -AsSecureString
+$sftpPath     = Read-Host "  Ruta en servidor (ej: /hypertensiones.alejandrobeltran.es/ o /)"
+
+$sftpServer = if ($inputServer -ne '') { $inputServer } else { $defaultServer }
+$sftpPort   = if ($inputPort   -ne '') { $inputPort   } else { $defaultPort   }
+$sftpUser   = if ($inputUser   -ne '') { $inputUser   } else { $defaultUser   }
 
 # Convertir SecureString a plain text solo para gh secret set
-$ftpPasswordPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
-    [Runtime.InteropServices.Marshal]::SecureStringToBSTR($ftpPassword)
+$sftpPasswordPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
+    [Runtime.InteropServices.Marshal]::SecureStringToBSTR($sftpPassword)
 )
 
 Write-Host ""
 Write-Host "  Creando secretos en GitHub..." -ForegroundColor DarkGray
 
-$ftpServer      | gh secret set FTP_SERVER   --repo $repoFullName
-$ftpUser        | gh secret set FTP_USERNAME --repo $repoFullName
-$ftpPasswordPlain | gh secret set FTP_PASSWORD --repo $repoFullName
-$ftpPath        | gh secret set FTP_PATH     --repo $repoFullName
+$sftpServer        | gh secret set SFTP_SERVER   --repo $repoFullName
+$sftpPort          | gh secret set SFTP_PORT     --repo $repoFullName
+$sftpUser          | gh secret set SFTP_USERNAME --repo $repoFullName
+$sftpPasswordPlain | gh secret set SFTP_PASSWORD --repo $repoFullName
+$sftpPath          | gh secret set SFTP_PATH     --repo $repoFullName
 
 # Limpiar contraseña de memoria
-$ftpPasswordPlain = $null
+$sftpPasswordPlain = $null
 [GC]::Collect()
 
-Write-Host "  ✓ 4 secretos configurados (FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, FTP_PATH)" -ForegroundColor Green
+Write-Host "  ✓ 5 secretos configurados (SFTP_SERVER, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD, SFTP_PATH)" -ForegroundColor Green
 
 # ── Paso 5: Lanzar primer workflow ───────────────────────────────────────────
 Write-Host ""

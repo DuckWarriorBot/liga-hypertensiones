@@ -56,22 +56,27 @@ jobs:
       - name: build.py  (genera index.html + version.json)
         run: python build.py
 
-      # ── 6. Deploy FTP a IONOS ────────────────────────────────────────────
-      - name: Deploy a IONOS via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server:   ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: ${{ secrets.FTP_PATH }}
-          include: |
-            index.html
-            version.json
-            liga_data.json
-            scores_data.json
-            predictions.json
-            predictions_history.json
-          # No borrar archivos existentes en el servidor
-          dangerous-clean-slate: false
-          log-level: minimal
+      # ── 6. Deploy SFTP a IONOS ───────────────────────────────────────────
+      - name: Deploy a IONOS via SFTP
+        env:
+          SFTP_SERVER:   ${{ secrets.SFTP_SERVER }}
+          SFTP_PORT:     ${{ secrets.SFTP_PORT }}
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_PATH:     ${{ secrets.SFTP_PATH }}
+        run: |
+          sudo apt-get install -y lftp
+          lftp -c "
+            set sftp:auto-confirm yes;
+            set net:timeout 30;
+            set net:max-retries 3;
+            open sftp://${SFTP_USERNAME}:${SFTP_PASSWORD}@${SFTP_SERVER}:${SFTP_PORT:-22};
+            cd ${SFTP_PATH};
+            put index.html;
+            put version.json;
+            put liga_data.json;
+            put scores_data.json;
+            put predictions.json;
+            put predictions_history.json;
+            bye
+          "
