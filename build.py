@@ -2691,15 +2691,20 @@ function buildScatterChart() {{
   scatterChart = new Chart(ctx.getContext('2d'), {{
     type: 'scatter',
     data: {{
-      datasets: standings.map(t => ({{
-        label: t.name,
-        data: [{{ x: t.gf, y: t.gc }}],
-        backgroundColor: getColor(t.name) + 'cc',
-        borderColor: getColor(t.name),
-        borderWidth: 1.5,
-        pointRadius: 7,
-        pointHoverRadius: 10,
-      }}))
+      datasets: standings.map(t => {{
+        const kf = TEAM_KIT_FULL[t.name] || {{}};
+        const kPri = kf.primary   || getColor(t.name);
+        const kSec = kf.secondary || '#1a2236';
+        return {{
+          label: t.name,
+          data: [{{ x: t.gf, y: t.gc }}],
+          backgroundColor: kPri,
+          borderColor: kSec,
+          borderWidth: 3,
+          pointRadius: 8,
+          pointHoverRadius: 11,
+        }};
+      }})
     }},
     plugins: [quadrantPlugin],
     options: {{
