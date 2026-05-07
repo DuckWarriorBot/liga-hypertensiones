@@ -179,7 +179,7 @@ TEAM_KIT_FULL = {
     'Mirandés':         {'primary': '#CC0000', 'secondary': '#000000'},  # rojo / negro
     'Huesca':           {'primary': '#003087', 'secondary': '#8B1A1A'},  # azul / granate
     'Real Zaragoza':    {'primary': '#FFFFFF', 'secondary': '#003087'},  # blanco / azul
-    'Cultural Leonesa': {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Cultural Leonesa': {'primary': '#FFFFFF', 'secondary': '#CC0000'},  # blanco / rojo
 }
 
 # Cargar predicciones reales de BeSoccer (generadas por fetch_predictions.py)
