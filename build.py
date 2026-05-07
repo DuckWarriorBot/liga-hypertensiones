@@ -158,7 +158,7 @@ TEAM_KIT = {
 # Kit 2 colores: primary = borde + brillo (glow), secondary = fondo del escudo
 TEAM_KIT_FULL = {
     # Equipo              primary (borde+glow)  secondary (fondo)
-    'Racing':           {'primary': '#006633', 'secondary': '#FFFFFF'},  # verde / blanco
+    'Racing':           {'primary': '#FFFFFF', 'secondary': '#006633'},  # blanco / verde
     'Almería':          {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
     'Deportivo':        {'primary': '#1C4E97', 'secondary': '#FFFFFF'},  # azul / blanco
     'Las Palmas':       {'primary': '#F5C500', 'secondary': '#003087'},  # amarillo / azul
@@ -170,15 +170,15 @@ TEAM_KIT_FULL = {
     'Andorra':          {'primary': '#1C3C8C', 'secondary': '#F5C500'},  # azul / amarillo
     'Ceuta':            {'primary': '#000000', 'secondary': '#FFFFFF'},  # negro / blanco
     'Sporting':         {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
-    'Albacete':         {'primary': '#000000', 'secondary': '#FFFFFF'},  # negro / blanco
-    'Granada':          {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Albacete':         {'primary': '#FFFFFF', 'secondary': '#000000'},  # blanco / negro
+    'Granada':          {'primary': '#FFFFFF', 'secondary': '#CC0000'},  # blanco / rojo
     'Valladolid':       {'primary': '#6A0DAD', 'secondary': '#FFFFFF'},  # violeta / blanco
     'Leganés':          {'primary': '#003087', 'secondary': '#FFFFFF'},  # azul / blanco
     'Real Sociedad B':  {'primary': '#0057A8', 'secondary': '#FFFFFF'},  # azul / blanco
     'Cádiz':            {'primary': '#F5C500', 'secondary': '#003087'},  # amarillo / azul
     'Mirandés':         {'primary': '#CC0000', 'secondary': '#000000'},  # rojo / negro
     'Huesca':           {'primary': '#003087', 'secondary': '#8B1A1A'},  # azul / granate
-    'Real Zaragoza':    {'primary': '#003087', 'secondary': '#FFFFFF'},  # azul / blanco
+    'Real Zaragoza':    {'primary': '#FFFFFF', 'secondary': '#003087'},  # blanco / azul
     'Cultural Leonesa': {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
 }
 
