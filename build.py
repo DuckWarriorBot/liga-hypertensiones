@@ -289,17 +289,17 @@ header {{
   box-shadow: var(--shadow);
 }}
 .logo {{
-  height: 52px;
+  height: 56px;
   width: auto;
   flex-shrink: 0;
   display: flex;
   align-items: center;
 }}
 .logo img {{
-  height: 52px;
+  height: 56px;
   width: auto;
-  mix-blend-mode: multiply;
-  filter: drop-shadow(0 0 6px rgba(57,255,20,.5));
+  border-radius: 6px;
+  filter: drop-shadow(0 0 8px rgba(57,255,20,.55));
 }}
 header h1 {{
   font-size: 1.3rem;
