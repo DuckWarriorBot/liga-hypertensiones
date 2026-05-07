@@ -1285,6 +1285,19 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 /* Kit-color row tinting */
 .standings-table tbody tr {{ transition: background .15s; }}
 .standings-table tbody tr:hover {{ filter: brightness(1.1); }}
+/* ===== FORM MODE BUTTONS ===== */
+.btn-form {{
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}}
+.btn-form.active {{ background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }}
 
 /* ===== CREST GLOW ===== */
 .team-crest img {{
@@ -1325,6 +1338,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <button data-tab="resultados" onclick="switchTab('resultados')">📋 Resultados</button>
     <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
     <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
+    <button data-tab="analisis" onclick="switchTab('analisis')">📊 Análisis</button>
   </nav>
 </header>
 
@@ -1341,6 +1355,11 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <span class="round-label" id="standingsRoundLabel">J{total_rounds} / {total_rounds}</span>
     <button class="round-btn" onclick="changeStandingsRound(1)" id="btnStandNext">›</button>
     <button class="btn-latest" onclick="changeStandingsRound(999)">Última jornada →</button>
+    <span style="margin-left:12px;color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Forma:</span>
+    <button class="btn-form active" id="fmtAll" onclick="setFormMode(0)">General</button>
+    <button class="btn-form" id="fmt5" onclick="setFormMode(5)">Últ.5</button>
+    <button class="btn-form" id="fmt10" onclick="setFormMode(10)">Últ.10</button>
+    <button class="btn-form" id="fmt20" onclick="setFormMode(20)">Últ.20</button>
   </div>
   <div class="zone-legend">
     <div class="zone-item"><div class="zone-dot" style="background:#22c55e"></div> Ascenso Directo (1-2)</div>
@@ -1362,6 +1381,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
             <th onclick="sortTable('gf')" title="Goles a favor">GF</th>
             <th onclick="sortTable('gc')" title="Goles en contra">GC</th>
             <th onclick="sortTable('dif')" title="Diferencia de goles">DIF</th>
+            <th onclick="sortTable('ppg')" title="Puntos por partido">PPG</th>
             <th onclick="sortTable('pts')" style="min-width:160px">Puntos</th>
             <th title="Últimas 5">Forma</th>
             <th onclick="sortTable('racha')" title="Partidos consecutivos sin perder">Racha</th>
@@ -1383,6 +1403,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
       <div class="chart-tabs">
         <button class="chart-tab active" id="ctab-pos" onclick="switchChart('pos')">Posición</button>
         <button class="chart-tab" id="ctab-pts" onclick="switchChart('pts')">Puntos</button>
+        <button class="chart-tab" id="ctab-ppg" onclick="switchChart('ppg')">PPG Rolling (5J)</button>
       </div>
       <div class="card-title" style="font-size:12px; color:var(--muted); margin-bottom:8px;">Seleccionar equipos:</div>
       <div class="team-selector" id="teamSelector"></div>
@@ -1467,6 +1488,50 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   <div class="teams-grid" id="teamsGrid"></div>
 </div>
 
+<!-- ============================== TAB 6: ANÁLISIS ============================== -->
+<div class="tab-panel" id="tab-analisis">
+  <div class="gap-section">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+      <div class="card">
+        <div class="card-title">⚡ Ataque vs Defensa</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">GF (eje X) · GC (eje Y) · líneas = media liga</div>
+        <div class="chart-container" style="height:320px"><canvas id="scatterChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏅 Rankings</div>
+        <div class="chart-tabs" style="margin-bottom:12px;flex-wrap:wrap;gap:4px">
+          <button class="chart-tab active" id="rank-off" onclick="switchRanking('off')">⚽ Ataque</button>
+          <button class="chart-tab" id="rank-def" onclick="switchRanking('def')">🛡 Defensa</button>
+          <button class="chart-tab" id="rank-ppg" onclick="switchRanking('ppg')">📊 PPG</button>
+          <button class="chart-tab" id="rank-home" onclick="switchRanking('home')">🏠 Local</button>
+          <button class="chart-tab" id="rank-away" onclick="switchRanking('away')">✈️ Visitante</button>
+        </div>
+        <div id="rankingList" style="max-height:290px;overflow-y:auto"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔢 Escenarios Matemáticos</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Máx. = si gana todo · Con E = si empata todo · Puntos restantes por disputar</div>
+      <div class="standings-wrapper">
+        <table class="standings-table" id="scenariosTable">
+          <thead><tr>
+            <th>#</th>
+            <th>Equipo</th>
+            <th title="Puntos actuales">Pts</th>
+            <th title="Jornadas restantes">Rest.</th>
+            <th title="Puntos máximos posibles si gana todo" style="color:#4ade80">Máx.</th>
+            <th title="Puntos si empata todo lo que queda" style="color:#fbbf24">Con E</th>
+            <th title="¿Puede alcanzar el ascenso directo?">Ascenso</th>
+            <th title="¿Puede alcanzar el playoff?">Playoff</th>
+            <th title="¿Tiene riesgo matemático de descenso?">Salvación</th>
+          </tr></thead>
+          <tbody id="scenariosBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
 
 <!-- MODAL team detail -->
@@ -1500,6 +1565,7 @@ let selectedTeams = new Set();
 
 let currentRound = LIGA_DATA.total_rounds;
 let standingsRound = LIGA_DATA.total_rounds; // which jornada to show in standings
+let formMode = 0; // 0 = general, N = last N jornadas
 let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome, minute}}
 
 // Poblar liveState desde datos embebidos (partidos en curso)
@@ -1545,7 +1611,9 @@ function computeStandingsForRound(round) {{
       gc = ex.gc || 0;
     }}
     const racha = (() => {{ let c=0; for(let i=res.length-1;i>=0;i--){{ if(res[i]==='D')break; c++; }} return c; }})();
-    return {{ name, wins, draws, losses, played: res.length, pts, gf, gc, dif: gf - gc, racha,
+    const played = res.length;
+    return {{ name, wins, draws, losses, played, pts, gf, gc, dif: gf - gc, racha,
+      ppg: played > 0 ? (pts / played).toFixed(2) : '0.00',
       quedan: (LIGA_DATA.total_season_rounds - r) * 3
     }};
   }}).sort((a,b) => b.pts - a.pts || b.wins - a.wins || b.dif - a.dif);
@@ -1578,7 +1646,37 @@ function computeStandingsForRound(round) {{
   }});
   return teams;
 }}
+function computeFormStandings(n) {{
+  const r = Math.min(standingsRound, LIGA_DATA.total_rounds);
+  const startIdx = Math.max(0, r - n);
+  const scMap = SCORES_DATA.scores_by_team || {{}};
+  return LIGA_DATA.teams.map(name => {{
+    const allRes = (LIGA_DATA.results_by_team[name] || []).slice(0, r);
+    const res = allRes.slice(-n);
+    const wins   = res.filter(x=>x==='V').length;
+    const draws  = res.filter(x=>x==='E').length;
+    const losses = res.filter(x=>x==='D').length;
+    const pts    = wins * 3 + draws;
+    const teamScores = scMap[name] || {{}};
+    let gf = 0, gc = 0;
+    for (let i = startIdx; i < r; i++) {{
+      const sc = teamScores[String(i)];
+      if (sc) {{ const [a,b]=sc.split('-').map(Number); gf+=a; gc+=b; }}
+    }}
+    const racha = (() => {{ let c=0; for(let i=allRes.length-1;i>=0;i--){{ if(allRes[i]==='D')break; c++; }} return c; }})();
+    const played = res.length;
+    return {{ name, wins, draws, losses, played, pts, gf, gc, dif: gf-gc, racha,
+      ppg: played > 0 ? (pts/played).toFixed(2) : '0.00',
+      quedan: (LIGA_DATA.total_season_rounds - r) * 3,
+      situacion: ''
+    }};
+  }}).sort((a,b) => b.pts - a.pts || b.wins - a.wins || b.dif - a.dif)
+    .map((t, i) => ({{...t, pos: i+1,
+      situacion: i<2?'ASCENSO':i<6?'PLAYOFF':i<18?'PERMANENCIA':'DESCENSO'
+    }}));
+}}
 function computeStandings() {{
+  if (formMode > 0) return computeFormStandings(formMode);
   return computeStandingsForRound(standingsRound).map((t,i)=>({{...t, pos:i+1}}));
 }}
 
@@ -1591,6 +1689,7 @@ function switchTab(name) {{
   if (name === 'evolucion' && !evolutionChart) initEvolutionChart();
   if (name === 'resultados') renderRoundResults();
   if (name === 'predicciones') renderPredictions();
+  if (name === 'analisis') initAnalysisTab();
 }}
 
 // ===== HELPERS =====
@@ -1726,6 +1825,7 @@ function drawStandingsTable() {{
       <td>${{t.gf}}</td>
       <td>${{t.gc}}</td>
       <td style="color:${{t.dif>0?'var(--win)':t.dif<0?'var(--loss)':'var(--muted)'}};font-weight:600">${{(t.dif>0?'+':'')+t.dif}}</td>
+      <td style="color:${{parseFloat(t.ppg)>=2.0?'#4ade80':parseFloat(t.ppg)>=1.5?'#fbbf24':parseFloat(t.ppg)<1.0?'#f87171':'var(--text)'}};font-weight:600">${{t.ppg}}</td>
       <td>
         <div class="pts-bar-cell">
           <span class="pts-value">${{t.pts}}</span>
@@ -1887,9 +1987,22 @@ function buildChart() {{
   const datasets = [];
   selectedTeams.forEach(name => {{
     const color = getColor(name);
-    const dataArr = activeChart === 'pos'
-      ? LIGA_DATA.positions_by_team[name]
-      : LIGA_DATA.points_by_team[name];
+    let dataArr;
+    if (activeChart === 'pos') {{
+      dataArr = LIGA_DATA.positions_by_team[name];
+    }} else if (activeChart === 'pts') {{
+      dataArr = LIGA_DATA.points_by_team[name];
+    }} else {{
+      // Rolling 5-jornada PPG
+      const results = LIGA_DATA.results_by_team[name] || [];
+      const ptsArr = results.map(r => r==='V'?3:r==='E'?1:0);
+      const W = 5;
+      dataArr = ptsArr.map((_,i) => {{
+        if (i < W - 1) return null;
+        const slice = ptsArr.slice(i - W + 1, i + 1);
+        return parseFloat((slice.reduce((a,b)=>a+b,0) / W).toFixed(2));
+      }});
+    }}
     datasets.push({{
       label: name,
       data: dataArr,
@@ -1920,7 +2033,7 @@ function buildChart() {{
         }},
         tooltip: {{
           callbacks: {{
-            label: ctx => ` ${{ctx.dataset.label}}: ${{activeChart==='pos'?'#':''}}${{ctx.parsed.y}}${{activeChart==='pts'?' pts':'º'}}`
+            label: ctx => ` ${{ctx.dataset.label}}: ${{activeChart==='pos'?'#':''}}${{ctx.parsed.y}}${{activeChart==='pts'?' pts':activeChart==='ppg'?' ppg':'º'}}`
           }}
         }}
       }},
@@ -1932,9 +2045,9 @@ function buildChart() {{
         y: {{
           reverse: activeChart === 'pos',
           grid: {{ color: '#2d3f5f44' }},
-          ticks: {{ color: '#94a3b8', stepSize: activeChart==='pos'?1:5 }},
+          ticks: {{ color: '#94a3b8', stepSize: activeChart==='pos'?1:activeChart==='ppg'?0.5:5 }},
           min: activeChart === 'pos' ? 1 : 0,
-          max: activeChart === 'pos' ? LIGA_DATA.teams.length : undefined
+          max: activeChart === 'pos' ? LIGA_DATA.teams.length : activeChart === 'ppg' ? 3 : undefined
         }}
       }}
     }}
@@ -2306,6 +2419,167 @@ function buildPredHistChart() {{
       }}
     }}
   }});
+}}
+
+// ===== FORM MODE =====
+function setFormMode(n) {{
+  formMode = n;
+  document.querySelectorAll('.btn-form').forEach(b => b.classList.remove('active'));
+  const id = n === 0 ? 'fmtAll' : 'fmt' + n;
+  const btn = document.getElementById(id);
+  if (btn) btn.classList.add('active');
+  sortCol = 'pos'; sortAsc = true;
+  renderStandings();
+}}
+
+// ===== ANÁLISIS TAB =====
+let scatterChart = null;
+let rankingMode = 'off';
+
+function initAnalysisTab() {{
+  buildScatterChart();
+  renderRanking(rankingMode);
+  renderScenarios();
+}}
+
+function buildScatterChart() {{
+  const standings = computeStandings();
+  if (scatterChart) scatterChart.destroy();
+  const ctx = document.getElementById('scatterChart');
+  if (!ctx) return;
+  const avgGF = standings.reduce((s,t)=>s+t.gf,0) / standings.length;
+  const avgGC = standings.reduce((s,t)=>s+t.gc,0) / standings.length;
+  const quadrantPlugin = {{
+    id: 'quadrantLines',
+    afterDraw(chart) {{
+      const {{ ctx: c, chartArea, scales: {{ x, y }} }} = chart;
+      if (!chartArea) return;
+      const xMid = x.getPixelForValue(avgGF);
+      const yMid = y.getPixelForValue(avgGC);
+      c.save();
+      c.setLineDash([5,5]);
+      c.strokeStyle = 'rgba(148,163,184,.3)';
+      c.lineWidth = 1;
+      c.beginPath(); c.moveTo(xMid, chartArea.top); c.lineTo(xMid, chartArea.bottom); c.stroke();
+      c.beginPath(); c.moveTo(chartArea.left, yMid); c.lineTo(chartArea.right, yMid); c.stroke();
+      // Quadrant labels
+      c.setLineDash([]);
+      c.font = 'bold 9px Segoe UI,system-ui,sans-serif';
+      c.fillStyle = 'rgba(148,163,184,.45)';
+      c.textAlign = 'left';  c.fillText('Goleadores', chartArea.left+4, chartArea.top+12);
+      c.textAlign = 'right'; c.fillText('Sólidos', chartArea.right-4, chartArea.top+12);
+      c.textAlign = 'left';  c.fillText('Vulnerables', chartArea.left+4, chartArea.bottom-4);
+      c.textAlign = 'right'; c.fillText('Equilibrados', chartArea.right-4, chartArea.bottom-4);
+      c.restore();
+    }}
+  }};
+  scatterChart = new Chart(ctx.getContext('2d'), {{
+    type: 'scatter',
+    data: {{
+      datasets: standings.map(t => ({{
+        label: t.name,
+        data: [{{ x: t.gf, y: t.gc }}],
+        backgroundColor: getColor(t.name) + 'cc',
+        borderColor: getColor(t.name),
+        borderWidth: 1.5,
+        pointRadius: 7,
+        pointHoverRadius: 10,
+      }}))
+    }},
+    plugins: [quadrantPlugin],
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {{
+        legend: {{ display: false }},
+        tooltip: {{
+          callbacks: {{
+            label: c => ` ${{c.dataset.label}}: GF ${{c.parsed.x}} · GC ${{c.parsed.y}} · DIF ${{c.parsed.x-c.parsed.y>=0?'+':''}}${{c.parsed.x-c.parsed.y}}`
+          }}
+        }}
+      }},
+      scales: {{
+        x: {{ title:{{ display:true, text:'Goles a favor (GF)', color:'#94a3b8' }}, grid:{{ color:'#2d3f5f44' }}, ticks:{{ color:'#94a3b8' }} }},
+        y: {{ title:{{ display:true, text:'Goles en contra (GC)', color:'#94a3b8' }}, grid:{{ color:'#2d3f5f44' }}, ticks:{{ color:'#94a3b8' }} }}
+      }}
+    }}
+  }});
+}}
+
+function switchRanking(mode) {{
+  rankingMode = mode;
+  document.querySelectorAll('.chart-tab[id^="rank-"]').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('rank-'+mode);
+  if (btn) btn.classList.add('active');
+  renderRanking(mode);
+}}
+
+function renderRanking(mode) {{
+  const standings = computeStandings();
+  let sorted;
+  if      (mode === 'off')  sorted = [...standings].sort((a,b)=>b.gf-a.gf||a.gc-b.gc);
+  else if (mode === 'def')  sorted = [...standings].sort((a,b)=>a.gc-b.gc||b.gf-a.gf);
+  else if (mode === 'ppg')  sorted = [...standings].sort((a,b)=>parseFloat(b.ppg)-parseFloat(a.ppg));
+  else if (mode === 'home') sorted = [...standings].sort((a,b)=>(TEAM_EXTRA_STATS[b.name]?.home_pts||0)-(TEAM_EXTRA_STATS[a.name]?.home_pts||0));
+  else                      sorted = [...standings].sort((a,b)=>(TEAM_EXTRA_STATS[b.name]?.away_pts||0)-(TEAM_EXTRA_STATS[a.name]?.away_pts||0));
+  const getVal = t => {{
+    const ex = TEAM_EXTRA_STATS[t.name]||{{}};
+    if (mode==='off')  return {{ v: t.gf,               lbl: `${{t.gf}} GF`  }};
+    if (mode==='def')  return {{ v: t.gc,               lbl: `${{t.gc}} GC`  }};
+    if (mode==='ppg')  return {{ v: parseFloat(t.ppg),  lbl: `${{t.ppg}}`   }};
+    if (mode==='home') return {{ v: ex.home_pts||0,     lbl: `${{ex.home_pts||0}}pts · ${{ex.home_pg||0}}V${{ex.home_pe||0}}E${{ex.home_pp||0}}D` }};
+    return                    {{ v: ex.away_pts||0,     lbl: `${{ex.away_pts||0}}pts · ${{ex.away_pg||0}}V${{ex.away_pe||0}}E${{ex.away_pp||0}}D` }};
+  }};
+  const maxV = Math.max(...sorted.map(t=>getVal(t).v), 1);
+  const el = document.getElementById('rankingList');
+  if (!el) return;
+  el.innerHTML = sorted.map((t,i) => {{
+    const {{ v, lbl }} = getVal(t);
+    const bar = (v/maxV*100).toFixed(1);
+    const color = getColor(t.name);
+    return `<div style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
+      <span style="width:18px;text-align:right;font-size:11px;color:var(--muted)">${{i+1}}</span>
+      ${{crestHTML(t.name,22)}}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${{t.name}}</div>
+        <div style="height:3px;border-radius:2px;background:var(--border);margin-top:3px">
+          <div style="height:100%;border-radius:2px;background:${{color}};width:${{bar}}%"></div>
+        </div>
+      </div>
+      <span style="font-size:12px;font-weight:700;color:${{color}};white-space:nowrap;flex-shrink:0">${{lbl}}</span>
+    </div>`;
+  }}).join('');
+}}
+
+function renderScenarios() {{
+  const standings = computeStandings();
+  const rndLeft = LIGA_DATA.total_season_rounds - standingsRound;
+  const quedanPts = rndLeft * 3;
+  const pts2  = standings[1]?.pts  ?? 0;
+  const pts6  = standings[5]?.pts  ?? 0;
+  const pts18 = standings[17]?.pts ?? 0;
+  const tbody = document.getElementById('scenariosBody');
+  if (!tbody) return;
+  tbody.innerHTML = standings.map(t => {{
+    const maxPts  = t.pts + quedanPts;
+    const empPts  = t.pts + rndLeft;
+    const canAscend   = maxPts >= pts2;
+    const canPlayoff  = maxPts >= pts6;
+    const canRelegate = t.pts <= pts18 && quedanPts > 0;
+    const zone  = getZoneClass(t.pos);
+    const color = getColor(t.name);
+    return `<tr class="${{zone}}" style="background:linear-gradient(90deg,${{color}}18 0%,transparent 120px)">
+      <td>${{posBadge(t.pos)}}</td>
+      <td><div class="team-cell">${{crestHTML(t.name,22)}}<span class="team-name-text">${{t.name}}</span></div></td>
+      <td style="font-weight:700;color:var(--accent)">${{t.pts}}</td>
+      <td style="color:var(--muted)">${{rndLeft}}J</td>
+      <td style="color:#4ade80;font-weight:700">${{maxPts}}</td>
+      <td style="color:#fbbf24;font-weight:600">${{empPts}}</td>
+      <td style="font-size:11px">${{canAscend?'<span style="color:#4ade80;font-weight:700">✓</span>':'<span style="color:#475569">✗</span>'}}</td>
+      <td style="font-size:11px">${{canPlayoff?'<span style="color:#fbbf24;font-weight:700">✓</span>':'<span style="color:#475569">✗</span>'}}</td>
+      <td style="font-size:11px">${{canRelegate?'<span style="color:#f87171;font-weight:700">⚠</span>':'<span style="color:#4ade80;font-weight:700">✓</span>'}}</td>
+    </tr>`;
+  }}).join('');
 }}
 
 // ===== AUTO-UPDATE =====
