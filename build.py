@@ -558,8 +558,6 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
   #standingsTable th:nth-child(1), #standingsTable td:nth-child(1) {{ padding-left: 10px; }}
   /* Ajuste columna Puntos en móvil */
   #standingsTable th:nth-child(11) {{ min-width: 120px; }}
-  /* Leyenda se oculta en móvil (demasiado texto) */
-  .card-legend {{ display: none; }}
 
   /* ===== H2H MATRIX MOBILE ===== */
   /* Full-bleed */
