@@ -19,6 +19,11 @@ results_db.json
 # Archivos de diagnóstico y prueba
 _*.py
 _*.html
+_*.png
+
+# Playwright MCP runtime
+.playwright-mcp/
+_*.html
 _*.json
 
 # Excel fuente (opcional, puede ser grande)
