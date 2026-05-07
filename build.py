@@ -1365,7 +1365,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <div class="zone-item"><div class="zone-dot" style="background:#22c55e"></div> Ascenso Directo (1-2)</div>
     <div class="zone-item"><div class="zone-dot" style="background:#fbbf24"></div> Playoff Ascenso (3-6)</div>
     <div class="zone-item"><div class="zone-dot" style="background:#6b7280"></div> Permanencia (7-18)</div>
-    <div class="zone-item"><div class="zone-dot" style="background:#ef4444"></div> Liguilla Descenso (19-22)</div>
+    <div class="zone-item"><div class="zone-dot" style="background:#ef4444"></div> Descenso (19-22)</div>
   </div>
   <div class="card">
     <div class="standings-wrapper">
