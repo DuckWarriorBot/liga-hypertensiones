@@ -2573,17 +2573,18 @@ function switchPredHistMode(mode) {{
 
 function buildPredHistChart() {{
   const teamHist = PRED_HISTORY[predHistTeam] || {{}};
-  const rounds   = LIGA_DATA.total_rounds;
+  const rounds   = LIGA_DATA.total_season_rounds;
   const labels   = Array.from({{length: rounds}}, (_, i) => 'J' + (i + 1));
   const asc = [], play = [], perm = [], desc = [], lineData = [];
   const posArr = LIGA_DATA.positions_by_team[predHistTeam] || [];
   const ptsArr = LIGA_DATA.points_by_team[predHistTeam]    || [];
   for (let i = 0; i < rounds; i++) {{
-    const p = teamHist[String(i)] || {{ascenso:0, playoff:0, permanencia:100, descenso:0}};
-    desc.push(p.descenso    || 0);
-    perm.push(p.permanencia || 0);
-    play.push(p.playoff     || 0);
-    asc.push( p.ascenso     || 0);
+    const p = teamHist[String(i)];
+    // Jornadas sin datos (futuras) se muestran vacías
+    desc.push(p ? (p.descenso    || 0) : null);
+    perm.push(p ? (p.permanencia || 0) : null);
+    play.push(p ? (p.playoff     || 0) : null);
+    asc.push( p ? (p.ascenso     || 0) : null);
     lineData.push(predHistMode === 'pos' ? (posArr[i] ?? null) : (ptsArr[i] ?? null));
   }}
   if (predHistChart) predHistChart.destroy();
