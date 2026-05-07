@@ -302,6 +302,7 @@ header {{
   width: 380px;
   height: auto;
   filter: drop-shadow(0 0 12px rgba(57,255,20,.7));
+  pointer-events: none;
 }}
 header h1 {{
   display: none;
