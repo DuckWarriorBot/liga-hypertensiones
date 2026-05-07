@@ -832,6 +832,11 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 .zone-promotion {{ background: var(--zone1); }}
 .zone-playoff {{ background: var(--zone2); }}
 .zone-relegation {{ background: var(--zone3); }}
+/* Posición matemáticamente asegurada (anula el borde de zona) */
+tr.secured-promotion td:first-child  {{ border-left: 5px solid #4ade80 !important; box-shadow: inset 4px 0 14px rgba(74,222,128,.18); }}
+tr.secured-playoff td:first-child    {{ border-left: 5px solid #fbbf24 !important; box-shadow: inset 4px 0 14px rgba(251,191,36,.18); }}
+tr.secured-permanence td:first-child {{ border-left: 5px solid #94a3b8 !important; }}
+tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !important; box-shadow: inset 4px 0 14px rgba(239,68,68,.18); }}
 
 /* Position badge */
 .pos-badge {{
@@ -2188,6 +2193,61 @@ let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome,
   }});
 }})();
 
+// ===== DESEMPATE CARA A CARA (Reglamento 2ª División) =====
+// Criterios (en orden): pts · H2H pts · H2H GD · H2H GF · GD general · GF general · nombre
+function computeH2HStats(names, r) {{
+  const h2h = {{}};
+  names.forEach(n => h2h[n] = {{ pts: 0, gd: 0, gf: 0 }});
+  const nameSet = new Set(names);
+  const oppsMap = LIGA_DATA.opponents_by_team || {{}};
+  const resMap  = LIGA_DATA.results_by_team   || {{}};
+  const scMap   = SCORES_DATA.scores_by_team  || {{}};
+  names.forEach(name => {{
+    const oppArr = oppsMap[name] || [];
+    const resArr = resMap[name]  || [];
+    for (let i = 0; i < Math.min(r, oppArr.length); i++) {{
+      const opp = oppArr[i];
+      if (!nameSet.has(opp)) continue;
+      const result = resArr[i];
+      if (!result) continue;
+      const sc = (scMap[name] || {{}})[String(i)];
+      if (sc) {{
+        const [gf, gc] = sc.split('-').map(Number);
+        h2h[name].gf += gf;
+        h2h[name].gd += (gf - gc);
+      }}
+      if (result === 'V') h2h[name].pts += 3;
+      else if (result === 'E') h2h[name].pts += 1;
+    }}
+  }});
+  return h2h;
+}}
+// Ordena in-place: pts → H2H pts → H2H GD → H2H GF → GD → GF → nombre
+function applyTiebreakSort(arr, r) {{
+  arr.sort((a, b) => b.pts - a.pts);
+  let i = 0;
+  while (i < arr.length) {{
+    let j = i + 1;
+    while (j < arr.length && arr[j].pts === arr[i].pts) j++;
+    if (j - i > 1) {{
+      const grp = arr.slice(i, j);
+      const h2h = computeH2HStats(grp.map(t => t.name), r);
+      grp.sort((a, b) => {{
+        const ha = h2h[a.name], hb = h2h[b.name];
+        if (hb.pts !== ha.pts) return hb.pts - ha.pts;
+        if (hb.gd  !== ha.gd)  return hb.gd  - ha.gd;
+        if (hb.gf  !== ha.gf)  return hb.gf  - ha.gf;
+        if (b.dif  !== a.dif)  return b.dif  - a.dif;
+        if (b.gf   !== a.gf)   return b.gf   - a.gf;
+        return a.name.localeCompare(b.name, 'es');
+      }});
+      arr.splice(i, j - i, ...grp);
+    }}
+    i = j;
+  }}
+  return arr;
+}}
+
 // ===== COMPUTED STANDINGS =====
 function computeStandingsForRound(round) {{
   const r = Math.min(round, LIGA_DATA.total_rounds);
@@ -2221,7 +2281,8 @@ function computeStandingsForRound(round) {{
       ppg: played > 0 ? (pts / played).toFixed(2) : '0.00',
       quedan: (LIGA_DATA.total_season_rounds - r) * 3
     }};
-  }}).sort((a,b) => b.pts - a.pts || b.wins - a.wins || b.dif - a.dif);
+  }});
+  applyTiebreakSort(teams, r);
   // Situación dinámica: distancias reales a cada zona (funciona en cualquier jornada)
   const pts3  = teams[2]?.pts  ?? 0;   // 3º clasificado (referencia para asegurar ascenso)
   const pts2  = teams[1]?.pts  ?? 0;   // 2º clasificado (referencia ascenso directo)
@@ -2231,30 +2292,57 @@ function computeStandingsForRound(round) {{
   const quedanRnd = (LIGA_DATA.total_season_rounds - r) * 3;
   teams.forEach((t, i) => {{
     const pos = i + 1;
+    t.secured = null; // marcador de posición matemáticamente asegurada
     if (pos <= 2) {{
-      // Puntos para asegurar matemáticamente el ascenso directo frente al 3º
+      // Puntos para asegurar el ascenso directo frente al 3º
       const dAsegurar = quedanRnd - (t.pts - pts3);
-      t.situacion = dAsegurar <= 0 ? 'ASCENSO ASEGURADO' : `A ${{dAsegurar}} DE ASEGURAR`;
-    }} else if (pos <= 6) {{
-      if (quedanRnd === 0) {{
-        // Temporada regular completada: este equipo juega el playoff de ascenso
-        t.situacion = 'PLAYOFF';
+      if (dAsegurar <= 0) {{
+        t.situacion = 'ASCENSO ASEGURADO';
+        t.secured   = 'promotion';
       }} else {{
-        const dSobre7 = t.pts - (teams[6]?.pts ?? 0);
-        t.situacion = dSobre7 > quedanRnd ? 'PLAYOFF ASEGURADO' : `A ${{pts2 - t.pts}} DEL ASCENSO`;
+        t.situacion = `A ${{dAsegurar}} DE ASEGURAR`;
+      }}
+    }} else if (pos <= 6) {{
+      const pts7        = teams[6]?.pts ?? 0;
+      const dAscDirecto = pts2 - t.pts;            // puntos hasta el ascenso directo (2º)
+      const dOver7      = t.pts - pts7;             // margen sobre el 7º
+      const canReachDirecto = dAscDirecto <= quedanRnd;  // puede alcanzar el 2º
+      const playoffSecured  = dOver7 > quedanRnd;        // el 7º no puede alcanzarle
+      if (quedanRnd === 0) {{
+        t.situacion = 'PLAYOFF';
+        t.secured   = 'playoff';
+      }} else if (canReachDirecto) {{
+        // Prioridad: mostrar distancia al ascenso directo mientras sea alcanzable
+        t.situacion = dAscDirecto === 0 ? 'IGUALA 2º EN PTS' : `A ${{dAscDirecto}} DEL ASCENSO DIRECTO`;
+        if (playoffSecured) t.secured = 'playoff'; // borde amarillo aunque aspire más arriba
+      }} else if (playoffSecured) {{
+        t.situacion = 'PLAYOFF ASEGURADO';
+        t.secured   = 'playoff';
+      }} else {{
+        // En zona playoff sin asegurar ni alcanzar el 2º
+        t.situacion = `A ${{dAscDirecto}} DEL ASCENSO DIRECTO`;
       }}
     }} else if (pos <= 18) {{
       const dPlay = pts6 - t.pts;          // puntos que le faltan al playoff
       const dDesc = t.pts - pts19;         // margen sobre el descenso (distancia al 19º)
       const canPlayoff = dPlay <= quedanRnd;  // matemáticamente puede alcanzar el playoff
       const safe       = dDesc > quedanRnd;   // matemáticamente no puede bajar
-      if (safe && !canPlayoff) t.situacion = 'PERMANENCIA';
-      else if (canPlayoff && dPlay <= dDesc) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
-      else                                   t.situacion = `A ${{dDesc}} DEL DESCENSO`;
+      if (safe && !canPlayoff) {{
+        t.situacion = 'PERMANENCIA';
+        t.secured   = 'permanence';
+      }} else if (canPlayoff && dPlay <= dDesc) {{
+        t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
+      }} else {{
+        t.situacion = `A ${{dDesc}} DEL DESCENSO`;
+      }}
     }} else {{
       const needed = pts18 - t.pts;
-      // Matemáticamente descendido: aunque gane todo no alcanza al 18º
-      t.situacion = needed > quedanRnd ? 'DESCENSO' : `A ${{needed}} DE SALVACI\u00d3N`;
+      if (needed > quedanRnd) {{
+        t.situacion = 'DESCENSO';
+        t.secured   = 'relegation';
+      }} else {{
+        t.situacion = `A ${{needed}} DE SALVACI\u00d3N`;
+      }}
     }}
   }});
   return teams;
@@ -2364,19 +2452,27 @@ function posBadge(pos) {{
 
 function situacionHTML(txt, pos) {{
   if (!txt) return '<span class="situ-badge situ-permanencia">–</span>';
+  const t = txt.toUpperCase();
   let cls;
-  if (pos !== undefined) {{
+  // Clasificar por contenido del texto (más preciso que solo la posición)
+  if (t.includes('ASCENSO ASEGURADO') || t.includes('ASEGURAR'))
+    cls = 'situ-ascenso';
+  else if (t.includes('ASCENSO DIRECTO') || t.includes('IGUALA 2'))
+    cls = 'situ-playoff'; // en zona playoff pero aspira al directo
+  else if (t.includes('PLAYOFF ASEGURADO') || t === 'PLAYOFF')
+    cls = 'situ-playoff';
+  else if (t.includes('DEL PLAYOFF'))
+    cls = 'situ-permanencia';
+  else if (t.includes('PERMANENCIA'))
+    cls = 'situ-permanencia';
+  else if (t.includes('DESCENSO') && !t.includes('DEL DESCENSO'))
+    cls = 'situ-salvacion'; // matem. descendido
+  else if (t.includes('DEL DESCENSO') || t.includes('SALVACI'))
+    cls = 'situ-salvacion';
+  else if (pos !== undefined)
     cls = pos <= 2 ? 'situ-ascenso' : pos <= 6 ? 'situ-playoff' : pos <= 18 ? 'situ-permanencia' : 'situ-salvacion';
-  }} else {{
-    const t = txt.toUpperCase();
-    const m = t.match(/A (-?\d+)/);
-    const n = m ? parseInt(m[1]) : 1;
-    if      (t.includes('DEL ASCENSO'))  cls = n <= 0 ? 'situ-ascenso' : 'situ-playoff';
-    else if (t.includes('DEL PLAYOFF'))  cls = 'situ-permanencia';
-    else if (t.includes('DEL DESCENSO')) cls = 'situ-permanencia';
-    else if (t.includes('SALVACI'))      cls = 'situ-salvacion';
-    else                                 cls = 'situ-permanencia';
-  }}
+  else
+    cls = 'situ-permanencia';
   return `<span class="situ-badge ${{cls}}">${{txt}}</span>`;
 }}
 
@@ -2427,7 +2523,8 @@ function drawStandingsTable() {{
   const isCurrent = (standingsRound >= LIGA_DATA.total_rounds);
   const pts3 = standingsData[2]?.pts ?? 0;  // puntos del 3er clasificado
   tbody.innerHTML = standingsData.map(t => {{
-    const zone = getZoneClass(t.pos);
+    const zone        = getZoneClass(t.pos);
+    const securedCls  = t.secured ? 'secured-' + t.secured : '';
     const results = LIGA_DATA.results_by_team[t.name] || [];
     // Momentum: PPG últimas 5J vs PPG global
     const recent5 = results.slice(Math.max(0, standingsRound-5), standingsRound);
@@ -2451,7 +2548,7 @@ function drawStandingsTable() {{
     const quedanCell = `<span class="quedan-badge">${{t.quedan}} pts</span>`;
 
     return `
-    <tr class="${{zone}}" style="background:linear-gradient(90deg,${{kit}}18 0%,transparent 120px)">
+    <tr class="${{zone}} ${{securedCls}}" style="background:linear-gradient(90deg,${{kit}}18 0%,transparent 120px)">
       <td>${{posBadge(t.pos)}}</td>
       <td>
         <div class="team-cell">
@@ -3380,20 +3477,29 @@ function renderPlayoff() {{
     html += '<div class="playoff-tie-header">' + label + '</div>';
     for (var i = 0; i < legs.length; i++) {{
       var m = legs[i];
+      var legNum = m.leg || (i + 1);
+      var legLbl = legNum === 1 ? 'IDA' : 'VUELTA';
       var homeW = winner && m.home === winner;
       var awayW = winner && m.away === winner;
       var homeCls = homeW ? 'winner' : (winner && !homeW ? 'loser' : '');
       var awayCls = awayW ? 'winner' : (winner && !awayW ? 'loser' : '');
-      var scoreDisp = m.played ? (m.score || '') : (m.home ? '<span style="opacity:.4;font-size:11px">por jugar</span>' : '<span style="opacity:.3;font-size:11px">–</span>');
+      var scoreDisp = m.played ? ('<strong>' + (m.score || '') + '</strong>') : (m.home ? '<span style="opacity:.4;font-size:11px">por jugar</span>' : '<span style="opacity:.3;font-size:11px">\u2013</span>');
       var dateLbl = m.date ? '<span style="font-size:10px;color:var(--muted);margin-left:4px">(' + m.date + ')</span>' : '';
       html += '<div class="playoff-match">';
+      html += '<span style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;min-width:36px;margin-right:4px">' + legLbl + '</span>';
       html += '<div class="playoff-team ' + homeCls + '">' + crest(m.home, 18) + '<span>' + (m.home || '?') + '</span>' + dateLbl + '</div>';
       html += '<div class="playoff-score">' + scoreDisp + '</div>';
       html += '<div class="playoff-team ' + awayCls + '" style="justify-content:flex-end;text-align:right">' + crest(m.away, 18) + '<span>' + (m.away || '?') + '</span></div>';
       html += '</div>';
     }}
     if (agg) {{
-      html += '<div class="playoff-agg decided">Global: ' + agg + (winner ? ' · Pasa: <strong>' + winner + '</strong>' : '') + '</div>';
+      var aggParts = agg.split('-').map(Number);
+      var aggWinner = winner || '';
+      html += '<div class="playoff-agg decided" style="margin-top:6px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:8px;">';
+      html += '<span style="font-size:11px;color:var(--muted)">Global:</span>';
+      html += '<span style="font-weight:800;font-size:15px">' + agg + '</span>';
+      if (aggWinner) html += '<span style="font-size:11px;color:var(--muted)">\u00b7 Pasa:</span><strong style="font-size:12px">' + aggWinner + '</strong>';
+      html += '</div>';
     }} else {{
       html += '<div class="playoff-agg">Eliminatoria a doble partido</div>';
     }}
@@ -3406,34 +3512,43 @@ function renderPlayoff() {{
   // ── Título ─────────────────────────────────────────────────────────────────
   html += '<div class="card" style="margin-bottom:16px;">';
   html += '<div class="card-title">🏆 Playoff de Ascenso</div>';
-  html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">3º-6º · 4º-5º · Final · Doble partido · Pasa el mejor global</div>';
+  html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">3\u00ba-6\u00ba \u00b7 4\u00ba-5\u00ba \u00b7 Final \u00b7 Doble partido \u00b7 Pasa el mejor global</div>';
 
-  // ── Bracket ────────────────────────────────────────────────────────────────
+  // \u2500\u2500 Bracket \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   var sf1 = po.semis[0];
   var sf2 = po.semis[1];
   var fin = po.final;
+
+  // Etiqueta dinámica de la semifinal
+  function sfLabel(sf) {{
+    var h = sf.team_high || '?', l = sf.team_low || '?';
+    return crest(h,16) + ' <span>' + h + '</span><span style="color:var(--muted);margin:0 6px">vs</span>' + crest(l,16) + ' <span>' + l + '</span>';
+  }}
 
   html += '<div class="playoff-bracket">';
 
   // Columna izquierda: semifinales
   html += '<div class="playoff-column">';
   html += '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Semifinales</div>';
-  html += tieHTML(sf1, sf1.team_high + ' vs ' + sf1.team_low);
+  html += tieHTML(sf1, sfLabel(sf1));
   html += '<div style="height:8px"></div>';
-  html += tieHTML(sf2, sf2.team_high + ' vs ' + sf2.team_low);
+  html += tieHTML(sf2, sfLabel(sf2));
   html += '</div>';
 
   // Conector central
-  html += '<div class="playoff-connector"><span>→</span><span style="font-size:11px;color:var(--muted)">Ganadores</span><span>→</span></div>';
+  html += '<div class="playoff-connector"><span>\u2192</span><span style="font-size:11px;color:var(--muted)">Ganadores</span><span>\u2192</span></div>';
 
   // Columna derecha: final
+  var finH = fin.matches[0]?.home || sf1.winner || '?';
+  var finA = fin.matches[0]?.away || sf2.winner || '?';
   html += '<div class="playoff-column">';
   html += '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Final</div>';
   html += '<div class="playoff-final-box">';
-  html += tieHTML(fin, (fin.matches[0].home || '?') + ' vs ' + (fin.matches[0].away || '?'));
+  html += tieHTML(fin, crest(finH,16) + ' <span>' + finH + '</span><span style="color:var(--muted);margin:0 6px">vs</span>' + crest(finA,16) + ' <span>' + finA + '</span>');
   // Banner ganador
   if (fin.winner) {{
-    html += '<div class="playoff-winner-banner">' + crest(fin.winner, 28) + '🎉 ' + fin.winner + ' asciende a Primera RFEF' + '</div>';
+    var winLabel = _historicalMode ? 'Ascendido a Primera' : 'Asciende a Primera';
+    html += '<div class="playoff-winner-banner">' + crest(fin.winner, 28) + '\U0001f389 ' + fin.winner + ' \u00b7 ' + winLabel + '</div>';
   }}
   html += '</div>';
   html += '</div>';
@@ -4298,6 +4413,7 @@ function switchSeason(label) {{
     const {{ points_by_team, positions_by_team }} = _buildHistPositions(hs.teams, hs.results_by_team, nr);
     const newLiga = {{
       label:               label,
+      playoff:             hs.playoff || null,
       teams:               hs.teams,
       total_rounds:        nr,
       total_season_rounds: nr,

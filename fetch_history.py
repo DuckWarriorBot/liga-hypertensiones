@@ -109,6 +109,25 @@ def map_team(raw):
 JS_EXTRACT = r"""
 () => {
   const rows = [];
+  const teamLogos = {};
+
+  // Capturar logos (Flashscore usa background-image en .event__logo)
+  document.querySelectorAll('.event__match').forEach(el => {
+    const logos = el.querySelectorAll('.event__logo');
+    const parts = el.querySelectorAll('.event__participant');
+    logos.forEach((logo, idx) => {
+      const nameEl = parts[idx];
+      if (!nameEl) return;
+      const name = nameEl.innerText.trim().split('\n')[0].trim();
+      if (!name || teamLogos[name]) return;
+      const style = window.getComputedStyle(logo);
+      const bg = style.getPropertyValue('background-image');
+      const m = bg.match(/url\(["']?([^"')]+)["']?\)/);
+      if (m && m[1] && m[1].startsWith('http')) teamLogos[name] = m[1];
+    });
+  });
+
+  // Extraer rondas y partidos (incluye event__round--static para playoff)
   const sel = '.event__round--round, .event__round--static, .event__match';
   document.querySelectorAll(sel).forEach(el => {
     const cls = el.className || '';
@@ -127,7 +146,7 @@ JS_EXTRACT = r"""
       rows.push({ type: 'match', home: homeName, away: awayName, scoreH, scoreA });
     }
   });
-  return rows;
+  return { rows, teamLogos };
 }
 """
 
@@ -166,6 +185,106 @@ def compute_standings(matches):
 
     return sorted(teams.values(), key=lambda t: (-t['pts'], -t['gd'], -t['gf'], t['name']))
 
+# ── Construcción del playoff ────────────────────────────────────────────────
+
+def build_playoff_structure(playoff_matches, final_standings):
+    """
+    Construye la estructura estándar de playoff desde los partidos scrapeados.
+
+    playoff_matches: [{home, away, score_h, score_a, round_label}]
+    final_standings: lista ordenada (0-based), el top-6 define los participantes
+
+    Formato: 3º vs 6º (SF1), 4º vs 5º (SF2), ganadores en la Final.
+    Devuelve None si no hay suficientes datos.
+    """
+    from collections import defaultdict
+
+    if len(final_standings) < 6 or not playoff_matches:
+        return None
+
+    p3 = final_standings[2]['name']
+    p4 = final_standings[3]['name']
+    p5 = final_standings[4]['name']
+    p6 = final_standings[5]['name']
+
+    # Agrupar partidos por par de equipos
+    pair_matches = defaultdict(list)
+    for m in playoff_matches:
+        if m['home'] and m['away']:
+            key = tuple(sorted([m['home'], m['away']]))
+            pair_matches[key].append(m)
+
+    def build_tie(team_high, team_low):
+        """Construye un tie (eliminatoria a doble partido) entre dos equipos."""
+        key = tuple(sorted([team_high, team_low]))
+        legs = list(pair_matches.get(key, []))
+        # Primer partido: team_high en casa (ida); segundo: team_low en casa (vuelta)
+        legs.sort(key=lambda m: 0 if m['home'] == team_high else 1)
+
+        agg_high = agg_low = 0
+        match_structs = []
+        for i, m in enumerate(legs[:2]):
+            if m['home'] == team_high:
+                agg_high += m['score_h']; agg_low += m['score_a']
+            else:
+                agg_high += m['score_a']; agg_low += m['score_h']
+            match_structs.append({
+                'home':   m['home'],
+                'away':   m['away'],
+                'score':  f"{m['score_h']}-{m['score_a']}",
+                'played': True,
+                'date':   None,
+                'leg':    i + 1,
+            })
+
+        # Rellenar si faltan partidos
+        while len(match_structs) < 2:
+            if not match_structs:
+                match_structs.append({'home': team_high, 'away': team_low,
+                                      'score': None, 'played': False, 'date': None, 'leg': 1})
+            else:
+                match_structs.append({'home': team_low, 'away': team_high,
+                                      'score': None, 'played': False, 'date': None, 'leg': 2})
+
+        played_count = sum(1 for ms in match_structs if ms['played'])
+        winner = agg_str = None
+        if played_count >= 2:
+            agg_str = f'{agg_high}-{agg_low}'
+            if agg_high > agg_low:
+                winner = team_high
+            elif agg_low > agg_high:
+                winner = team_low
+            else:
+                winner = team_high  # empate: clasifica el equipo de mayor posición
+
+        return {'team_high': team_high, 'team_low': team_low,
+                'matches': match_structs, 'agg': agg_str, 'winner': winner}
+
+    sf1 = build_tie(p3, p6); sf1['id'] = 'sf1'
+    sf2 = build_tie(p4, p5); sf2['id'] = 'sf2'
+
+    # La final es el par que NO es sf1 ni sf2
+    sf_keys = {tuple(sorted([p3, p6])), tuple(sorted([p4, p5]))}
+    final_key = next((k for k in pair_matches if k not in sf_keys), None)
+
+    if final_key:
+        fw1 = sf1.get('winner') or p3
+        fw2 = sf2.get('winner') or p4
+        fin = build_tie(fw1, fw2)
+    else:
+        fw1 = sf1.get('winner') or ''
+        fw2 = sf2.get('winner') or ''
+        fin = {
+            'matches': [
+                {'home': fw1, 'away': fw2, 'score': None, 'played': False, 'date': None, 'leg': 1},
+                {'home': fw2, 'away': fw1, 'score': None, 'played': False, 'date': None, 'leg': 2},
+            ],
+            'agg': None, 'winner': None,
+        }
+
+    return {'semis': [sf1, sf2], 'final': fin}
+
+
 # ── Scrapers ─────────────────────────────────────────────────────────────────
 
 def scrape_season(page, year_slug, label):
@@ -192,12 +311,22 @@ def scrape_season(page, year_slug, label):
             break
     print(f'  Carga completada', flush=True)
 
-    raw = page.evaluate(JS_EXTRACT)
+    result = page.evaluate(JS_EXTRACT)
+    raw       = result['rows']
+    raw_logos = result.get('teamLogos', {})
 
-    matches = []
-    current_round = None
-    in_playoff = False
-    not_mapped = set()
+    # Traducir logos Flashscore: raw_name → URL, mapeando al nombre interno
+    team_badges = {}
+    for raw_name, url in raw_logos.items():
+        mapped = map_team(raw_name)
+        if mapped and url and url.startswith('http'):
+            team_badges[mapped] = url
+
+    matches          = []
+    playoff_matches_raw = []
+    current_round    = None
+    current_playoff_label = None
+    in_playoff       = False
 
     PLAYOFF_LABELS = {'final', 'semifinales', 'semifinal', 'semifinals'}
 
@@ -206,14 +335,14 @@ def scrape_season(page, year_slug, label):
             txt = row['text'].strip().lower()
             if txt in PLAYOFF_LABELS:
                 in_playoff = True
+                current_playoff_label = row['text'].strip()
             elif re.match(r'jornada\s+\d+|round\s+\d+', txt):
                 in_playoff = False
+                current_playoff_label = None
                 m = re.search(r'(\d+)', txt)
                 if m:
                     current_round = int(m.group(1))
             continue
-        if in_playoff:
-            continue  # ignorar partidos de playoff en clasificación de liga
 
         home_raw, away_raw = row['home'], row['away']
         if not home_raw or not away_raw:
@@ -221,6 +350,22 @@ def scrape_season(page, year_slug, label):
 
         home_int = map_team(home_raw)
         away_int = map_team(away_raw)
+
+        if in_playoff:
+            # Capturar partidos de playoff (en lugar de ignorarlos)
+            try:
+                score_h = int(row['scoreH'])
+                score_a = int(row['scoreA'])
+            except (ValueError, TypeError):
+                continue
+            playoff_matches_raw.append({
+                'home':        home_int,
+                'away':        away_int,
+                'score_h':     score_h,
+                'score_a':     score_a,
+                'round_label': current_playoff_label,
+            })
+            continue
 
         try:
             score_h = int(row['scoreH'])
@@ -297,22 +442,30 @@ def scrape_season(page, year_slug, label):
 
     # ── Clasificación final ───────────────────────────────────────────────
     standings = compute_standings(matches)
+    playoff   = build_playoff_structure(playoff_matches_raw, standings)
 
     print(f'  ✓ {label}: {len(matches)} partidos · {len(all_teams)} equipos · J{total_rounds}', flush=True)
     if standings:
         print(f'    1º {standings[0]["name"]} {standings[0]["pts"]}pts · '
               f'Último {standings[-1]["name"]} {standings[-1]["pts"]}pts', flush=True)
+    if playoff:
+        winner = playoff['final'].get('winner') or 'no determinado'
+        print(f'    Playoff: {len(playoff_matches_raw)} partidos · ganador: {winner}', flush=True)
+    else:
+        print(f'    Playoff: {len(playoff_matches_raw)} partidos scrapeados (sin estructura)', flush=True)
 
     return {
-        'label':              label,
-        'total_rounds':       total_rounds,
+        'label':               label,
+        'total_rounds':        total_rounds,
         'total_season_rounds': total_rounds,
-        'teams':              sorted(all_teams),
-        'final_standings':    standings,
-        'opponents_by_team':  opponents_by_team,
-        'results_by_team':    results_by_team,
-        'scores_by_team':     scores_by_team,
-        'venue_by_team':      venue_by_team,
+        'teams':               sorted(all_teams),
+        'final_standings':     standings,
+        'opponents_by_team':   opponents_by_team,
+        'results_by_team':     results_by_team,
+        'scores_by_team':      scores_by_team,
+        'venue_by_team':       venue_by_team,
+        'playoff':             playoff,
+        'team_badges':         team_badges,
     }
 
 # ── Main ─────────────────────────────────────────────────────────────────────
