@@ -200,6 +200,26 @@ kit_full_js = json.dumps(TEAM_KIT_FULL)
 data_js = json.dumps(data, ensure_ascii=False)
 total_rounds = data['total_rounds']
 
+# Datos históricos de temporadas anteriores
+_history_path = os.path.join(os.path.dirname(__file__), 'history_data.json')
+if os.path.exists(_history_path):
+    with open(_history_path, 'r', encoding='utf-8') as _f:
+        _history_raw = json.load(_f)
+    # Solo embeber lo necesario para la visualización: clasificación final y label
+    _history_lite = {'seasons': {}}
+    for _label, _sdata in _history_raw.get('seasons', {}).items():
+        _history_lite['seasons'][_label] = {
+            'label':           _label,
+            'total_rounds':    _sdata.get('total_rounds', 42),
+            'final_standings': _sdata.get('final_standings', []),
+            'teams':           _sdata.get('teams', []),
+        }
+    history_js = json.dumps(_history_lite, ensure_ascii=False)
+    print(f"[build] Historial cargado: {list(_history_lite['seasons'].keys())}")
+else:
+    history_js = '{"seasons":{}}'
+    print("[build] AVISO: history_data.json no encontrado")
+
 # Marcadores históricos (generados por fetch_scores.py)
 _scores_path = os.path.join(os.path.dirname(__file__), 'scores_data.json')
 if os.path.exists(_scores_path):
@@ -1623,6 +1643,69 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   .playoff-bracket {{ grid-template-columns: 1fr; }}
   .playoff-connector {{ flex-direction: row; font-size: 14px; padding-top: 0; }}
 }}
+
+/* ── Historia ───────────────────────────────────────────── */
+.historia-season-selector {{
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;
+}}
+.historia-season-btn {{
+  background: var(--card2); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer;
+  color: var(--text); transition: background .15s, border-color .15s;
+}}
+.historia-season-btn.active, .historia-season-btn:hover {{
+  background: var(--accent); color: #000; border-color: var(--accent);
+}}
+.historia-table {{
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}}
+.historia-table th {{
+  background: var(--card2); color: var(--muted); font-weight: 600;
+  padding: 7px 8px; text-align: center; font-size: 11px; text-transform: uppercase;
+  letter-spacing: .4px; border-bottom: 1px solid rgba(255,255,255,.07);
+}}
+.historia-table th:nth-child(2) {{ text-align: left; }}
+.historia-table td {{
+  padding: 6px 8px; text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}}
+.historia-table td:nth-child(2) {{ text-align: left; }}
+.historia-table tr:hover td {{ background: rgba(255,255,255,.03); }}
+.historia-pos-badge {{
+  display: inline-block; width: 22px; height: 22px; border-radius: 50%;
+  font-size: 11px; font-weight: 700; line-height: 22px; text-align: center;
+}}
+.pos-1  {{ background: #d4af37; color: #000; }}
+.pos-2  {{ background: #a8a9ad; color: #000; }}
+.pos-3  {{ background: #cd7f32; color: #000; }}
+.pos-asc {{ background: rgba(34,197,94,.25); color: var(--win); }}
+.pos-play {{ background: rgba(250,204,21,.18); color: #facc15; }}
+.pos-rel {{ background: rgba(239,68,68,.2); color: var(--loss); }}
+.historia-team-row {{
+  display: flex; gap: 6px; align-items: center;
+}}
+.historia-team-row img {{ width: 18px; height: 18px; object-fit: contain; }}
+.historia-pts-bar-wrap {{ width: 70px; }}
+.historia-pts-bar {{
+  height: 6px; border-radius: 3px; background: var(--accent); opacity: .7;
+}}
+/* Sección de evolución de equipo */
+.historia-team-select {{
+  background: var(--card2); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px; padding: 6px 12px; color: var(--text); font-size: 13px;
+  width: 100%; max-width: 260px; margin-bottom: 16px;
+}}
+.historia-evo-grid {{
+  display: grid; gap: 6px;
+}}
+.historia-evo-row {{
+  display: grid; grid-template-columns: 70px 1fr 40px 40px 40px 40px 40px;
+  align-items: center; gap: 8px; padding: 6px 10px;
+  background: var(--card2); border-radius: 8px; font-size: 12px;
+}}
+.historia-evo-row.current-season {{
+  border-left: 3px solid var(--accent);
+}}
 </style>
 </head>
 <body>
@@ -1662,6 +1745,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
     <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
     <button data-tab="playoff" onclick="switchTab('playoff')">🏆 Playoff</button>
+    <button data-tab="historia" onclick="switchTab('historia')">📜 Historia</button>
     <button data-tab="analisis" onclick="switchTab('analisis')">📊 Análisis</button>
   </nav>
   </div>
@@ -1888,6 +1972,11 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   <div class="gap-section" id="playoffContent"></div>
 </div>
 
+<!-- ============================== TAB HISTORIA ============================== -->
+<div class="tab-panel" id="tab-historia">
+  <div class="gap-section" id="historiaContent"></div>
+</div>
+
 </main>
 
 <!-- MODAL team detail -->
@@ -1911,6 +2000,7 @@ const TEAM_KIT_FULL = {kit_full_js};
 const BESOCCER_NAME = {besoccer_map_js};
 let SCORES_DATA = {scores_js};
 const PRED_HISTORY = {pred_hist_js};
+const HISTORY_DATA = {history_js};
 const MAX_PTS = LIGA_DATA.total_rounds * 3;
 
 // ===== STATE =====
@@ -2052,6 +2142,7 @@ function switchTab(name) {{
   if (name === 'predicciones') renderPredictions();
   if (name === 'analisis') initAnalysisTab();
   if (name === 'playoff') renderPlayoff();
+  if (name === 'historia') renderHistoria();
 }}
 
 function toggleNav() {{
@@ -2845,6 +2936,164 @@ function setFormMode(n) {{
 let scatterChart = null;
 let localVisitanteChart = null;
 let rankingMode = 'off';
+
+// ===== HISTORIA =====
+var _historiaActiveSeason = null;
+
+function renderHistoria() {{
+  const el = document.getElementById('historiaContent');
+  if (!el) return;
+  const seasons = HISTORY_DATA.seasons || {{}};
+  const labels = Object.keys(seasons).sort().reverse(); // más reciente primero
+
+  if (!labels.length) {{
+    el.innerHTML = '<div class="card"><div class="playoff-pending">📜 No hay datos de temporadas anteriores todavía. Ejecuta fetch_history.py para importarlos.</div></div>';
+    return;
+  }}
+
+  if (!_historiaActiveSeason || !seasons[_historiaActiveSeason]) {{
+    _historiaActiveSeason = labels[0];
+  }}
+
+  // ── Selector de temporada ───────────────────────────────────────────────
+  var html = '<div class="card">';
+  html += '<div class="card-title">📜 Temporadas Anteriores</div>';
+  html += '<div class="historia-season-selector">';
+  for (var i = 0; i < labels.length; i++) {{
+    var lbl = labels[i];
+    var ac  = lbl === _historiaActiveSeason ? ' active' : '';
+    html += '<button class="historia-season-btn' + ac + '" data-season="' + lbl + '">' + lbl + '</button>';
+  }}
+  html += '</div>';
+
+  // ── Tabla de clasificación ──────────────────────────────────────────────
+  var sd = seasons[_historiaActiveSeason];
+  var st = sd.final_standings || [];
+  var maxPts = st.length ? st[0].pts : 1;
+
+  html += '<div style="overflow-x:auto;">';
+  html += '<table class="historia-table">';
+  html += '<thead><tr>';
+  html += '<th>#</th><th>Equipo</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th>';
+  html += '<th>GF</th><th>GC</th><th>DIF</th><th>Pts</th><th></th>';
+  html += '</tr></thead><tbody>';
+
+  for (var j = 0; j < st.length; j++) {{
+    var t   = st[j];
+    var pos = j + 1;
+    var n   = st.length;
+    // Color de posición
+    var posCls = pos <= 2 ? 'pos-asc' : pos <= 6 ? 'pos-play' : pos >= n - 3 ? 'pos-rel' : '';
+    if (pos === 1) posCls = 'pos-1';
+    if (pos === 2) posCls = 'pos-2';
+    if (pos === 3) posCls = 'pos-3';
+
+    var badge = TEAM_BADGES[t.name] || '';
+    var crest = badge
+      ? '<img src="' + badge + '" alt="' + t.name + '" style="width:18px;height:18px;object-fit:contain;">'
+      : '';
+    var dv = t.gd || (t.gf - t.gc) || 0;
+    var dvStr = dv > 0 ? '+' + dv : String(dv);
+    var dvColor = dv > 0 ? 'var(--win)' : dv < 0 ? 'var(--loss)' : 'var(--muted)';
+    var barW = Math.round((t.pts / maxPts) * 100);
+
+    html += '<tr>';
+    html += '<td><span class="historia-pos-badge ' + posCls + '">' + pos + '</span></td>';
+    html += '<td><div class="historia-team-row">' + crest + '<span>' + t.name + '</span></div></td>';
+    html += '<td>' + (t.played || 0) + '</td>';
+    html += '<td style="color:var(--win)">' + (t.wins || 0) + '</td>';
+    html += '<td style="color:var(--draw)">' + (t.draws || 0) + '</td>';
+    html += '<td style="color:var(--loss)">' + (t.losses || 0) + '</td>';
+    html += '<td>' + (t.gf || 0) + '</td>';
+    html += '<td>' + (t.gc || 0) + '</td>';
+    html += '<td style="color:' + dvColor + '">' + dvStr + '</td>';
+    html += '<td style="font-weight:700;color:var(--accent)">' + t.pts + '</td>';
+    html += '<td><div class="historia-pts-bar-wrap"><div class="historia-pts-bar" style="width:' + barW + '%"></div></div></td>';
+    html += '</tr>';
+  }}
+  html += '</tbody></table></div>';
+  html += '</div>'; // .card
+
+  // ── Evolución de equipos actuales a lo largo de las temporadas ──────────
+  var currentTeams = LIGA_DATA.teams || [];
+  // Solo mostrar equipos que aparezcan en al menos una temporada histórica
+  var histTeams = [];
+  for (var k = 0; k < currentTeams.length; k++) {{
+    var tn = currentTeams[k];
+    var appearsInHistory = false;
+    for (var li = 0; li < labels.length; li++) {{
+      var lst = (seasons[labels[li]].final_standings || []);
+      for (var si = 0; si < lst.length; si++) {{
+        if (lst[si].name === tn) {{ appearsInHistory = true; break; }}
+      }}
+      if (appearsInHistory) break;
+    }}
+    if (appearsInHistory) histTeams.push(tn);
+  }}
+
+  if (histTeams.length > 0) {{
+    html += '<div class="card" style="margin-top:16px;">';
+    html += '<div class="card-title" style="margin-bottom:12px">📊 Evolución por temporada</div>';
+    html += '<div style="font-size:11px;color:var(--muted);margin-bottom:12px">Posición final de cada equipo en cada temporada histórica disponible.</div>';
+    html += '<div style="overflow-x:auto;">';
+    html += '<table class="historia-table">';
+    html += '<thead><tr><th>Equipo</th>';
+    for (var li = 0; li < labels.length; li++) html += '<th>' + labels[li] + '</th>';
+    html += '<th>Actual</th></tr></thead><tbody>';
+
+    for (var k = 0; k < histTeams.length; k++) {{
+      var tn = histTeams[k];
+      var badge2 = TEAM_BADGES[tn] || '';
+      var crest2 = badge2
+        ? '<img src="' + badge2 + '" alt="' + tn + '" style="width:16px;height:16px;object-fit:contain;">'
+        : '';
+      html += '<tr><td><div class="historia-team-row">' + crest2 + '<span>' + tn + '</span></div></td>';
+
+      for (var li = 0; li < labels.length; li++) {{
+        var lst = (seasons[labels[li]].final_standings || []);
+        var found = null;
+        for (var si = 0; si < lst.length; si++) {{
+          if (lst[si].name === tn) {{ found = si + 1; break; }}
+        }}
+        if (found === null) {{
+          html += '<td style="color:var(--muted);font-size:10px">—</td>';
+        }} else {{
+          var pc = found <= 2 ? 'pos-asc' : found <= 6 ? 'pos-play' : found >= lst.length - 3 ? 'pos-rel' : '';
+          if (found === 1) pc = 'pos-1';
+          if (found === 2) pc = 'pos-2';
+          if (found === 3) pc = 'pos-3';
+          html += '<td><span class="historia-pos-badge ' + pc + '">' + found + '</span></td>';
+        }}
+      }}
+
+      // Posición actual en temporada en curso
+      var curStandings = computeStandings();
+      var curPos = null;
+      for (var ci = 0; ci < curStandings.length; ci++) {{
+        if (curStandings[ci].name === tn) {{ curPos = ci + 1; break; }}
+      }}
+      if (curPos === null) {{
+        html += '<td style="color:var(--muted);font-size:10px">—</td>';
+      }} else {{
+        var cpc = curPos <= 2 ? 'pos-asc' : curPos <= 6 ? 'pos-play' : curPos >= curStandings.length - 3 ? 'pos-rel' : '';
+        if (curPos === 1) cpc = 'pos-1';
+        if (curPos === 2) cpc = 'pos-2';
+        if (curPos === 3) cpc = 'pos-3';
+        html += '<td style="font-weight:700"><span class="historia-pos-badge ' + cpc + '">' + curPos + '</span></td>';
+      }}
+      html += '</tr>';
+    }}
+    html += '</tbody></table></div></div>';
+  }}
+
+  el.innerHTML = html;
+  el.querySelectorAll('.historia-season-btn').forEach(function(btn) {{
+    btn.addEventListener('click', function() {{
+      _historiaActiveSeason = this.getAttribute('data-season');
+      renderHistoria();
+    }});
+  }});
+}}
 
 // ===== PLAYOFF BRACKET =====
 function renderPlayoff() {{
