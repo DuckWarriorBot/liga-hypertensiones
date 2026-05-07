@@ -3235,8 +3235,47 @@ function openTeamModal(name) {{
       </div>
     </div>`:''}}`;}})()}}
     <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Historial completo:</div>
-    <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:12px;">
-      ${{results.map((r,i)=>`<div title="J${{i+1}}" class="form-dot form-${{r}}" style="width:22px;height:22px;font-size:9px;cursor:default">${{r}}</div>`).join('')}}
+    <div style="margin-bottom:12px;">
+    ${{(()=>{{
+      const oppArr  = (LIGA_DATA.opponents_by_team||{{}})[name] || [];
+      const scMap   = SCORES_DATA.scores_by_team || SCORES_DATA;
+      const venMap  = SCORES_DATA.venue_by_team  || {{}};
+      const scArr   = scMap[name]  || {{}};
+      const venArr  = venMap[name] || {{}};
+      const total   = LIGA_DATA.total_season_rounds || 42;
+      const played  = LIGA_DATA.total_rounds || 0;
+      let rows = '';
+      for(let row=0; row<Math.ceil(total/21); row++){{
+        rows += '<div style="display:flex;gap:3px;margin-bottom:3px;">';
+        for(let col=0;col<21;col++){{
+          const i = row*21+col;
+          if(i>=total){{ rows+='<div style="width:22px;height:22px;"></div>'; continue; }}
+          const opp   = oppArr[i] || '';
+          const badge = opp ? TEAM_BADGES[opp] : null;
+          if(i >= played){{
+            // Jornada futura
+            const inner = badge
+              ? `<img src="${{badge}}" alt="${{opp}}" onerror="this.style.display='none'">`
+              : `<span style="font-size:8px">${{opp?opp.substring(0,3).toUpperCase():'–'}}</span>`;
+            rows+=`<div title="J${{i+1}}${{opp?' · vs '+opp:''}}" class="cell-future" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;">${{inner}}</div>`;
+            continue;
+          }}
+          const r = results[i];
+          if(!r){{ rows+=`<div style="width:22px;height:22px;border-radius:4px;background:rgba(255,255,255,.03);"></div>`; continue; }}
+          const score = scArr[String(i)] || '';
+          const venue = venArr[String(i)] || '';
+          const lbl   = r==='V'?'Victoria':r==='E'?'Empate':'Derrota';
+          const vTxt  = venue==='H'?' (Casa)':venue==='A'?' (Fuera)':'';
+          const tip   = `J${{i+1}}: ${{lbl}}${{score?' '+score:''}}${{opp?' · vs '+opp:''}}${{vTxt}}`;
+          const inner = badge
+            ? `<img src="${{badge}}" alt="${{opp}}" onerror="this.parentNode.innerHTML='<span style=\\'font-size:10px;font-weight:700\\'>${{r}}</span>'">`
+            : `<span style="font-size:10px;font-weight:700">${{r}}</span>`;
+          rows+=`<div title="${{tip}}" class="cell-${{r}}" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:default;">${{inner}}</div>`;
+        }}
+        rows += '</div>';
+      }}
+      return rows;
+    }}())}}
     </div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:10px;">
       <span>Evolución de posición</span>
