@@ -2020,7 +2020,7 @@ function drawStandingsTable() {{
       <td>
         <div class="pts-bar-cell">
           <span class="pts-value">${{t.pts}}</span>
-          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:linear-gradient(180deg,${{kPrimary}} 50%,${{kSecondary}} 50%);box-shadow:0 0 0 0.5px ${{kPrimary}};box-sizing:border-box"></div></div>
+          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:linear-gradient(180deg,${{kPrimary}} 50%,${{kSecondary}} 50%);box-shadow:0 0 0 1.5px ${{kPrimary}};box-sizing:border-box"></div></div>
         </div>
       </td>
       <td>${{formHTML(results.slice(0, standingsRound))}}</td>
@@ -2748,7 +2748,7 @@ function renderRanking(mode) {{
         ? `background:linear-gradient(90deg,#22c55e,#4ade80);width:${{bar}}%`   // infrapuntuado: verde
         : `background:linear-gradient(90deg,#ef4444,#f87171);width:${{bar}}%`;  // sobrepuntuado: rojo
     }} else {{
-      barStyle = `background:linear-gradient(180deg,${{kfPri}} 50%,${{kfSec}} 50%);box-shadow:0 0 0 0.5px ${{kfPri}};box-sizing:border-box;width:${{bar}}%`;
+      barStyle = `background:linear-gradient(180deg,${{kfPri}} 50%,${{kfSec}} 50%);box-shadow:0 0 0 1.5px ${{kfPri}};box-sizing:border-box;width:${{bar}}%`;
     }}
     const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : color;
     return `<div style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
