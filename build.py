@@ -2693,21 +2693,29 @@ function buildScatterChart() {{
       c.restore();
     }}
   }};
+  // Pre-carga escudos como Image para usarlos como pointStyle
+  const badgeImgs = {{}};
+  standings.forEach(t => {{
+    if (TEAM_BADGES[t.name]) {{
+      const img = new Image(28, 28);
+      img.src = TEAM_BADGES[t.name];
+      badgeImgs[t.name] = img;
+    }}
+  }});
   scatterChart = new Chart(ctx.getContext('2d'), {{
     type: 'scatter',
     data: {{
       datasets: standings.map(t => {{
-        const kf = TEAM_KIT_FULL[t.name] || {{}};
-        const kPri = kf.primary   || getColor(t.name);
-        const kSec = kf.secondary || '#1a2236';
+        const img = badgeImgs[t.name];
         return {{
           label: t.name,
           data: [{{ x: t.gf, y: t.gc }}],
-          backgroundColor: kPri,
-          borderColor: kSec,
-          borderWidth: 3,
-          pointRadius: 8,
-          pointHoverRadius: 11,
+          backgroundColor: 'transparent',
+          borderColor: 'transparent',
+          borderWidth: 0,
+          pointStyle: img || 'circle',
+          pointRadius: img ? 14 : 8,
+          pointHoverRadius: img ? 17 : 11,
         }};
       }})
     }},
