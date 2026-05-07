@@ -279,7 +279,7 @@ header {{
   background: linear-gradient(135deg, #0a0a0a 0%, #1e1e1e 100%);
   border-bottom: 1px solid var(--border);
   position: sticky;
-  top: 5px;
+  top: 0;
   z-index: 100;
   box-shadow: var(--shadow);
   display: flex;
@@ -299,6 +299,7 @@ header {{
   margin: -26px -4px -26px 0;
 }}
 .logo img {{
+  padding-top: 20px;
   width: 380px;
   height: auto;
   filter: drop-shadow(0 0 12px rgba(57,255,20,.7));
