@@ -2124,7 +2124,7 @@ function buildChart() {{
       plugins: {{
         legend: {{
           display: true,
-          position: 'right',
+          position: 'bottom',
           labels: {{ color: '#94a3b8', boxWidth: 12, font: {{size: 11}} }}
         }},
         tooltip: {{
