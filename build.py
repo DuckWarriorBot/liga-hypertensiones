@@ -537,6 +537,16 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   align-items: center;
   gap: 8px;
 }}
+.card-legend {{
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.7;
+  opacity: .75;
+}}
+.card-legend b {{ color: var(--text); opacity: .6; font-weight: 600; }}
 
 /* ===== STANDINGS TABLE ===== */
 .standings-wrapper {{
@@ -1523,6 +1533,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
         <tbody id="standingsBody"></tbody>
       </table>
     </div>
+    <div class="card-legend"><b>PJ</b> Partidos jugados &nbsp;·&nbsp; <b>PG/PE/PP</b> Ganados / Empates / Perdidos &nbsp;·&nbsp; <b>GF/GC</b> Goles a favor / en contra &nbsp;·&nbsp; <b>DIF</b> Diferencia de goles &nbsp;·&nbsp; <b>PPG</b> Puntos por partido (media) &nbsp;·&nbsp; <b>Forma</b> últimos 5 resultados (V/E/D) &nbsp;·&nbsp; <b>Racha</b> partidos consecutivos sin perder &nbsp;·&nbsp; <b>Quedan</b> puntos máximos posibles por disputar (jornadas restantes × 3)</div>
   </div>
 </div>
 
@@ -1547,6 +1558,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
       <div class="chart-container">
         <canvas id="evolutionChart"></canvas>
       </div>
+      <div class="card-legend"><b>Posición</b> lugar en la clasificación jornada a jornada &nbsp;·&nbsp; <b>Puntos</b> puntos acumulados por jornada &nbsp;·&nbsp; <b>PPG Rolling 5J</b> media de puntos por partido en las últimas 5 jornadas (mueve la ventana hacia adelante conforme avanza la temporada) &nbsp;·&nbsp; Usa los botones para filtrar los equipos que se muestran</div>
     </div>
   </div>
 </div>
@@ -1564,6 +1576,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
         <span style="color:var(--muted); font-size:12px" id="roundProgressLabel">de {total_rounds} jugadas · 42 en temporada</span>
       </div>
       <div class="results-grid" id="resultsGrid"></div>
+      <div class="card-legend">Resultados de la jornada seleccionada · <b>local</b> a la izquierda · <b>visitante</b> a la derecha · navega con las flechas o escribe directamente el número de jornada</div>
     </div>
     <div class="card">
       <div class="card-title">📊 Historial completo (V/E/D por equipo)</div>
@@ -1577,6 +1590,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
       <div class="history-grid-wrapper">
         <table class="history-table" id="historyTable"></table>
       </div>
+      <div class="card-legend"><b>V</b> Victoria &nbsp;·&nbsp; <b>E</b> Empate &nbsp;·&nbsp; <b>D</b> Derrota &nbsp;·&nbsp; cada columna = una jornada · el color de fondo indica el resultado · ordena por clasificación, alfabético, más victorias o más derrotas usando los botones superiores</div>
     </div>
   </div>
 </div>
@@ -1596,6 +1610,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
         <div class="pred-legend-item"><div class="pred-legend-dot" style="background:#ef4444"></div> Descenso</div>
       </div>
       <div id="predictionsTable"></div>
+      <div class="card-legend">Probabilidades estimadas de clasificación final al cierre de temporada &nbsp;·&nbsp; <b>Ascenso directo</b> puestos 1-2 &nbsp;·&nbsp; <b>Playoff</b> puestos 3-6 &nbsp;·&nbsp; <b>Permanencia</b> puestos 7-18 &nbsp;·&nbsp; <b>Descenso</b> puestos 19-22 &nbsp;·&nbsp; Fuente: BeSoccer · se actualiza tras cada jornada</div>
     </div>
     <div class="card mt-20">
       <div class="card-title">📊 Pronósticos históricos por equipo</div>
@@ -1610,6 +1625,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
       <div class="chart-container" style="height:380px;">
         <canvas id="predHistCanvas"></canvas>
       </div>
+      <div class="card-legend">Evolución de las probabilidades de cada zona clasificatoria jornada a jornada &nbsp;·&nbsp; <b>Barras apiladas</b> % estimado en cada zona (Ascenso / Playoff / Permanencia / Descenso) &nbsp;·&nbsp; <b>Línea</b> posición real o puntos reales según el modo seleccionado &nbsp;·&nbsp; Selecciona un equipo con los botones superiores</div>
     </div>
   </div>
 </div>
@@ -1627,6 +1643,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
         <div class="card-title">⚡ Ataque vs Defensa</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">GF (eje X) · GC (eje Y) · líneas = media liga</div>
         <div class="chart-container" style="height:320px"><canvas id="scatterChart"></canvas></div>
+        <div class="card-legend"><b>Eje X</b> Goles a favor (GF) &nbsp;·&nbsp; <b>Eje Y</b> Goles en contra (GC, mayor = peor) &nbsp;·&nbsp; La línea vertical = media de GF de la liga · La línea horizontal = media de GC · <b>Cuadrante superior-izq.</b> buen ataque / mala defensa &nbsp;·&nbsp; <b>inferior-dcha.</b> mal ataque / buena defensa &nbsp;·&nbsp; Pasa el cursor sobre un punto para ver el equipo</div>
       </div>
       <div class="card">
         <div class="card-title">🏅 Rankings</div>
@@ -1639,6 +1656,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
           <button class="chart-tab" id="rank-xpts" onclick="switchRanking('xpts')" title="Puntos pitagóricos esperados basados en GF/GC · diferencia con puntos reales = suerte">📐 xPts</button>
         </div>
         <div id="rankingList" style="max-height:290px;overflow-y:auto"></div>
+        <div class="card-legend"><b>Ataque</b> GF por partido &nbsp;·&nbsp; <b>Defensa</b> GC por partido (menos = mejor) &nbsp;·&nbsp; <b>PPG</b> puntos por partido (media general) &nbsp;·&nbsp; <b>Local/Visitante</b> PPG jugando en casa / fuera &nbsp;·&nbsp; <b>xPts</b> puntos pitagóricos = GF²÷(GF²+GC²)×PJ×3 · diferencia con Pts reales indica suerte/mala suerte estadística</div>
       </div>
     </div>
     <div class="card">
@@ -1661,12 +1679,14 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
           <tbody id="scenariosBody"></tbody>
         </table>
       </div>
+      <div class="card-legend"><b>Máx.</b> puntos actuales + (jornadas restantes × 3) &nbsp;·&nbsp; <b>Con E</b> puntos si empata todos los partidos que quedan &nbsp;·&nbsp; <b>Ascenso ✓</b> Máx. ≥ puntos del 2º &nbsp;·&nbsp; <b>Playoff ✓</b> Máx. ≥ puntos del 6º &nbsp;·&nbsp; <b>Salvación ✓</b> Máx. ≥ puntos actuales del 18º (aún puede salvarse) &nbsp;·&nbsp; <b>Descenso ✓ rojo</b> el 18º puede alcanzarle ganando todo (aún en peligro matemático) · ✗ gris = ya imposible</div>
     </div>
     <!-- Local vs Visitante -->
     <div class="card">
       <div class="card-title">🏠✈️ Rendimiento Local vs Visitante</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Puntos obtenidos como local y como visitante · ordenados por total de puntos</div>
       <div class="chart-container" style="height:480px"><canvas id="localVisitanteChart"></canvas></div>
+      <div class="card-legend"><b>Pts Local/Visitante</b> suma de puntos obtenidos jugando en casa / a domicilio &nbsp;·&nbsp; <b>GF Local/Visitante</b> goles marcados en casa / fuera &nbsp;·&nbsp; Calculado sobre todos los partidos jugados de la temporada · Los equipos aparecen ordenados por puntos totales (mayor arriba)</div>
     </div>
 
     <!-- Head-to-head matrix -->
@@ -1674,6 +1694,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
       <div class="card-title">⚔️ Resultados directos (todos vs todos)</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Fila = equipo local · Columna = equipo visitante · marcador del partido de ida (local → visitante)</div>
       <div id="h2hGrid" style="overflow-x:auto"></div>
+      <div class="card-legend"><b>Fila</b> equipo local &nbsp;·&nbsp; <b>Columna</b> equipo visitante &nbsp;·&nbsp; Cada celda muestra el marcador del partido (goles local – goles visitante) &nbsp;·&nbsp; <span style="color:#39ff14">■</span> Victoria del equipo de la fila &nbsp;·&nbsp; <span style="color:#f59e0b">■</span> Empate &nbsp;·&nbsp; <span style="color:#ef4444">■</span> Derrota del equipo de la fila &nbsp;·&nbsp; <b>Cruz de Selección</b> activa una capa de oscurecimiento fuera de la fila y columna del cursor para facilitar la lectura</div>
     </div>
   </div>
 </div>
