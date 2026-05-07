@@ -1,0 +1,30 @@
+# Generados por el pipeline (no trackear en git)
+index.html
+version.json
+liga_data.json
+scores_data.json
+predictions_history.json
+
+# Entorno virtual
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.mypy_cache/
+
+# Base de datos local
+liga.db
+
+# Archivos de diagnóstico y prueba
+_*.py
+_*.html
+_*.json
+
+# Excel fuente (opcional, puede ser grande)
+*.xlsx
+
+# Hosting local (ruta absoluta Windows)
+F:/
+
+# Dreamweaver
+_notes/

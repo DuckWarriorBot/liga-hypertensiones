@@ -1,0 +1,134 @@
+{
+  "Racing": {
+    "ascenso": 92,
+    "playoff": 8,
+    "permanencia": 0,
+    "descenso": 0
+  },
+  "Almería": {
+    "ascenso": 66,
+    "playoff": 34,
+    "permanencia": 0,
+    "descenso": 0
+  },
+  "Deportivo": {
+    "ascenso": 30,
+    "playoff": 66,
+    "permanencia": 4,
+    "descenso": 0
+  },
+  "Las Palmas": {
+    "ascenso": 9,
+    "playoff": 84,
+    "permanencia": 7,
+    "descenso": 0
+  },
+  "Castellón": {
+    "ascenso": 2,
+    "playoff": 84,
+    "permanencia": 14,
+    "descenso": 0
+  },
+  "Málaga": {
+    "ascenso": 0,
+    "playoff": 61,
+    "permanencia": 39,
+    "descenso": 0
+  },
+  "Burgos": {
+    "ascenso": 1,
+    "playoff": 43,
+    "permanencia": 56,
+    "descenso": 0
+  },
+  "Eibar": {
+    "ascenso": 0,
+    "playoff": 19,
+    "permanencia": 81,
+    "descenso": 0
+  },
+  "Córdoba": {
+    "ascenso": 0,
+    "playoff": 1,
+    "permanencia": 99,
+    "descenso": 0
+  },
+  "Andorra": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 100,
+    "descenso": 0
+  },
+  "Ceuta": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 100,
+    "descenso": 0
+  },
+  "Sporting": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 100,
+    "descenso": 0
+  },
+  "Albacete": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 100,
+    "descenso": 0
+  },
+  "Granada": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 100,
+    "descenso": 0
+  },
+  "Valladolid": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 98,
+    "descenso": 2
+  },
+  "Leganés": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 94,
+    "descenso": 6
+  },
+  "Real Sociedad B": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 99,
+    "descenso": 1
+  },
+  "Cádiz": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 45,
+    "descenso": 55
+  },
+  "Huesca": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 21,
+    "descenso": 79
+  },
+  "Mirandés": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 38,
+    "descenso": 62
+  },
+  "Real Zaragoza": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 5,
+    "descenso": 95
+  },
+  "Cultural Leonesa": {
+    "ascenso": 0,
+    "playoff": 0,
+    "permanencia": 1,
+    "descenso": 99
+  }
+}
