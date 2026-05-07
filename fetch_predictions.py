@@ -149,3 +149,30 @@ if __name__ == '__main__':
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(predictions, f, ensure_ascii=False, indent=2)
     print(f"Guardado en {out_path}")
+
+    # Guardar snapshot en historial con la jornada actual
+    ld_path = os.path.join(os.path.dirname(__file__), 'liga_data.json')
+    if os.path.exists(ld_path):
+        with open(ld_path, encoding='utf-8') as f:
+            liga = json.load(f)
+        round_idx = str(liga.get('total_rounds', 1) - 1)  # 0-indexed
+
+        hist_path = os.path.join(os.path.dirname(__file__), 'predictions_history.json')
+        if os.path.exists(hist_path):
+            with open(hist_path, encoding='utf-8') as f:
+                hist = json.load(f)
+        else:
+            hist = {}
+
+        updated = 0
+        for team, pred in predictions.items():
+            if team not in hist:
+                hist[team] = {}
+            hist[team][round_idx] = pred
+            updated += 1
+
+        with open(hist_path, 'w', encoding='utf-8') as f:
+            json.dump(hist, f, ensure_ascii=False, indent=2)
+        print(f"Historial actualizado: {updated} equipos → jornada {int(round_idx)+1} (índice {round_idx})")
+    else:
+        print("  ⚠ liga_data.json no encontrado — historial no actualizado")
