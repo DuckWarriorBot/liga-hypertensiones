@@ -205,19 +205,23 @@ _history_path = os.path.join(os.path.dirname(__file__), 'history_data.json')
 if os.path.exists(_history_path):
     with open(_history_path, 'r', encoding='utf-8') as _f:
         _history_raw = json.load(_f)
-    # Solo embeber lo necesario para la visualización: clasificación final y label
+    # Embeber todos los datos necesarios para switchSeason completo
     _history_lite = {'seasons': {}}
+    _HIST_KEYS = ['label','total_rounds','total_season_rounds','teams','final_standings',
+                  'results_by_team','scores_by_team','opponents_by_team','venue_by_team']
     for _label, _sdata in _history_raw.get('seasons', {}).items():
-        _history_lite['seasons'][_label] = {
-            'label':           _label,
-            'total_rounds':    _sdata.get('total_rounds', 42),
-            'final_standings': _sdata.get('final_standings', []),
-            'teams':           _sdata.get('teams', []),
-        }
+        _history_lite['seasons'][_label] = {k: _sdata[k] for k in _HIST_KEYS if k in _sdata}
     history_js = json.dumps(_history_lite, ensure_ascii=False)
-    print(f"[build] Historial cargado: {list(_history_lite['seasons'].keys())}")
+    # Opciones HTML para el selector de temporada (ordenadas más reciente primero)
+    _hist_labels_sorted = sorted(_history_lite['seasons'].keys(), reverse=True)
+    season_options_html = '\n'.join(
+        f'<option value="{_lbl}">{_lbl}</option>'
+        for _lbl in _hist_labels_sorted
+    )
+    print(f"[build] Historial cargado: {_hist_labels_sorted}")
 else:
     history_js = '{"seasons":{}}'
+    season_options_html = ''
     print("[build] AVISO: history_data.json no encontrado")
 
 # Marcadores históricos (generados por fetch_scores.py)
@@ -384,6 +388,37 @@ header h1 {{
   font-size: 12px;
   color: var(--muted);
   white-space: nowrap;
+}}
+/* ===== SEASON SELECTOR ===== */
+.season-select-wrap {{
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: 8px;
+}}
+.season-select-wrap label {{
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}}
+.season-select {{
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .2s;
+  min-width: 90px;
+}}
+.season-select:focus, .season-select:hover {{
+  border-color: var(--accent);
 }}
 /* ===== NEXT-MATCH (inline en header-meta) ===== */
 #nextMatchBanner {{
@@ -1737,6 +1772,13 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
       </div>
     </div>
     <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>
+    <div class="season-select-wrap">
+      <label>Temporada</label>
+      <select class="season-select" id="seasonSelect" onchange="switchSeason(this.value)">
+        <option value="_actual_">25/26 ★</option>
+        {season_options_html}
+      </select>
+    </div>
   </div>
   <nav id="mainNav">
     <button class="active" data-tab="clasificacion" onclick="switchTab('clasificacion')">🏆 Clasificación</button>
@@ -1745,7 +1787,6 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
     <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
     <button data-tab="playoff" onclick="switchTab('playoff')">🏆 Playoff</button>
-    <button data-tab="historia" onclick="switchTab('historia')">📜 Historia</button>
     <button data-tab="analisis" onclick="switchTab('analisis')">📊 Análisis</button>
   </nav>
   </div>
@@ -1972,11 +2013,6 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   <div class="gap-section" id="playoffContent"></div>
 </div>
 
-<!-- ============================== TAB HISTORIA ============================== -->
-<div class="tab-panel" id="tab-historia">
-  <div class="gap-section" id="historiaContent"></div>
-</div>
-
 </main>
 
 <!-- MODAL team detail -->
@@ -2051,7 +2087,7 @@ function computeStandingsForRound(round) {{
       }}
     }}
     // En la jornada actual siempre usamos los totales oficiales de TEAM_EXTRA_STATS
-    if (isCurrent) {{
+    if (isCurrent && !_historicalMode) {{
       const ex = TEAM_EXTRA_STATS[name] || {{}};
       if (ex.gf !== undefined) gf = ex.gf;
       if (ex.gc !== undefined) gc = ex.gc;
@@ -2142,7 +2178,6 @@ function switchTab(name) {{
   if (name === 'predicciones') renderPredictions();
   if (name === 'analisis') initAnalysisTab();
   if (name === 'playoff') renderPlayoff();
-  if (name === 'historia') renderHistoria();
 }}
 
 function toggleNav() {{
@@ -3964,6 +3999,117 @@ function updateNextMatchBanner() {{
   teamsEl.textContent = f.home + ' vs ' + f.away;
   cdEl.textContent = '\u23f1 ' + timeStr;
   banner.style.display = 'flex';
+}}
+
+// ===== SEASON SWITCHER =====
+const _ORIG_LIGA_DATA   = JSON.parse(JSON.stringify(LIGA_DATA));
+const _ORIG_SCORES_DATA = JSON.parse(JSON.stringify(SCORES_DATA));
+let _historicalMode = false;
+
+function _buildHistPositions(teams, results_by_team, nr) {{
+  const points_by_team   = {{}};
+  const positions_by_team = {{}};
+  for (const t of teams) {{
+    points_by_team[t] = [];
+    const res = results_by_team[t] || [];
+    for (let r = 0; r < nr; r++) {{
+      const prev = r > 0 ? points_by_team[t][r-1] : 0;
+      const v = res[r];
+      points_by_team[t].push(prev + (v==='V'?3:v==='E'?1:0));
+    }}
+  }}
+  for (let r = 0; r < nr; r++) {{
+    const sorted = [...teams].sort((a,b) =>
+      (points_by_team[b][r]||0) - (points_by_team[a][r]||0));
+    sorted.forEach((t,i) => {{
+      if (!positions_by_team[t]) positions_by_team[t] = [];
+      positions_by_team[t].push(i+1);
+    }});
+  }}
+  return {{ points_by_team, positions_by_team }};
+}}
+
+function switchSeason(label) {{
+  if (label === '_actual_') {{
+    Object.keys(LIGA_DATA).forEach(k => delete LIGA_DATA[k]);
+    Object.assign(LIGA_DATA, _ORIG_LIGA_DATA);
+    Object.keys(SCORES_DATA).forEach(k => delete SCORES_DATA[k]);
+    Object.assign(SCORES_DATA, _ORIG_SCORES_DATA);
+    _historicalMode = false;
+  }} else {{
+    const hs = HISTORY_DATA.seasons[label];
+    if (!hs) return;
+    const nr = hs.total_rounds || hs.total_season_rounds || 42;
+    const {{ points_by_team, positions_by_team }} = _buildHistPositions(hs.teams, hs.results_by_team, nr);
+    const newLiga = {{
+      teams:               hs.teams,
+      total_rounds:        nr,
+      total_season_rounds: nr,
+      last_updated:        label,
+      results_by_team:     hs.results_by_team,
+      opponents_by_team:   hs.opponents_by_team,
+      final_standings:     hs.final_standings,
+      positions_by_team,
+      points_by_team,
+      situacion_by_team:   {{}},
+      quedan_by_team:      {{}},
+      fixtures:            [],
+      match_days:          {{}},
+      h2h_data:            {{}},
+    }};
+    Object.keys(LIGA_DATA).forEach(k => delete LIGA_DATA[k]);
+    Object.assign(LIGA_DATA, newLiga);
+    Object.keys(SCORES_DATA).forEach(k => delete SCORES_DATA[k]);
+    SCORES_DATA.scores_by_team = hs.scores_by_team;
+    SCORES_DATA.venue_by_team  = hs.venue_by_team;
+    _historicalMode = true;
+  }}
+
+  // Reset state
+  currentRound   = LIGA_DATA.total_rounds;
+  standingsRound = LIGA_DATA.total_rounds;
+  formMode       = 0;
+  selectedTeams  = new Set();
+  if (evolutionChart) {{ evolutionChart.destroy(); evolutionChart = null; }}
+
+  // Mostrar/ocultar tabs no disponibles en modo histórico
+  const hiddenInHistory = ['predicciones', 'playoff'];
+  hiddenInHistory.forEach(tab => {{
+    const btn = document.querySelector('[data-tab="' + tab + '"]');
+    if (btn) btn.style.display = _historicalMode ? 'none' : '';
+  }});
+
+  // Si la tab activa quedó oculta, ir a clasificacion
+  const activePanel = document.querySelector('.tab-panel.active');
+  const activeTabName = activePanel ? activePanel.id.replace('tab-','') : 'clasificacion';
+  if (_historicalMode && hiddenInHistory.includes(activeTabName)) {{
+    switchTab('clasificacion');
+  }} else {{
+    // Re-renderizar tab activa
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    const panelEl = document.getElementById('tab-' + activeTabName);
+    const btnEl   = document.querySelector('[data-tab="' + activeTabName + '"]');
+    if (panelEl) panelEl.classList.add('active');
+    if (btnEl)   btnEl.classList.add('active');
+    if (activeTabName === 'evolucion') initEvolutionChart();
+    else if (activeTabName === 'resultados') renderRoundResults();
+    else if (activeTabName === 'analisis') initAnalysisTab();
+    else renderStandings();
+  }}
+  // Actualizar roundsBadge y roundInput max
+  const rb = document.getElementById('roundsBadge');
+  if (rb) rb.textContent = 'Jornada ' + LIGA_DATA.total_rounds + ' / ' + LIGA_DATA.total_season_rounds;
+  const ri = document.getElementById('roundInput');
+  if (ri) {{ ri.max = LIGA_DATA.total_rounds; ri.value = LIGA_DATA.total_rounds; }}
+
+  // Ocultar elementos irrelevantes en modo histórico
+  const liveBar = document.getElementById('liveBar');
+  if (liveBar) liveBar.style.display = _historicalMode ? 'none' : '';
+  const nmBanner = document.getElementById('nextMatchBanner');
+  if (nmBanner) nmBanner.style.display = _historicalMode ? 'none' : '';
+  const statusBar = document.querySelector('.status-bar');
+  if (statusBar) statusBar.style.display = _historicalMode ? 'none' : '';
 }}
 
 // ===== INIT =====
