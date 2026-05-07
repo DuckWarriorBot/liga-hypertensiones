@@ -88,8 +88,22 @@ def parse_percent(cell_html):
     return int(m.group(1)) if m else 0
 
 
+def parse_besoccer_round(html):
+    """Extrae el número de jornada actualmente seleccionada en el dropdown de BeSoccer."""
+    m = re.search(r'<option[^>]+value="(\d+)"[^>]*selected[^>]*>', html)
+    if m:
+        return int(m.group(1))
+    # Fallback: última opción disponible
+    rounds = re.findall(r'<option[^>]+value="(\d+)"', html)
+    return int(rounds[-1]) if rounds else None
+
+
 def scrape_predictions():
     html = fetch_html(URL)
+
+    # Jornada que BeSoccer tiene seleccionada en su dropdown
+    besoccer_round = parse_besoccer_round(html)
+    print(f"  BeSoccer jornada seleccionada: {besoccer_round}")
 
     # Localizar el bloque de predicciones
     m = re.search(r'id="tab_predictions\d+"[^>]*>(.*)', html, re.DOTALL)
@@ -137,12 +151,12 @@ def scrape_predictions():
         }
         print(f"  {internal_name}: ascenso={ascenso} playoff={playoff} permanencia={permanencia} descenso={descenso}")
 
-    return results
+    return results, besoccer_round
 
 
 if __name__ == '__main__':
     print("Scrapeando predicciones de BeSoccer...")
-    predictions = scrape_predictions()
+    predictions, besoccer_round = scrape_predictions()
     print(f"\nTotal equipos: {len(predictions)}")
 
     out_path = os.path.join(os.path.dirname(__file__), 'predictions.json')
@@ -150,12 +164,10 @@ if __name__ == '__main__':
         json.dump(predictions, f, ensure_ascii=False, indent=2)
     print(f"Guardado en {out_path}")
 
-    # Guardar snapshot en historial con la jornada actual
-    ld_path = os.path.join(os.path.dirname(__file__), 'liga_data.json')
-    if os.path.exists(ld_path):
-        with open(ld_path, encoding='utf-8') as f:
-            liga = json.load(f)
-        round_idx = str(liga.get('total_rounds', 1))  # 0-indexed: predicciones para la siguiente jornada
+    # Guardar snapshot en historial usando la jornada que BeSoccer tiene seleccionada
+    # Índice 0-based: jornada 1 → índice 0, jornada 38 → índice 37
+    if besoccer_round is not None:
+        round_idx = str(besoccer_round - 1)
 
         hist_path = os.path.join(os.path.dirname(__file__), 'predictions_history.json')
         if os.path.exists(hist_path):
@@ -173,6 +185,6 @@ if __name__ == '__main__':
 
         with open(hist_path, 'w', encoding='utf-8') as f:
             json.dump(hist, f, ensure_ascii=False, indent=2)
-        print(f"Historial actualizado: {updated} equipos → jornada {int(round_idx)+1} (índice {round_idx})")
+        print(f"Historial actualizado: {updated} equipos → jornada {besoccer_round} (índice {round_idx})")
     else:
-        print("  ⚠ liga_data.json no encontrado — historial no actualizado")
+        print("  ⚠ No se pudo determinar la jornada de BeSoccer — historial no actualizado")
