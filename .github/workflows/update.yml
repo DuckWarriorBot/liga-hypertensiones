@@ -27,15 +27,7 @@ jobs:
       - name: Instalar Chromium
         run: python -m playwright install chromium --with-deps
 
-      - name: Restaurar predictions_history
-        uses: actions/cache@v4
-        with:
-          path: predictions_history.json
-          key: predictions-history-v2-${{ github.run_id }}
-          restore-keys: |
-            predictions-history-v2-
-
-      - name: Descargar results_db desde hosting
+      - name: Descargar datos persistentes desde hosting
         env:
           SFTP_HOST: ${{ secrets.SFTP_SERVER }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
@@ -43,18 +35,21 @@ jobs:
           SFTP_PASS: ${{ secrets.SFTP_PASSWORD }}
         run: |
           python - <<'EOF'
-          import paramiko, os, json
+          import paramiko, os
           try:
               t = paramiko.Transport((os.environ['SFTP_HOST'], int(os.environ.get('SFTP_PORT', 22))))
               t.connect(username=os.environ['SFTP_USER'], password=os.environ['SFTP_PASS'])
               s = paramiko.SFTPClient.from_transport(t)
-              s.get('results_db.json', 'results_db.json')
+              # Solo results_db.json se descarga del hosting (crece con partidos)
+              # predictions_history.json viene del repo + se actualiza con fetch_predictions.py
+              try:
+                  s.get('results_db.json', 'results_db.json')
+                  print('OK results_db.json descargado del hosting')
+              except FileNotFoundError:
+                  print('results_db.json no existe en hosting — iniciando BD vacía')
               s.close(); t.close()
-              print('OK results_db.json descargado del hosting')
-          except FileNotFoundError:
-              print('results_db.json no existe aún en hosting — iniciando BD vacía')
           except Exception as e:
-              print(f'No se pudo descargar results_db.json: {e} — iniciando BD vacía')
+              print(f'No se pudo conectar al hosting: {e} — usando archivos del repo')
           EOF
 
       - name: fetch_all
