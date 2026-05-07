@@ -2789,7 +2789,7 @@ function renderRanking(mode) {{
     }} else {{
       barStyle = `background:linear-gradient(180deg,${{kfPri}} 50%,${{kfSec}} 50%);box-shadow:0 0 0 1.5px ${{kfPri}};box-sizing:border-box;width:${{bar}}%`;
     }}
-    const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : readable(color);
+    const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : readable(kfPri);
     return `<div style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
       <span style="width:18px;text-align:right;font-size:11px;color:var(--muted)">${{i+1}}</span>
       ${{crestHTML(t.name,22)}}
@@ -2900,10 +2900,12 @@ function renderH2H() {{
   html += '<div style="font-size:10px;color:var(--muted)">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
   html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:10px;color:var(--muted);user-select:none"><input type="checkbox" id="h2hCrossToggle" style="accent-color:#39ff14;width:13px;height:13px;cursor:pointer"> Cruz de Selecci\u00f3n</label>';
   html += '</div>';
-  html += '<table class="h2h-matrix" style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
+  html += '<div style="overflow-x:auto;display:flex;justify-content:center"><table class="h2h-matrix" style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
   html += '<th style="min-width:95px;text-align:right;padding-right:6px;font-size:9px;color:var(--muted);white-space:nowrap">Local \\ Visitante</th>';
   teams.forEach((t, ci) => {{
-    html += `<th data-c="${{ci}}" style="width:24px;min-width:24px;writing-mode:vertical-lr;transform:rotate(180deg);font-size:8px;color:var(--muted);padding:2px;text-align:center" title="${{t}}">${{abbr(t)}}</th>`;
+    const badgeUrl = TEAM_BADGES[t];
+    const inner = badgeUrl ? `<img src="${{badgeUrl}}" alt="${{t}}" style="width:18px;height:18px;object-fit:contain" onerror="this.outerHTML='${{abbr(t)}}'">` : abbr(t);
+    html += `<th data-c="${{ci}}" style="width:26px;min-width:26px;font-size:8px;color:var(--muted);padding:2px 1px;text-align:center;vertical-align:bottom" title="${{t}}">${{inner}}</th>`;
   }});
   html += '</tr></thead><tbody>';
   teams.forEach((home, ri) => {{
@@ -2921,7 +2923,7 @@ function renderH2H() {{
     }});
     html += '</tr>';
   }});
-  html += '</tbody></table>';
+  html += '</tbody></table></div>';
   el.innerHTML = html;
   // Inicializar checkbox con el estado guardado
   const chk = el.querySelector('#h2hCrossToggle');
