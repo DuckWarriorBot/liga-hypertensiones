@@ -282,7 +282,7 @@ header {{
   display: flex;
   align-items: center;
   gap: 16px;
-  height: 80px;
+  height: 96px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -292,12 +292,12 @@ header {{
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  margin: -20px -8px -20px 0;
+  margin: -30px -4px -30px 0;
 }}
 .logo img {{
-  width: 280px;
+  width: 380px;
   height: auto;
-  filter: drop-shadow(0 0 10px rgba(57,255,20,.6));
+  filter: drop-shadow(0 0 12px rgba(57,255,20,.7));
 }}
 header h1 {{
   display: none;
