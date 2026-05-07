@@ -3248,19 +3248,19 @@ function openTeamModal(name) {{
   setTimeout(()=>{{
     const ctx = document.getElementById('miniChart').getContext('2d');
     const teamHist = PRED_HISTORY[name] || {{}};
-    const rounds   = LIGA_DATA.total_rounds;
+    const rounds   = LIGA_DATA.total_season_rounds;
     const posArr   = LIGA_DATA.positions_by_team[name] || [];
     const asc = [], play = [], perm = [], desc = [];
     for (let i = 0; i < rounds; i++) {{
-      const p = teamHist[String(i)] || {{ascenso:0,playoff:0,permanencia:100,descenso:0}};
-      desc.push(p.descenso    || 0);
-      perm.push(p.permanencia || 0);
-      play.push(p.playoff     || 0);
-      asc.push( p.ascenso     || 0);
+      const p = teamHist[String(i)];
+      desc.push(p ? (p.descenso    || 0) : null);
+      perm.push(p ? (p.permanencia || 0) : null);
+      play.push(p ? (p.playoff     || 0) : null);
+      asc.push( p ? (p.ascenso     || 0) : null);
     }}
     new Chart(ctx,{{
       data:{{
-        labels: posHistory.map((_,i)=>'J'+(i+1)),
+        labels: Array.from({{length: rounds}}, (_,i)=>'J'+(i+1)),
         datasets:[
           {{ type:'bar',  label:'Descenso',    data:desc, backgroundColor:'rgba(239,68,68,.65)',   stack:'p', barPercentage:1, categoryPercentage:1, order:2 }},
           {{ type:'bar',  label:'Permanencia', data:perm, backgroundColor:'rgba(100,116,139,.50)', stack:'p', barPercentage:1, categoryPercentage:1, order:2 }},
