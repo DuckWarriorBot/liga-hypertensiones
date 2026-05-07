@@ -31,9 +31,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: predictions_history.json
-          key: predictions-history-${{ github.run_id }}
+          key: predictions-history-v2-${{ github.run_id }}
           restore-keys: |
-            predictions-history-
+            predictions-history-v2-
 
       - name: Descargar results_db desde hosting
         env:
@@ -65,9 +65,6 @@ jobs:
 
       - name: fetch_predictions
         run: python fetch_predictions.py || echo "fetch_predictions falló (no crítico)"
-
-      - name: fetch_predictions_history
-        run: python fetch_predictions_history.py
 
       - name: build
         run: python build.py
