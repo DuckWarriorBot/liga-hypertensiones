@@ -1522,6 +1522,107 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   filter: drop-shadow(0 0 5px var(--crest-glow, rgba(255,255,255,.15)))
           drop-shadow(0 0 1px rgba(0,0,0,.7));
 }}
+
+/* ===== PLAYOFF BRACKET ===== */
+.playoff-bracket {{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}}
+.playoff-column {{ display: flex; flex-direction: column; gap: 16px; }}
+.playoff-connector {{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 22px;
+}}
+.playoff-tie {{
+  background: var(--card2);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+}}
+.playoff-tie-header {{
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--muted);
+  background: rgba(255,255,255,.03);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}}
+.playoff-match {{
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  font-size: 13px;
+}}
+.playoff-match:last-child {{ border-bottom: none; }}
+.playoff-team {{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}}
+.playoff-team.winner {{ color: var(--win); font-weight: 700; }}
+.playoff-team.loser {{ opacity: .5; }}
+.playoff-team span {{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+.playoff-score {{
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 36px;
+  text-align: center;
+  color: var(--accent);
+}}
+.playoff-agg {{
+  text-align: center;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  background: rgba(255,255,255,.03);
+  border-top: 1px solid rgba(255,255,255,.06);
+}}
+.playoff-agg.decided {{ color: var(--win); }}
+.playoff-final-box {{
+  background: linear-gradient(135deg,rgba(250,204,21,.08),rgba(250,204,21,.03));
+  border: 1px solid rgba(250,204,21,.25);
+  border-radius: 10px;
+  overflow: hidden;
+}}
+.playoff-winner-banner {{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: linear-gradient(135deg,rgba(250,204,21,.15),rgba(250,204,21,.05));
+  border-top: 1px solid rgba(250,204,21,.2);
+  font-size: 15px;
+  font-weight: 700;
+  color: #facc15;
+}}
+.playoff-pending {{
+  text-align: center;
+  padding: 24px 12px;
+  color: var(--muted);
+  font-size: 13px;
+}}
+@media (max-width: 640px) {{
+  .playoff-bracket {{ grid-template-columns: 1fr; }}
+  .playoff-connector {{ flex-direction: row; font-size: 14px; padding-top: 0; }}
+}}
 </style>
 </head>
 <body>
@@ -1560,6 +1661,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <button data-tab="resultados" onclick="switchTab('resultados')">📋 Resultados</button>
     <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
     <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
+    <button data-tab="playoff" onclick="switchTab('playoff')">🏆 Playoff</button>
     <button data-tab="analisis" onclick="switchTab('analisis')">📊 Análisis</button>
   </nav>
   </div>
@@ -1781,6 +1883,11 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   </div>
 </div>
 
+<!-- ============================== TAB PLAYOFF ============================== -->
+<div class="tab-panel" id="tab-playoff">
+  <div class="gap-section" id="playoffContent"></div>
+</div>
+
 </main>
 
 <!-- MODAL team detail -->
@@ -1944,6 +2051,7 @@ function switchTab(name) {{
   if (name === 'resultados') renderRoundResults();
   if (name === 'predicciones') renderPredictions();
   if (name === 'analisis') initAnalysisTab();
+  if (name === 'playoff') renderPlayoff();
 }}
 
 function toggleNav() {{
@@ -2738,6 +2846,96 @@ let scatterChart = null;
 let localVisitanteChart = null;
 let rankingMode = 'off';
 
+// ===== PLAYOFF BRACKET =====
+function renderPlayoff() {{
+  const el = document.getElementById('playoffContent');
+  if (!el) return;
+  const po = LIGA_DATA.playoff;
+
+  if (!po) {{
+    el.innerHTML = '<div class="card"><div class="playoff-pending">🏆 El playoff de ascenso comenzará al finalizar la jornada 42.</div></div>';
+    return;
+  }}
+
+  function crest(name, sz) {{
+    sz = sz || 20;
+    const bd = TEAM_BADGES[name] || '';
+    if (!bd) return '<span style="font-size:10px;opacity:.5">' + (name||'?').substring(0,3).toUpperCase() + '</span>';
+    return '<img src="' + bd + '" alt="' + name + '" style="width:' + sz + 'px;height:' + sz + 'px;object-fit:contain;flex-shrink:0;">';
+  }}
+
+  function tieHTML(tie, label) {{
+    var legs = tie.matches;
+    var winner = tie.winner;
+    var agg    = tie.agg;
+    var html = '<div class="playoff-tie">';
+    html += '<div class="playoff-tie-header">' + label + '</div>';
+    for (var i = 0; i < legs.length; i++) {{
+      var m = legs[i];
+      var homeW = winner && m.home === winner;
+      var awayW = winner && m.away === winner;
+      var homeCls = homeW ? 'winner' : (winner && !homeW ? 'loser' : '');
+      var awayCls = awayW ? 'winner' : (winner && !awayW ? 'loser' : '');
+      var scoreDisp = m.played ? (m.score || '') : (m.home ? '<span style="opacity:.4;font-size:11px">por jugar</span>' : '<span style="opacity:.3;font-size:11px">–</span>');
+      var dateLbl = m.date ? '<span style="font-size:10px;color:var(--muted);margin-left:4px">(' + m.date + ')</span>' : '';
+      html += '<div class="playoff-match">';
+      html += '<div class="playoff-team ' + homeCls + '">' + crest(m.home, 18) + '<span>' + (m.home || '?') + '</span>' + dateLbl + '</div>';
+      html += '<div class="playoff-score">' + scoreDisp + '</div>';
+      html += '<div class="playoff-team ' + awayCls + '" style="justify-content:flex-end;text-align:right">' + crest(m.away, 18) + '<span>' + (m.away || '?') + '</span></div>';
+      html += '</div>';
+    }}
+    if (agg) {{
+      html += '<div class="playoff-agg decided">Global: ' + agg + (winner ? ' · Pasa: <strong>' + winner + '</strong>' : '') + '</div>';
+    }} else {{
+      html += '<div class="playoff-agg">Eliminatoria a doble partido</div>';
+    }}
+    html += '</div>';
+    return html;
+  }}
+
+  var html = '';
+
+  // ── Título ─────────────────────────────────────────────────────────────────
+  html += '<div class="card" style="margin-bottom:16px;">';
+  html += '<div class="card-title">🏆 Playoff de Ascenso</div>';
+  html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">3º-6º · 4º-5º · Final · Doble partido · Pasa el mejor global</div>';
+
+  // ── Bracket ────────────────────────────────────────────────────────────────
+  var sf1 = po.semis[0];
+  var sf2 = po.semis[1];
+  var fin = po.final;
+
+  html += '<div class="playoff-bracket">';
+
+  // Columna izquierda: semifinales
+  html += '<div class="playoff-column">';
+  html += '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Semifinales</div>';
+  html += tieHTML(sf1, sf1.team_high + ' vs ' + sf1.team_low);
+  html += '<div style="height:8px"></div>';
+  html += tieHTML(sf2, sf2.team_high + ' vs ' + sf2.team_low);
+  html += '</div>';
+
+  // Conector central
+  html += '<div class="playoff-connector"><span>→</span><span style="font-size:11px;color:var(--muted)">Ganadores</span><span>→</span></div>';
+
+  // Columna derecha: final
+  html += '<div class="playoff-column">';
+  html += '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Final</div>';
+  html += '<div class="playoff-final-box">';
+  html += tieHTML(fin, (fin.matches[0].home || '?') + ' vs ' + (fin.matches[0].away || '?'));
+  // Banner ganador
+  if (fin.winner) {{
+    html += '<div class="playoff-winner-banner">' + crest(fin.winner, 28) + '🎉 ' + fin.winner + ' asciende a Primera RFEF' + '</div>';
+  }}
+  html += '</div>';
+  html += '</div>';
+
+  html += '</div>'; // .playoff-bracket
+  html += '</div>'; // .card
+
+  el.innerHTML = html;
+}}
+
 function initAnalysisTab() {{
   buildScatterChart();
   renderRanking(rankingMode);
@@ -3290,6 +3488,65 @@ function buildHistoryDots(name, results) {{
     }}
     html += '</div>';
   }}
+
+  // ── Playoff dots (J43-J46) ────────────────────────────────────────────────
+  var po = LIGA_DATA.playoff;
+  if (po) {{
+    // Recopilar los partidos del playoff en los que participa este equipo, en orden cronológico
+    var poMatches = [];
+    var allTies = (po.semis || []).concat(po.final ? [po.final] : []);
+    for (var t = 0; t < allTies.length; t++) {{
+      var tie = allTies[t];
+      var legs = tie.matches || [];
+      for (var l = 0; l < legs.length; l++) {{
+        var m = legs[l];
+        if (m.home === name || m.away === name) {{
+          poMatches.push(m);
+        }}
+      }}
+    }}
+    if (poMatches.length > 0) {{
+      // Separador visual
+      html += '<div style="display:flex;align-items:center;gap:6px;margin:6px 0 4px;">'
+            + '<div style="height:1px;flex:1;background:rgba(250,204,21,.25);"></div>'
+            + '<span style="font-size:9px;color:#facc15;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Playoff</span>'
+            + '<div style="height:1px;flex:1;background:rgba(250,204,21,.25);"></div>'
+            + '</div>';
+      html += '<div style="display:flex;gap:2px;">';
+      for (var k = 0; k < poMatches.length; k++) {{
+        var pm   = poMatches[k];
+        var opp2 = pm.home === name ? pm.away : pm.home;
+        var badge2 = opp2 ? (TEAM_BADGES[opp2] || '') : '';
+        var esc2 = opp2.replace(/"/g, '&quot;');
+        var isHome = pm.home === name;
+        var venueTxt = isHome ? ' (Casa)' : ' (Fuera)';
+        if (!pm.played) {{
+          // Partido pendiente
+          var inner2 = badge2
+            ? '<img src="' + badge2 + '" alt="' + esc2 + '" style="width:14px;height:14px;object-fit:contain;display:block;margin:auto;opacity:.4;">'
+            : '<span style="font-size:7px;color:#facc15;opacity:.5">' + (opp2 ? opp2.substring(0,3).toUpperCase() : '?') + '</span>';
+          html += '<div title="' + pm.label + ' vs ' + esc2 + venueTxt + '" style="width:18px;height:18px;border-radius:3px;border:1px solid rgba(250,204,21,.3);display:flex;align-items:center;justify-content:center;">' + inner2 + '</div>';
+        }} else {{
+          // Partido jugado — determinar resultado para este equipo
+          var parts2 = (pm.score || '0-0').split('-');
+          var hg2 = parseInt(parts2[0]) || 0;
+          var ag2 = parseInt(parts2[1]) || 0;
+          var teamGf = isHome ? hg2 : ag2;
+          var teamGc = isHome ? ag2 : hg2;
+          var res2 = teamGf > teamGc ? 'V' : teamGf < teamGc ? 'D' : 'E';
+          var lbl2 = res2 === 'V' ? 'Victoria' : res2 === 'E' ? 'Empate' : 'Derrota';
+          var sc2 = teamGf + '-' + teamGc;
+          var tip2 = pm.label + ': ' + lbl2 + ' ' + sc2 + ' vs ' + esc2 + venueTxt;
+          var inner2 = badge2
+            ? '<img src="' + badge2 + '" alt="' + esc2 + '" style="width:14px;height:14px;object-fit:contain;display:block;margin:auto;">'
+            : '<span style="font-size:9px;font-weight:700;">' + res2 + '</span>';
+          html += '<div title="' + tip2 + '" class="cell-' + res2 + '" style="width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;cursor:default;">' + inner2 + '</div>';
+        }}
+      }}
+      html += '</div>';
+    }}
+  }}
+
   return html;
 }}
 

@@ -58,6 +58,9 @@ jobs:
       - name: fetch_flashscore
         run: python fetch_flashscore.py
 
+      - name: fetch_playoff
+        run: python fetch_playoff.py || echo "fetch_playoff falló (no crítico)"
+
       - name: fetch_predictions
         run: python fetch_predictions.py || echo "fetch_predictions falló (no crítico)"
 

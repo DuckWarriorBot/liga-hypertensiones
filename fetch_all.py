@@ -496,6 +496,50 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
                 if key in ex:
                     t[key] = ex[key]
 
+    # ── Playoff de ascenso ────────────────────────────────────────────────────
+    # Se generan los emparejamientos automáticamente cuando la liga tiene al
+    # menos 6 equipos clasificados. Los resultados los rellena fetch_playoff.py.
+    # Estructura fija: SF1 = 3º vs 6º, SF2 = 4º vs 5º, Final = ganadores.
+    playoff = None
+    if len(final_standing) >= 6:
+        p3 = final_standing[2]['name']  # 3er clasificado
+        p4 = final_standing[3]['name']  # 4º
+        p5 = final_standing[4]['name']  # 5º
+        p6 = final_standing[5]['name']  # 6º
+        playoff = {
+            'semis': [
+                {
+                    'id': 'SF1', 'team_high': p3, 'team_low': p6,
+                    'matches': [
+                        {'round': 43, 'leg': 1, 'label': 'Semifinal Ida',
+                         'home': p3, 'away': p6, 'score': None, 'played': False, 'date': None},
+                        {'round': 44, 'leg': 2, 'label': 'Semifinal Vuelta',
+                         'home': p6, 'away': p3, 'score': None, 'played': False, 'date': None},
+                    ],
+                    'winner': None, 'agg': None,
+                },
+                {
+                    'id': 'SF2', 'team_high': p4, 'team_low': p5,
+                    'matches': [
+                        {'round': 43, 'leg': 1, 'label': 'Semifinal Ida',
+                         'home': p4, 'away': p5, 'score': None, 'played': False, 'date': None},
+                        {'round': 44, 'leg': 2, 'label': 'Semifinal Vuelta',
+                         'home': p5, 'away': p4, 'score': None, 'played': False, 'date': None},
+                    ],
+                    'winner': None, 'agg': None,
+                },
+            ],
+            'final': {
+                'matches': [
+                    {'round': 45, 'leg': 1, 'label': 'Final Ida',
+                     'home': None, 'away': None, 'score': None, 'played': False, 'date': None},
+                    {'round': 46, 'leg': 2, 'label': 'Final Vuelta',
+                     'home': None, 'away': None, 'score': None, 'played': False, 'date': None},
+                ],
+                'winner': None, 'agg': None,
+            },
+        }
+
     liga_data = {
         'teams':               teams,
         'total_rounds':        rounds_played,
@@ -511,6 +555,7 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
         'fixtures':            fixtures,
         'match_days':          match_days,
         'h2h_data':            h2h_data,
+        'playoff':             playoff,
     }
 
     # Incluir scores_by_team y venue_by_team completos en el dict de salida
