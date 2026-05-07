@@ -482,7 +482,8 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     height: 100px;
   }}
   .logo img {{
-    width: 380px;
+    max-width: calc(100vw - 32px);
+    width: auto;
     padding-top: 0;
     align-items: center;
   }}
@@ -517,11 +518,52 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     border-left-color: var(--accent);
     background: rgba(0,212,255,.05);
   }}
-  main {{ padding: 0 7px 0 10px; }}
+  main {{ padding: 0 8px 0 8px; }}
   /* Forma label: salto de línea antes de los botones de forma */
   .forma-label {{ flex-basis: 100%; margin-left: 0 !important; }}
   /* Análisis: scatter + rankings en columna, ancho completo */
   .analisis-top-grid {{ grid-template-columns: 1fr !important; }}
+  /* Evitar desbordamiento horizontal del cuerpo */
+  body {{ overflow-x: hidden; }}
+  .card {{ max-width: 100%; overflow: hidden; }}
+
+  /* Zone legend */
+  .zone-legend {{ gap: 8px; }}
+  .zone-item {{ font-size: 11px; }}
+
+  /* H2H: asegurar overflow correcto */
+  #h2hGrid {{ width: 100%; box-sizing: border-box; }}
+
+  /* Standings: ocultar columnas menos importantes */
+  /* GF=7, GC=8, DIF=9, PPG=10, Racha=13, Quedan=15 */
+  .standings-table th:nth-child(7), .standings-table td:nth-child(7),
+  .standings-table th:nth-child(8), .standings-table td:nth-child(8),
+  .standings-table th:nth-child(9), .standings-table td:nth-child(9),
+  .standings-table th:nth-child(10), .standings-table td:nth-child(10),
+  .standings-table th:nth-child(13), .standings-table td:nth-child(13),
+  .standings-table th:nth-child(15), .standings-table td:nth-child(15) {{ display: none; }}
+  /* Ocultar barra de puntos, solo mostrar el número */
+  .pts-bar {{ display: none; }}
+  /* Reducir columna equipo */
+  .standings-table td:nth-child(2) {{ min-width: 100px; }}
+  /* Reducir ancho mínimo de puntos (override inline style) */
+  .standings-table th:nth-child(11) {{ min-width: 50px !important; }}
+  /* Reducir situación (override inline style) */
+  .standings-table th:nth-child(14), .standings-table td:nth-child(14) {{ min-width: 80px !important; }}
+  /* Nombre equipo: truncar si es largo */
+  .team-name-text {{ max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+  /* Celdas de la tabla más compactas */
+  .standings-table th, .standings-table td {{ padding: 7px 6px; font-size: 12px; }}
+  .standings-table td:first-child {{ padding-left: 8px; }}
+  .standings-table th:first-child {{ padding-left: 8px; }}
+  /* Form dots más pequeños */
+  .form-dot {{ width: 16px; height: 16px; font-size: 8px; }}
+  /* Team crest más pequeño */
+  .team-crest {{ width: 22px; height: 22px; }}
+  .team-cell {{ gap: 6px; }}
+  /* Modal ancho completo */
+  .modal {{ padding: 16px; }}
+  .modal-overlay {{ padding: 10px; }}
 }}
 
 /* ===== MAIN CONTENT ===== */
