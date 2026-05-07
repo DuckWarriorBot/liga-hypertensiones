@@ -155,7 +155,7 @@ if __name__ == '__main__':
     if os.path.exists(ld_path):
         with open(ld_path, encoding='utf-8') as f:
             liga = json.load(f)
-        round_idx = str(liga.get('total_rounds', 1) - 1)  # 0-indexed
+        round_idx = str(liga.get('total_rounds', 1))  # 0-indexed: predicciones para la siguiente jornada
 
         hist_path = os.path.join(os.path.dirname(__file__), 'predictions_history.json')
         if os.path.exists(hist_path):
