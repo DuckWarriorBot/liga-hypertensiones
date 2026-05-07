@@ -279,7 +279,7 @@ header {{
   background: linear-gradient(135deg, #0a0a0a 0%, #1e1e1e 100%);
   border-bottom: 1px solid var(--border);
   position: sticky;
-  top: 0;
+  top: 5px;
   z-index: 100;
   box-shadow: var(--shadow);
   display: flex;
@@ -288,9 +288,9 @@ header {{
 .header-top {{
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 0px;
   padding: 0 24px;
-  height: 80px;
+  height: 130px;
 }}
 .logo {{
   flex-shrink: 0;
