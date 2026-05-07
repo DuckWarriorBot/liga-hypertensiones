@@ -257,6 +257,16 @@ html = f"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>⚡ Liga Hypertensiones 25/26</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta name="description" content="Clasificación, estadísticas y análisis de la Liga Hypertensiones 25/26">
+<meta property="og:title" content="⚡ Liga Hypertensiones 25/26">
+<meta property="og:description" content="Clasificación, estadísticas y análisis de la Liga Hypertensiones 25/26">
+<meta property="og:image" content="https://hypertensiones.alejandrobeltran.es/logo.png">
+<meta property="og:url" content="https://hypertensiones.alejandrobeltran.es/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hypertensiones.alejandrobeltran.es/logo.png">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 /* ===== RESET & BASE ===== */
