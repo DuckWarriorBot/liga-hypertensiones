@@ -482,8 +482,7 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     height: 100px;
   }}
   .logo img {{
-    max-width: calc(100vw - 32px);
-    width: auto;
+    width: 380px;
     padding-top: 0;
     align-items: center;
   }}
@@ -518,52 +517,77 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     border-left-color: var(--accent);
     background: rgba(0,212,255,.05);
   }}
-  main {{ padding: 0 8px 0 8px; }}
+  main {{ padding: 0 7px 0 10px; }}
   /* Forma label: salto de línea antes de los botones de forma */
   .forma-label {{ flex-basis: 100%; margin-left: 0 !important; }}
   /* Análisis: scatter + rankings en columna, ancho completo */
   .analisis-top-grid {{ grid-template-columns: 1fr !important; }}
-  /* Evitar desbordamiento horizontal del cuerpo */
-  body {{ overflow-x: hidden; }}
-  .card {{ max-width: 100%; overflow: hidden; }}
 
-  /* Zone legend */
-  .zone-legend {{ gap: 8px; }}
-  .zone-item {{ font-size: 11px; }}
+  /* ===== TABLA CLASIFICACIÓN MOBILE ===== */
+  /* Full-bleed: el wrapper sobresale del padding del card */
+  .standings-wrapper {{
+    margin: 0 -20px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }}
+  /* Sticky columnas 1 (#) y 2 (Equipo) */
+  .standings-table th:nth-child(1),
+  .standings-table td:nth-child(1) {{
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--card2);
+  }}
+  .standings-table td:nth-child(1) {{ background: var(--card); }}
+  .standings-table th:nth-child(2),
+  .standings-table td:nth-child(2) {{
+    position: sticky;
+    left: 35px;
+    z-index: 2;
+    background: var(--card2);
+    box-shadow: 2px 0 6px rgba(0,0,0,.4);
+    min-width: 110px;
+  }}
+  .standings-table td:nth-child(2) {{
+    background: var(--card);
+    box-shadow: 2px 0 6px rgba(0,0,0,.4);
+  }}
+  /* Reducir fuente y padding en móvil SOLO en clasificación */
+  #standingsTable {{ font-size: 12px; }}
+  #standingsTable th, #standingsTable td {{ padding: 8px 9px; }}
+  #standingsTable th:nth-child(1), #standingsTable td:nth-child(1) {{ padding-left: 10px; }}
+  /* Ajuste columna Puntos en móvil */
+  #standingsTable th:nth-child(11) {{ min-width: 120px; }}
+  /* Leyenda se oculta en móvil (demasiado texto) */
+  .card-legend {{ display: none; }}
 
-  /* H2H: asegurar overflow correcto */
-  #h2hGrid {{ width: 100%; box-sizing: border-box; }}
-
-  /* Standings: ocultar columnas menos importantes */
-  /* GF=7, GC=8, DIF=9, PPG=10, Racha=13, Quedan=15 */
-  .standings-table th:nth-child(7), .standings-table td:nth-child(7),
-  .standings-table th:nth-child(8), .standings-table td:nth-child(8),
-  .standings-table th:nth-child(9), .standings-table td:nth-child(9),
-  .standings-table th:nth-child(10), .standings-table td:nth-child(10),
-  .standings-table th:nth-child(13), .standings-table td:nth-child(13),
-  .standings-table th:nth-child(15), .standings-table td:nth-child(15) {{ display: none; }}
-  /* Ocultar barra de puntos, solo mostrar el número */
-  .pts-bar {{ display: none; }}
-  /* Reducir columna equipo */
-  .standings-table td:nth-child(2) {{ min-width: 100px; }}
-  /* Reducir ancho mínimo de puntos (override inline style) */
-  .standings-table th:nth-child(11) {{ min-width: 50px !important; }}
-  /* Reducir situación (override inline style) */
-  .standings-table th:nth-child(14), .standings-table td:nth-child(14) {{ min-width: 80px !important; }}
-  /* Nombre equipo: truncar si es largo */
-  .team-name-text {{ max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
-  /* Celdas de la tabla más compactas */
-  .standings-table th, .standings-table td {{ padding: 7px 6px; font-size: 12px; }}
-  .standings-table td:first-child {{ padding-left: 8px; }}
-  .standings-table th:first-child {{ padding-left: 8px; }}
-  /* Form dots más pequeños */
-  .form-dot {{ width: 16px; height: 16px; font-size: 8px; }}
-  /* Team crest más pequeño */
-  .team-crest {{ width: 22px; height: 22px; }}
-  .team-cell {{ gap: 6px; }}
-  /* Modal ancho completo */
-  .modal {{ padding: 16px; }}
-  .modal-overlay {{ padding: 10px; }}
+  /* ===== H2H MATRIX MOBILE ===== */
+  /* Full-bleed */
+  #h2hGrid > div:last-child {{ margin: 0 -20px; }}
+  /* Celdas más pequeñas */
+  .h2h-matrix {{ font-size: 7px !important; }}
+  .h2h-matrix td, .h2h-matrix th {{
+    width: 18px !important;
+    min-width: 18px !important;
+    height: 16px !important;
+  }}
+  .h2h-matrix thead tr th:first-child {{
+    min-width: 70px !important;
+    font-size: 8px !important;
+  }}
+  .h2h-matrix tbody tr td:first-child {{
+    font-size: 8px !important;
+    padding-right: 4px !important;
+    min-width: 70px;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }}
+  .h2h-matrix thead tr th:not(:first-child) img {{
+    width: 14px !important;
+    height: 14px !important;
+  }}
 }}
 
 /* ===== MAIN CONTENT ===== */
@@ -1329,6 +1353,15 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 /* ===== H2H ===== */
 #h2hGrid table {{ border-collapse: collapse; }}
 #h2hGrid td {{ border: 1px solid #0a0a0a; }}
+/* Primera columna sticky en la matriz H2H */
+.h2h-matrix thead tr th:first-child,
+.h2h-matrix tbody tr td:first-child {{
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--card);
+  box-shadow: 2px 0 6px rgba(0,0,0,.5);
+}}
 
 /* ===== STATUS BAR (inline en header-meta) ===== */
 .status-bar {{
