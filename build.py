@@ -1727,7 +1727,7 @@ function getZoneClass(pos) {{
   return 'zone-relegation';
 }}
 function posBadge(pos) {{
-  const cls = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-default';
+  const cls = pos===1?'pos-1':pos===2?'pos-2':'pos-default';
   return `<span class="pos-badge ${{cls}}">${{pos}}</span>`;
 }}
 
