@@ -2178,6 +2178,9 @@ function buildChart() {{
   const datasets = [];
   selectedTeams.forEach(name => {{
     const color = getColor(name);
+    const kf = TEAM_KIT_FULL[name] || {{}};
+    const kPri = kf.primary   || color;
+    const kSec = kf.secondary || '#1a2236';
     let dataArr;
     if (activeChart === 'pos') {{
       dataArr = LIGA_DATA.positions_by_team[name];
@@ -2194,12 +2197,22 @@ function buildChart() {{
         return parseFloat((slice.reduce((a,b)=>a+b,0) / W).toFixed(2));
       }});
     }}
+    // Gradiente horizontal del canvas: secondary → primary (igual que las barras)
+    const chartEl = document.getElementById('evolutionChart');
+    const gradCtx = chartEl ? chartEl.getContext('2d') : null;
+    let lineColor = kPri;
+    if (gradCtx) {{
+      const grad = gradCtx.createLinearGradient(0, 0, chartEl.width, 0);
+      grad.addColorStop(0, kSec);
+      grad.addColorStop(1, kPri);
+      lineColor = grad;
+    }}
     datasets.push({{
       label: name,
       data: dataArr,
-      borderColor: color,
-      backgroundColor: color + '18',
-      borderWidth: 2,
+      borderColor: lineColor,
+      backgroundColor: kPri + '18',
+      borderWidth: 2.5,
       pointRadius: 0,
       pointHoverRadius: 5,
       tension: 0.3,
