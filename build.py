@@ -440,10 +440,12 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
   .logo {{
     margin: 0;
     justify-content: center;
+    height: 100px;
   }}
   .logo img {{
-    width: 230px;
-    padding-top: 8px;
+    width: 380px;
+    padding-top: 0;
+    align-items: center;
   }}
   .header-meta {{
     width: 100%;
@@ -451,7 +453,7 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     border-top: 1px solid var(--border);
     padding-left: 0;
     padding-top: 10px;
-    padding-bottom: 12px;
+    padding-bottom: 2px;
     align-items: center;
     text-align: center;
   }}
@@ -476,7 +478,9 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     border-left-color: var(--accent);
     background: rgba(0,212,255,.05);
   }}
-  main {{ padding: 16px 12px; }}
+  main {{ padding: 0 7px 0 10px; }}
+  /* Forma label: salto de línea antes de los botones de forma */
+  .forma-label {{ flex-basis: 100%; margin-left: 0 !important; }}
 }}
 
 /* ===== MAIN CONTENT ===== */
@@ -1441,7 +1445,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
     <span class="round-label" id="standingsRoundLabel">J{total_rounds} / {total_rounds}</span>
     <button class="round-btn" onclick="changeStandingsRound(1)" id="btnStandNext">›</button>
     <button class="btn-latest" onclick="changeStandingsRound(999)">Última jornada →</button>
-    <span style="margin-left:12px;color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Forma:</span>
+    <span class="forma-label" style="margin-left:12px;color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Forma:</span>
     <button class="btn-form active" id="fmtAll" onclick="setFormMode(0)">General</button>
     <button class="btn-form" id="fmt5" onclick="setFormMode(5)">Últ.5</button>
     <button class="btn-form" id="fmt10" onclick="setFormMode(10)">Últ.10</button>
