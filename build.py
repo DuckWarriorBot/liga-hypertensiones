@@ -2197,26 +2197,31 @@ function buildChart() {{
         return parseFloat((slice.reduce((a,b)=>a+b,0) / W).toFixed(2));
       }});
     }}
-    // Gradiente horizontal del canvas: secondary → primary (igual que las barras)
-    const chartEl = document.getElementById('evolutionChart');
-    const gradCtx = chartEl ? chartEl.getContext('2d') : null;
-    let lineColor = kPri;
-    if (gradCtx) {{
-      const grad = gradCtx.createLinearGradient(0, 0, chartEl.width, 0);
-      grad.addColorStop(0, kSec);
-      grad.addColorStop(1, kPri);
-      lineColor = grad;
-    }}
+    // Línea inferior gruesa (secondary) = "borde", oculta de leyenda y tooltip
+    datasets.push({{
+      label: '\x00' + name,
+      data: dataArr,
+      borderColor: kSec,
+      backgroundColor: 'transparent',
+      borderWidth: 5,
+      pointRadius: 0,
+      pointHoverRadius: 0,
+      tension: 0.3,
+      fill: false,
+      order: 2
+    }});
+    // Línea superior más fina (primary) = color principal, visible en leyenda
     datasets.push({{
       label: name,
       data: dataArr,
-      borderColor: lineColor,
+      borderColor: kPri,
       backgroundColor: kPri + '18',
-      borderWidth: 2.5,
+      borderWidth: 3,
       pointRadius: 0,
       pointHoverRadius: 5,
       tension: 0.3,
-      fill: false
+      fill: false,
+      order: 1
     }});
   }});
   if (evolutionChart) evolutionChart.destroy();
@@ -2233,11 +2238,14 @@ function buildChart() {{
         legend: {{
           display: true,
           position: 'bottom',
-          labels: {{ color: '#94a3b8', boxWidth: 12, font: {{size: 11}} }}
+          labels: {{
+            color: '#94a3b8', boxWidth: 12, font: {{size: 11}},
+            filter: item => !item.text.startsWith('\x00')
+          }}
         }},
         tooltip: {{
           callbacks: {{
-            label: ctx => ` ${{ctx.dataset.label}}: ${{activeChart==='pos'?'#':''}}${{ctx.parsed.y}}${{activeChart==='pts'?' pts':activeChart==='ppg'?' ppg':'º'}}`
+            label: ctx => ctx.dataset.label.startsWith('\x00') ? null : ` ${{ctx.dataset.label}}: ${{activeChart==='pos'?'#':''}}${{ctx.parsed.y}}${{activeChart==='pts'?' pts':activeChart==='ppg'?' ppg':'º'}}`
           }}
         }}
       }},
