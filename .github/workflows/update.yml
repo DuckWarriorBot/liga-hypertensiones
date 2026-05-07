@@ -71,7 +71,7 @@ jobs:
             set net:timeout 30;
             set net:max-retries 3;
             open sftp://${SFTP_USERNAME}:${SFTP_PASSWORD}@${SFTP_SERVER}:${SFTP_PORT:-22};
-            cd ${SFTP_PATH};
+            cd "${SFTP_PATH:-.}";
             put index.html;
             put version.json;
             put liga_data.json;

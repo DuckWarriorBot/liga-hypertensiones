@@ -31,7 +31,7 @@ SFTP_USER = 'acc147683744'
 # La contraseña se lee desde variable de entorno IONOS_SFTP_PASS
 # (nunca hardcodeada). Configúrala con:
 #   $env:IONOS_SFTP_PASS = 'tu_contraseña'
-SFTP_REMOTE_DIR = '/'   # Ajusta si es necesario (ej: '/hypertensiones.alejandrobeltran.es/')
+SFTP_REMOTE_DIR = '.'   # Home del usuario SFTP = raíz del sitio web
 
 # Archivos a copiar al hosting
 DEPLOY_FILES = [
@@ -114,13 +114,13 @@ def do_deploy_sftp():
         transport.connect(username=SFTP_USER, password=password)
         sftp = paramiko.SFTPClient.from_transport(transport)
 
-        # Determinar directorio remoto
-        remote_dir = SFTP_REMOTE_DIR
-        try:
-            sftp.chdir(remote_dir)
-        except IOError:
-            print(f'         ⚠  Ruta remota "{remote_dir}" no encontrada, usando directorio actual')
-            sftp.chdir('.')
+        # El home ya es el directorio web — solo cambiamos si se especifica otro
+        remote_dir = SFTP_REMOTE_DIR.strip()
+        if remote_dir and remote_dir not in ('.', '/'):
+            try:
+                sftp.chdir(remote_dir)
+            except IOError:
+                print(f'         ⚠  Ruta remota "{remote_dir}" no encontrada, usando directorio actual')
 
         ok = True
         for fname in DEPLOY_FILES:

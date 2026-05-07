@@ -92,7 +92,8 @@ $inputServer = Read-Host "  Host SFTP [$defaultServer]"
 $inputPort   = Read-Host "  Puerto SFTP [$defaultPort]"
 $inputUser   = Read-Host "  Usuario SFTP [$defaultUser]"
 $sftpPassword = Read-Host "  Contraseña SFTP" -AsSecureString
-$sftpPath     = Read-Host "  Ruta en servidor (ej: /hypertensiones.alejandrobeltran.es/ o /)"
+$inputPath = Read-Host "  Ruta en servidor [.] (Enter = raíz home, que es el directorio web)"
+$sftpPath  = if ($inputPath -ne '') { $inputPath } else { '.' }
 
 $sftpServer = if ($inputServer -ne '') { $inputServer } else { $defaultServer }
 $sftpPort   = if ($inputPort   -ne '') { $inputPort   } else { $defaultPort   }
