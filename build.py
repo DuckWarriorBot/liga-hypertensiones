@@ -915,6 +915,10 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   font-size: 12px;
 }}
 .live-bar.has-live {{ display: flex; }}
+/* H2H cross-highlight */
+.h2h-matrix td, .h2h-matrix th {{ transition: opacity 0.1s; }}
+.h2h-matrix.h2h-hov td:not(.h2h-cross),
+.h2h-matrix.h2h-hov th:not(.h2h-cross) {{ opacity: 0.12; }}
 .live-match-pill {{
   display: flex;
   align-items: center;
@@ -2810,30 +2814,62 @@ function renderH2H() {{
   const abbr  = n => n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,3);
   const bg    = r => r==='V'?'rgba(57,255,20,.70)':r==='E'?'rgba(245,158,11,.70)':r==='D'?'rgba(239,68,68,.70)':'var(--card2)';
   const tc    = r => r==='V'?'#0a0a0a':r==='E'?'#0a0a0a':r==='D'?'#fff':'var(--muted)';
-  let html = '<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
-  html += '<table style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
+  const crossEnabled = () => localStorage.getItem('h2h_cross') !== '0';
+  let html = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
+  html += '<div style="font-size:10px;color:var(--muted)">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
+  html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:10px;color:var(--muted);user-select:none"><input type="checkbox" id="h2hCrossToggle" style="accent-color:#39ff14;width:13px;height:13px;cursor:pointer"> Cruz hover</label>';
+  html += '</div>';
+  html += '<table class="h2h-matrix" style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
   html += '<th style="min-width:95px;text-align:right;padding-right:6px;font-size:9px;color:var(--muted);white-space:nowrap">Local \\ Visitante</th>';
-  teams.forEach(t => {{
-    html += `<th style="width:24px;min-width:24px;writing-mode:vertical-lr;transform:rotate(180deg);font-size:8px;color:var(--muted);padding:2px;text-align:center" title="${{t}}">${{abbr(t)}}</th>`;
+  teams.forEach((t, ci) => {{
+    html += `<th data-c="${{ci}}" style="width:24px;min-width:24px;writing-mode:vertical-lr;transform:rotate(180deg);font-size:8px;color:var(--muted);padding:2px;text-align:center" title="${{t}}">${{abbr(t)}}</th>`;
   }});
   html += '</tr></thead><tbody>';
-  teams.forEach(home => {{
-    html += `<tr><td style="font-size:9px;color:var(--muted);padding-right:8px;white-space:nowrap;text-align:right;padding-top:2px;padding-bottom:2px">${{home}}</td>`;
-    teams.forEach(away => {{
+  teams.forEach((home, ri) => {{
+    html += `<tr><td data-r="${{ri}}" style="font-size:9px;color:var(--muted);padding-right:8px;white-space:nowrap;text-align:right;padding-top:2px;padding-bottom:2px">${{home}}</td>`;
+    teams.forEach((away, ci) => {{
       if (home === away) {{
-        html += '<td style="background:var(--border);width:24px;min-width:24px;height:20px"></td>';
+        html += `<td data-r="${{ri}}" data-c="${{ci}}" style="background:var(--border);width:24px;min-width:24px;height:20px"></td>`;
       }} else {{
         const cell = (h2h[home] || {{}})[away];
         const r    = cell?.res || '?';
         const s    = cell?.score || '-';
         const disp = (s !== '-' && s !== '?') ? s : '';
-        html += `<td style="background:${{bg(r)}};color:${{tc(r)}};width:24px;min-width:24px;height:20px;text-align:center;font-weight:700;font-size:8px" title="${{home}} vs ${{away}}: ${{s}}">${{disp}}</td>`;
+        html += `<td data-r="${{ri}}" data-c="${{ci}}" style="background:${{bg(r)}};color:${{tc(r)}};width:24px;min-width:24px;height:20px;text-align:center;font-weight:700;font-size:8px" title="${{home}} vs ${{away}}: ${{s}}">${{disp}}</td>`;
       }}
     }});
     html += '</tr>';
   }});
   html += '</tbody></table>';
   el.innerHTML = html;
+  // Inicializar checkbox con el estado guardado
+  const chk = el.querySelector('#h2hCrossToggle');
+  if (chk) {{
+    chk.checked = crossEnabled();
+    chk.addEventListener('change', function() {{
+      localStorage.setItem('h2h_cross', this.checked ? '1' : '0');
+      tbl && tbl.classList.toggle('h2h-cross-off', !this.checked);
+    }});
+  }}
+  // Cruz de fila+columna al hacer hover
+  const tbl = el.querySelector('.h2h-matrix');
+  if (tbl) {{
+    if (!crossEnabled()) tbl.classList.add('h2h-cross-off');
+    tbl.addEventListener('mouseover', function(e) {{
+      if (tbl.classList.contains('h2h-cross-off')) return;
+      const cell = e.target.closest('[data-r],[data-c]');
+      if (!cell) return;
+      tbl.querySelectorAll('.h2h-cross').forEach(x => x.classList.remove('h2h-cross'));
+      tbl.classList.add('h2h-hov');
+      const r = cell.dataset.r, c = cell.dataset.c;
+      if (r !== undefined) tbl.querySelectorAll(`[data-r="${{r}}"]`).forEach(x => x.classList.add('h2h-cross'));
+      if (c !== undefined) tbl.querySelectorAll(`[data-c="${{c}}"]`).forEach(x => x.classList.add('h2h-cross'));
+    }});
+    tbl.addEventListener('mouseleave', function() {{
+      tbl.classList.remove('h2h-hov');
+      tbl.querySelectorAll('.h2h-cross').forEach(x => x.classList.remove('h2h-cross'));
+    }});
+  }}
 }}
 
 // ===== AUTO-UPDATE =====
