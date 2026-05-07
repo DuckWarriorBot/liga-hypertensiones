@@ -2151,6 +2151,15 @@ const BESOCCER_NAME = {besoccer_map_js};
 let SCORES_DATA = {scores_js};
 const PRED_HISTORY = {pred_hist_js};
 const HISTORY_DATA = {history_js};
+// Ganadores del playoff de ascenso por temporada histórica
+const HIST_PLAYOFF_WINNERS = {{
+  '2019/20': 'Elche',
+  '2020/21': 'Rayo Vallecano',
+  '2021/22': 'Girona',
+  '2022/23': 'Levante',
+  '2023/24': 'Espanyol',
+  '2024/25': 'Real Oviedo',
+}};
 const MAX_PTS = LIGA_DATA.total_rounds * 3;
 
 // ===== STATE =====
@@ -2227,7 +2236,13 @@ function computeStandingsForRound(round) {{
       const dAsegurar = quedanRnd - (t.pts - pts3);
       t.situacion = dAsegurar <= 0 ? 'ASCENSO ASEGURADO' : `A ${{dAsegurar}} DE ASEGURAR`;
     }} else if (pos <= 6) {{
-      t.situacion = `A ${{pts2 - t.pts}} DEL ASCENSO`;
+      if (quedanRnd === 0) {{
+        // Temporada regular completada: este equipo juega el playoff de ascenso
+        t.situacion = 'PLAYOFF';
+      }} else {{
+        const dSobre7 = t.pts - (teams[6]?.pts ?? 0);
+        t.situacion = dSobre7 > quedanRnd ? 'PLAYOFF ASEGURADO' : `A ${{pts2 - t.pts}} DEL ASCENSO`;
+      }}
     }} else if (pos <= 18) {{
       const dPlay = pts6 - t.pts;          // puntos que le faltan al playoff
       const dDesc = t.pts - pts19;         // margen sobre el descenso (distancia al 19º)
@@ -3279,6 +3294,25 @@ function renderPlayoff() {{
       }});
       html += '</div>';
 
+      // Ganador del playoff
+      var currentLabel = LIGA_DATA.label || '';
+      var playoffWinner = HIST_PLAYOFF_WINNERS[currentLabel] || null;
+      if (playoffWinner) {{
+        var pwBd = TEAM_BADGES[playoffWinner] || '';
+        var pwCrest = pwBd
+          ? '<img src="' + pwBd + '" alt="' + playoffWinner + '" style="width:44px;height:44px;object-fit:contain;flex-shrink:0;">'
+          : '<span style="font-size:18px;font-weight:700;color:var(--muted)">' + playoffWinner.substring(0,3).toUpperCase() + '</span>';
+        var pwKf = TEAM_KIT_FULL[playoffWinner] || {{}};
+        var pwColor = pwKf.primary || TEAM_COLORS[playoffWinner] || '#f5c500';
+        html += '<div class="card" style="margin-top:16px;background:linear-gradient(135deg,' + pwColor + '22,' + pwColor + '44);border:2px solid ' + pwColor + '88;">';
+        html += '<div class="card-title" style="color:' + pwColor + '">🎉 Ganador del Playoff · Ascendido</div>';
+        html += '<div style="display:flex;align-items:center;gap:14px;padding:8px 0;">';
+        html += '<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;">' + pwCrest + '</div>';
+        html += '<div><div style="font-size:20px;font-weight:800;color:' + pwColor + '">' + playoffWinner + '</div>';
+        html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">Ascenso vía playoff · ' + currentLabel + '</div></div>';
+        html += '</div></div>';
+      }}
+
       html += '<div class="card" style="margin-top:16px;">';
       html += '<div class="card-title">⚡ Playoff de Ascenso (3º – 6º)</div>';
       html += '<div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Semifinales: 3º vs 6º · 4º vs 5º &nbsp;·&nbsp; Final: ganadores</div>';
@@ -3317,7 +3351,9 @@ function renderPlayoff() {{
           }});
           html += '</div>';
         }}
-        html += '<div style="color:var(--muted);font-style:italic;font-size:10px">Resultados del playoff no almacenados — re-ejecuta fetch_history.py para obtenerlos</div>';
+        html += '<div style="color:var(--muted);font-style:italic;font-size:10px">'
+             + (playoffWinner ? ('Ganador: ' + playoffWinner + ' · Partidos individuales no almacenados') : 'Resultados de partidos no almacenados')
+             + '</div>';
         html += '</div>';
       }}
       html += '</div>';
@@ -4261,6 +4297,7 @@ function switchSeason(label) {{
     const nr = hs.total_rounds || hs.total_season_rounds || 42;
     const {{ points_by_team, positions_by_team }} = _buildHistPositions(hs.teams, hs.results_by_team, nr);
     const newLiga = {{
+      label:               label,
       teams:               hs.teams,
       total_rounds:        nr,
       total_season_rounds: nr,
