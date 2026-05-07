@@ -33,6 +33,30 @@ TEAM_COLORS = {
     'Huesca':           '#003087',  # azul SD Huesca
     'Real Zaragoza':    '#003087',  # azul Real Zaragoza
     'Cultural Leonesa': '#CC0000',  # rojo Cultural Leonesa
+    # ── Equipos de temporadas históricas ──────────────────────────────────
+    'Levante':            '#0033A0',  # azul marino Levante UD
+    'Cartagena':          '#CC0000',  # rojo FC Cartagena
+    'Elche':              '#00843D',  # verde Elche CF
+    'Eldense':            '#CC0000',  # rojo UD Eldense
+    'Espanyol':           '#003DA5',  # azul RCD Espanyol
+    'Tenerife':           '#003087',  # azul CD Tenerife
+    'Girona':             '#9B1C31',  # granate Girona FC
+    'Mallorca':           '#CC0000',  # rojo RCD Mallorca
+    'Real Oviedo':        '#003087',  # azul Real Oviedo
+    'Alavés':             '#003087',  # azul Deportivo Alavés
+    'Rayo Vallecano':     '#CC0000',  # rojo Rayo Vallecano
+    'Lugo':               '#CC0000',  # rojo CD Lugo
+    'Ponferradina':       '#CC0000',  # rojo SD Ponferradina
+    'Alcorcón':           '#FF6600',  # naranja AD Alcorcón
+    'Amorebieta':         '#CC0000',  # rojo SD Amorebieta
+    'Ibiza':              '#003087',  # azul UD Ibiza
+    'Fuenlabrada':        '#009B3A',  # verde CF Fuenlabrada
+    'Numancia':           '#CC0000',  # rojo CD Numancia
+    'Racing Club Ferrol': '#CC0000',  # rojo Racing Club de Ferrol
+    'Sabadell':           '#003087',  # azul CE Sabadell
+    'UD Logroñés':        '#CC0000',  # rojo UD Logroñés
+    'Villarreal B':       '#F5C500',  # amarillo Villarreal CF B
+    'Extremadura':        '#CC0000',  # rojo Extremadura UD
 }
 
 # Escudos oficiales de BeSoccer CDN (cdn.resfu.com)
@@ -59,6 +83,30 @@ TEAM_BADGES = {
     'Huesca':           'https://cdn.resfu.com/img_data/equipos/1339.png',
     'Real Zaragoza':    'https://cdn.resfu.com/img_data/equipos/2136.png',
     'Cultural Leonesa': 'https://cdn.resfu.com/img_data/equipos/877.png',
+    # ── Equipos de temporadas históricas (BeSoccer CDN) ──────────────────
+    'Levante':            'https://cdn.resfu.com/img_data/equipos/1535.png',
+    'Cartagena':          'https://cdn.resfu.com/img_data/equipos/660.png',
+    'Elche':              'https://cdn.resfu.com/img_data/equipos/1000.png',
+    'Eldense':            'https://cdn.resfu.com/img_data/equipos/2847.png',
+    'Espanyol':           'https://cdn.resfu.com/img_data/equipos/1021.png',
+    'Tenerife':           'https://cdn.resfu.com/img_data/equipos/2214.png',
+    'Girona':             'https://cdn.resfu.com/img_data/equipos/1137.png',
+    'Mallorca':           'https://cdn.resfu.com/img_data/equipos/1631.png',
+    'Real Oviedo':        'https://cdn.resfu.com/img_data/equipos/2073.png',
+    'Alavés':             'https://cdn.resfu.com/img_data/equipos/127.png',
+    'Rayo Vallecano':     'https://cdn.resfu.com/img_data/equipos/2090.png',
+    'Lugo':               'https://cdn.resfu.com/img_data/equipos/1609.png',
+    'Ponferradina':       'https://cdn.resfu.com/img_data/equipos/2009.png',
+    'Alcorcón':           'https://cdn.resfu.com/img_data/equipos/131.png',
+    'Amorebieta':         'https://cdn.resfu.com/img_data/equipos/195.png',
+    'Ibiza':              'https://cdn.resfu.com/img_data/equipos/23459.png',
+    'Fuenlabrada':        'https://cdn.resfu.com/img_data/equipos/1107.png',
+    'Numancia':           'https://cdn.resfu.com/img_data/equipos/1789.png',
+    'Racing Club Ferrol': 'https://cdn.resfu.com/img_data/equipos/2079.png',
+    'Sabadell':           'https://cdn.resfu.com/img_data/equipos/2111.png',
+    'UD Logroñés':        'https://cdn.resfu.com/img_data/equipos/1590.png',
+    'Villarreal B':       'https://cdn.resfu.com/img_data/equipos/2665.png',
+    'Extremadura':        'https://cdn.resfu.com/img_data/equipos/1056.png',
 }
 
 # Nota: besoccer_ids.json NO sobreescribe TEAM_BADGES — los IDs hardcodeados son correctos.
@@ -153,6 +201,30 @@ TEAM_KIT = {
     'Huesca':           '#4338ca',  # azul y granate → índigo
     'Real Zaragoza':    '#1d4ed8',  # blanco y azul → azul
     'Cultural Leonesa': '#94a3b8',  # blanco → neutro
+    # ── Temporadas históricas ──────────────────────────────────────────────
+    'Levante':            '#1d4ed8',  # azul marino
+    'Cartagena':          '#dc2626',  # rojo
+    'Elche':              '#16a34a',  # verde
+    'Eldense':            '#dc2626',  # rojo
+    'Espanyol':           '#1d4ed8',  # azul
+    'Tenerife':           '#1d4ed8',  # azul
+    'Girona':             '#dc2626',  # granate
+    'Mallorca':           '#dc2626',  # rojo
+    'Real Oviedo':        '#1d4ed8',  # azul
+    'Alavés':             '#1d4ed8',  # azul
+    'Rayo Vallecano':     '#dc2626',  # rojo
+    'Lugo':               '#dc2626',  # rojo
+    'Ponferradina':       '#dc2626',  # rojo
+    'Alcorcón':           '#f97316',  # naranja
+    'Amorebieta':         '#dc2626',  # rojo
+    'Ibiza':              '#1d4ed8',  # azul
+    'Fuenlabrada':        '#16a34a',  # verde
+    'Numancia':           '#dc2626',  # rojo
+    'Racing Club Ferrol': '#dc2626',  # rojo
+    'Sabadell':           '#1d4ed8',  # azul
+    'UD Logroñés':        '#dc2626',  # rojo
+    'Villarreal B':       '#f59e0b',  # amarillo
+    'Extremadura':        '#dc2626',  # rojo
 }
 
 # Kit 2 colores: primary = borde + brillo (glow), secondary = fondo del escudo
@@ -180,6 +252,30 @@ TEAM_KIT_FULL = {
     'Huesca':           {'primary': '#003087', 'secondary': '#8B1A1A'},  # azul / granate
     'Real Zaragoza':    {'primary': '#FFFFFF', 'secondary': '#003087'},  # blanco / azul
     'Cultural Leonesa': {'primary': '#FFFFFF', 'secondary': '#CC0000'},  # blanco / rojo
+    # ── Temporadas históricas ──────────────────────────────────────────────
+    'Levante':            {'primary': '#0033A0', 'secondary': '#CC0000'},  # azul / rojo
+    'Cartagena':          {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Elche':              {'primary': '#00843D', 'secondary': '#FFFFFF'},  # verde / blanco
+    'Eldense':            {'primary': '#CC0000', 'secondary': '#000000'},  # rojo / negro
+    'Espanyol':           {'primary': '#003DA5', 'secondary': '#FFFFFF'},  # azul / blanco
+    'Tenerife':           {'primary': '#003087', 'secondary': '#FFFFFF'},  # azul / blanco
+    'Girona':             {'primary': '#9B1C31', 'secondary': '#FFFFFF'},  # granate / blanco
+    'Mallorca':           {'primary': '#CC0000', 'secondary': '#000000'},  # rojo / negro
+    'Real Oviedo':        {'primary': '#003087', 'secondary': '#FFFFFF'},  # azul / blanco
+    'Alavés':             {'primary': '#003087', 'secondary': '#FFFFFF'},  # azul / blanco
+    'Rayo Vallecano':     {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Lugo':               {'primary': '#CC0000', 'secondary': '#000000'},  # rojo / negro
+    'Ponferradina':       {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Alcorcón':           {'primary': '#FF6600', 'secondary': '#000000'},  # naranja / negro
+    'Amorebieta':         {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Ibiza':              {'primary': '#003087', 'secondary': '#FFFFFF'},  # azul / blanco
+    'Fuenlabrada':        {'primary': '#009B3A', 'secondary': '#FFFFFF'},  # verde / blanco
+    'Numancia':           {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Racing Club Ferrol': {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Sabadell':           {'primary': '#003087', 'secondary': '#FFFFFF'},  # azul / blanco
+    'UD Logroñés':        {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
+    'Villarreal B':       {'primary': '#F5C500', 'secondary': '#003087'},  # amarillo / azul
+    'Extremadura':        {'primary': '#CC0000', 'secondary': '#FFFFFF'},  # rojo / blanco
 }
 
 # Cargar predicciones reales de BeSoccer (generadas por fetch_predictions.py)
@@ -190,6 +286,24 @@ if os.path.exists(_pred_path):
         print(f"[build] Cargando predicciones reales de {_pred_path}")
 else:
     print("[build] AVISO: predictions.json no encontrado, usando datos hardcoded")
+
+# Cargar assets adicionales de equipos históricos (generados por fetch_team_assets.py)
+_assets_path = os.path.join(os.path.dirname(__file__) or '.', 'team_assets.json')
+if os.path.exists(_assets_path):
+    with open(_assets_path, 'r', encoding='utf-8') as _f:
+        _team_assets = json.load(_f)
+    _ext_badges = _team_assets.get('badges', {})
+    _ext_colors = _team_assets.get('colors', {})
+    # Solo añadir equipos que no estén ya hardcodeados en build.py
+    for _n, _v in _ext_badges.items():
+        if _n not in TEAM_BADGES:
+            TEAM_BADGES[_n] = _v
+    for _n, _v in _ext_colors.items():
+        if _n not in TEAM_COLORS:
+            TEAM_COLORS[_n] = _v
+    print(f"[build] team_assets.json cargado: {len(_ext_badges)} badges, {len(_ext_colors)} colores")
+else:
+    print("[build] INFO: team_assets.json no encontrado — usando assets hardcodeados")
 
 colors_js = json.dumps(TEAM_COLORS)
 badges_js = json.dumps(TEAM_BADGES)
@@ -3137,6 +3251,78 @@ function renderPlayoff() {{
   const po = LIGA_DATA.playoff;
 
   if (!po) {{
+    if (_historicalMode) {{
+      // Mostrar playoff histórico: ascendidos directos + 4 equipos del playoff
+      var st = LIGA_DATA.final_standings || [];
+      var promoted  = st.slice(0, 2);   // 1º y 2º: ascenso directo
+      var playTeams = st.slice(2, 6);   // 3º-6º: participantes del playoff
+
+      function teamRowH(t, pos, note) {{
+        var bd = TEAM_BADGES[t.name] || '';
+        var cr = bd ? '<img src="' + bd + '" alt="' + t.name + '" style="width:24px;height:24px;object-fit:contain;">'
+                    : '<span style="font-size:10px;color:var(--muted)">' + t.name.substring(0,3).toUpperCase() + '</span>';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">'
+             + '<span style="width:22px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)">' + pos + '</span>'
+             + cr
+             + '<span style="flex:1;font-weight:600">' + t.name + '</span>'
+             + '<span style="font-size:11px;color:var(--muted)">' + t.pts + ' pts</span>'
+             + (note ? '<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:' + note.bg + ';color:' + note.fg + ';font-weight:700;margin-left:6px">' + note.text + '</span>' : '')
+             + '</div>';
+      }}
+
+      var html = '<div class="card">';
+      html += '<div class="card-title">🏆 Ascenso Directo</div>';
+      promoted.forEach(function(t,i) {{
+        html += teamRowH(t, i+1, {{bg:'var(--win)', fg:'#0a0a0a', text:'ASCENSO DIRECTO'}});
+      }});
+      html += '</div>';
+
+      html += '<div class="card" style="margin-top:16px;">';
+      html += '<div class="card-title">⚡ Playoff de Ascenso (3º – 6º)</div>';
+      html += '<div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Semifinales: 3º vs 6º · 4º vs 5º &nbsp;·&nbsp; Final: ganadores</div>';
+      if (playTeams.length > 0) {{
+        html += '<div style="margin-bottom:16px;">';
+        html += '<div style="display:flex;gap:12px;flex-wrap:wrap;">';
+        playTeams.forEach(function(t,i) {{
+          var pos = i+3;
+          var bd = TEAM_BADGES[t.name] || '';
+          var cr = bd ? '<img src="' + bd + '" alt="' + t.name + '" style="width:40px;height:40px;object-fit:contain;">'
+                      : '<span style="font-size:11px;color:var(--muted);font-weight:700">' + t.name.substring(0,3).toUpperCase() + '</span>';
+          var kf = TEAM_KIT_FULL[t.name] || {{}};
+          var primary = kf.primary || getColor(t.name) || '#444';
+          var secondary = kf.secondary || '#1e1e1e';
+          html += '<div style="flex:1;min-width:120px;background:linear-gradient(135deg,' + secondary + '22,' + primary + '33);'
+               + 'border:1px solid ' + primary + '55;border-radius:10px;padding:12px;text-align:center;">';
+          html += '<div style="font-size:10px;color:var(--muted);margin-bottom:4px">' + pos + 'º clasificado</div>';
+          html += '<div style="width:40px;height:40px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center">' + cr + '</div>';
+          html += '<div style="font-size:12px;font-weight:700;color:' + primary + '">' + t.name + '</div>';
+          html += '<div style="font-size:11px;color:var(--muted)">' + t.pts + ' pts</div>';
+          html += '</div>';
+        }});
+        html += '</div>';
+        html += '</div>';
+        // Cuadro de eliminatorias
+        html += '<div style="background:var(--card2);border-radius:8px;padding:12px;font-size:11px;color:var(--muted);text-align:center;">';
+        if (playTeams.length >= 4) {{
+          html += '<div style="margin-bottom:8px;color:var(--text);font-weight:600">Semifinales</div>';
+          html += '<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">';
+          [[0,3],[1,2]].forEach(function(pair) {{
+            var a = playTeams[pair[0]], b = playTeams[pair[1]];
+            if (!a || !b) return;
+            var bdA = TEAM_BADGES[a.name] ? '<img src="'+TEAM_BADGES[a.name]+'" style="width:18px;height:18px;object-fit:contain;">' : a.name.substring(0,3).toUpperCase();
+            var bdB = TEAM_BADGES[b.name] ? '<img src="'+TEAM_BADGES[b.name]+'" style="width:18px;height:18px;object-fit:contain;">' : b.name.substring(0,3).toUpperCase();
+            html += '<div style="display:flex;align-items:center;gap:8px;">' + bdA + '<span style="color:var(--text)">' + a.name + '</span><span>vs</span>' + bdB + '<span style="color:var(--text)">' + b.name + '</span></div>';
+          }});
+          html += '</div>';
+        }}
+        html += '<div style="color:var(--muted);font-style:italic;font-size:10px">Resultados del playoff no almacenados — re-ejecuta fetch_history.py para obtenerlos</div>';
+        html += '</div>';
+      }}
+      html += '</div>';
+
+      el.innerHTML = html;
+      return;
+    }}
     el.innerHTML = '<div class="card"><div class="playoff-pending">🏆 El playoff de ascenso comenzará al finalizar la jornada 42.</div></div>';
     return;
   }}
@@ -3404,16 +3590,47 @@ function renderScenarios() {{
 }}
 
 // ===== LOCAL VS VISITANTE CHART =====
+function computeHomeAwayStats(name) {{
+  // Primero: usar TEAM_EXTRA_STATS si está disponible (solo temporada actual)
+  const ex = TEAM_EXTRA_STATS[name];
+  if (ex && ex.home_pts !== undefined && !_historicalMode) return ex;
+  // Calcular desde resultados + marcadores (modo histórico o equipo sin stats)
+  const res    = LIGA_DATA.results_by_team[name] || [];
+  const scMap  = SCORES_DATA.scores_by_team || {{}};
+  const venMap = SCORES_DATA.venue_by_team  || {{}};
+  const scTeam  = scMap[name]  || {{}};
+  const venTeam = venMap[name] || {{}};
+  const nr = Math.min(res.length, LIGA_DATA.total_rounds);
+  let home_pts=0, home_pj=0, home_pg=0, home_pe=0, home_pp=0, home_gf=0, home_gc=0;
+  let away_pts=0, away_pj=0, away_pg=0, away_pe=0, away_pp=0, away_gf=0, away_gc=0;
+  for (let i=0; i<nr; i++) {{
+    const r = res[i]; if (!r) continue;
+    const ven = venTeam[String(i)] || '';
+    const sc  = scTeam[String(i)]  || '';
+    let gf=0, gc=0;
+    if (sc) {{ const p=sc.split('-'); gf=parseInt(p[0]||0); gc=parseInt(p[1]||0); }}
+    if (ven === 'H') {{
+      home_pj++; home_gf+=gf; home_gc+=gc;
+      if (r==='V') {{ home_pg++; home_pts+=3; }} else if (r==='E') {{ home_pe++; home_pts+=1; }} else home_pp++;
+    }} else if (ven === 'A') {{
+      away_pj++; away_gf+=gf; away_gc+=gc;
+      if (r==='V') {{ away_pg++; away_pts+=3; }} else if (r==='E') {{ away_pe++; away_pts+=1; }} else away_pp++;
+    }}
+  }}
+  return {{ home_pts, home_pj, home_pg, home_pe, home_pp, home_gf, home_gc,
+            away_pts, away_pj, away_pg, away_pe, away_pp, away_gf, away_gc }};
+}}
+
 function buildLocalVisitanteChart() {{
   const ctx = document.getElementById('localVisitanteChart');
   if (!ctx) return;
   if (localVisitanteChart) localVisitanteChart.destroy();
   const standings = computeStandings().sort((a,b)=>b.pts-a.pts);
   const labels    = standings.map(t => t.name);
-  const homePts   = standings.map(t => TEAM_EXTRA_STATS[t.name]?.home_pts||0);
-  const awayPts   = standings.map(t => TEAM_EXTRA_STATS[t.name]?.away_pts||0);
-  const homeGF    = standings.map(t => TEAM_EXTRA_STATS[t.name]?.home_gf||0);
-  const awayGF    = standings.map(t => TEAM_EXTRA_STATS[t.name]?.away_gf||0);
+  const homePts   = standings.map(t => computeHomeAwayStats(t.name).home_pts||0);
+  const awayPts   = standings.map(t => computeHomeAwayStats(t.name).away_pts||0);
+  const homeGF    = standings.map(t => computeHomeAwayStats(t.name).home_gf||0);
+  const awayGF    = standings.map(t => computeHomeAwayStats(t.name).away_gf||0);
   const _glowPlugin = {{
     id: 'glowBars',
     beforeDatasetDraw(chart, args) {{
@@ -4073,7 +4290,7 @@ function switchSeason(label) {{
   if (evolutionChart) {{ evolutionChart.destroy(); evolutionChart = null; }}
 
   // Mostrar/ocultar tabs no disponibles en modo histórico
-  const hiddenInHistory = ['predicciones', 'playoff'];
+  const hiddenInHistory = ['predicciones'];
   hiddenInHistory.forEach(tab => {{
     const btn = document.querySelector('[data-tab="' + tab + '"]');
     if (btn) btn.style.display = _historicalMode ? 'none' : '';
@@ -4095,6 +4312,8 @@ function switchSeason(label) {{
     if (activeTabName === 'evolucion') initEvolutionChart();
     else if (activeTabName === 'resultados') renderRoundResults();
     else if (activeTabName === 'analisis') initAnalysisTab();
+    else if (activeTabName === 'equipos') renderTeams();
+    else if (activeTabName === 'playoff') renderPlayoff();
     else renderStandings();
   }}
   // Actualizar roundsBadge y roundInput max
