@@ -1604,11 +1604,11 @@ function computeStandingsForRound(round) {{
         gf += a; gc += b;
       }}
     }}
-    // Fallback: si no hay scores usamos los totales del Excel en jornada actual
-    if (gf === 0 && gc === 0 && isCurrent) {{
+    // En la jornada actual siempre usamos los totales oficiales de TEAM_EXTRA_STATS
+    if (isCurrent) {{
       const ex = TEAM_EXTRA_STATS[name] || {{}};
-      gf = ex.gf || 0;
-      gc = ex.gc || 0;
+      if (ex.gf !== undefined) gf = ex.gf;
+      if (ex.gc !== undefined) gc = ex.gc;
     }}
     const racha = (() => {{ let c=0; for(let i=res.length-1;i>=0;i--){{ if(res[i]==='D')break; c++; }} return c; }})();
     const played = res.length;
