@@ -1656,7 +1656,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
           <button class="chart-tab" id="rank-xpts" onclick="switchRanking('xpts')" title="Puntos pitagóricos esperados basados en GF/GC · diferencia con puntos reales = suerte">📐 xPts</button>
         </div>
         <div id="rankingList" style="max-height:290px;overflow-y:auto"></div>
-        <div class="card-legend"><b>Ataque</b> GF por partido &nbsp;·&nbsp; <b>Defensa</b> GC por partido (menos = mejor) &nbsp;·&nbsp; <b>PPG</b> puntos por partido (media general) &nbsp;·&nbsp; <b>Local/Visitante</b> PPG jugando en casa / fuera &nbsp;·&nbsp; <b>xPts</b> puntos pitagóricos = GF²÷(GF²+GC²)×PJ×3 · Estima los puntos que “merece” el equipo por sus goles · <b>xPts &gt; Pts reales</b> → infrapuntuado (mala suerte, puede remontar) · <b>xPts &lt; Pts reales</b> → sobrepuntuado (ha tenido suerte, puede bajar)</div>
+        <div class="card-legend"><b>Ataque</b> GF por partido &nbsp;·&nbsp; <b>Defensa</b> GC por partido (menos = mejor) &nbsp;·&nbsp; <b>PPG</b> puntos por partido (media general) &nbsp;·&nbsp; <b>Local/Visitante</b> PPG jugando en casa / fuera &nbsp;·&nbsp; <b>xPts</b> puntos pitagóricos = GF²÷(GF²+GC²)×PJ×3 · Ordenado de más infrapuntuado (mala suerte, barra verde) a más sobrepuntuado (con suerte, barra roja) · <b>xPts &gt; Pts reales</b> → merece más puntos de los que tiene · <b>xPts &lt; Pts reales</b> → ha tenido suerte, puede bajar</div>
       </div>
     </div>
     <div class="card">
@@ -2018,7 +2018,7 @@ function drawStandingsTable() {{
       <td>
         <div class="pts-bar-cell">
           <span class="pts-value">${{t.pts}}</span>
-          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:${{color}}"></div></div>
+          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:linear-gradient(90deg,${{color}},${{kit}})"></div></div>
         </div>
       </td>
       <td>${{formHTML(results.slice(0, standingsRound))}}</td>
@@ -2715,7 +2715,7 @@ function renderRanking(mode) {{
   else if (mode === 'ppg')  sorted = [...standings].sort((a,b)=>parseFloat(b.ppg)-parseFloat(a.ppg));
   else if (mode === 'home') sorted = [...standings].sort((a,b)=>(TEAM_EXTRA_STATS[b.name]?.home_pts||0)-(TEAM_EXTRA_STATS[a.name]?.home_pts||0));
   else if (mode === 'away') sorted = [...standings].sort((a,b)=>(TEAM_EXTRA_STATS[b.name]?.away_pts||0)-(TEAM_EXTRA_STATS[a.name]?.away_pts||0));
-  else                      sorted = [...standings].sort((a,b)=>xPtsCalc(b)-xPtsCalc(a));
+  else                      sorted = [...standings].sort((a,b)=>(xPtsCalc(a)-a.pts)-(xPtsCalc(b)-b.pts));  // más infrapuntuado primero (luck más negativo = menos suerte)
   const getVal = t => {{
     const ex = TEAM_EXTRA_STATS[t.name]||{{}};
     if (mode==='off')  return {{ v: t.gf,              lbl: `${{t.gf}} GF`  }};
@@ -2723,26 +2723,39 @@ function renderRanking(mode) {{
     if (mode==='ppg')  return {{ v: parseFloat(t.ppg), lbl: `${{t.ppg}}`   }};
     if (mode==='home') return {{ v: ex.home_pts||0,    lbl: `${{ex.home_pts||0}}pts · ${{ex.home_pg||0}}V${{ex.home_pe||0}}E${{ex.home_pp||0}}D` }};
     if (mode==='away') return {{ v: ex.away_pts||0,    lbl: `${{ex.away_pts||0}}pts · ${{ex.away_pg||0}}V${{ex.away_pe||0}}E${{ex.away_pp||0}}D` }};
-    const xp = xPtsCalc(t); const luck = t.pts - xp;
-    return {{ v: xp, lbl: `${{xp.toFixed(1)}} xPts (${{luck>=0?'+':''}}${{luck.toFixed(1)}})` }};
+    const xp = xPtsCalc(t); const luck = xp - t.pts;  // positivo = infrapuntuado, negativo = sobrepuntuado
+    return {{ v: Math.abs(luck), lbl: `${{xp.toFixed(1)}} xPts (${{luck>=0?'\u2212':'+' }}${{Math.abs(luck).toFixed(1)}} ${{luck>=0?'con suerte':'mala suerte'}})`, luck }};
   }};
   const maxV = Math.max(...sorted.map(t=>getVal(t).v), 1);
   const el = document.getElementById('rankingList');
   if (!el) return;
   el.innerHTML = sorted.map((t,i) => {{
-    const {{ v, lbl }} = getVal(t);
+    const valObj = getVal(t);
+    const {{ v, lbl }} = valObj;
     const bar = (v/maxV*100).toFixed(1);
     const color = getColor(t.name);
+    const kit2  = TEAM_KIT[t.name] || color;
+    // Para xPts: barra verde si infrapuntuado (mala suerte), roja si sobrepuntuado (suerte)
+    let barStyle;
+    if (mode === 'xpts') {{
+      const luck = valObj.luck ?? 0;
+      barStyle = luck >= 0
+        ? `background:linear-gradient(90deg,#22c55e,#4ade80);width:${{bar}}%`   // infrapuntuado: verde
+        : `background:linear-gradient(90deg,#ef4444,#f87171);width:${{bar}}%`;  // sobrepuntuado: rojo
+    }} else {{
+      barStyle = `background:linear-gradient(90deg,${{color}},${{kit2}});width:${{bar}}%`;
+    }}
+    const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : color;
     return `<div style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
       <span style="width:18px;text-align:right;font-size:11px;color:var(--muted)">${{i+1}}</span>
       ${{crestHTML(t.name,22)}}
       <div style="flex:1;min-width:0">
         <div style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${{t.name}}</div>
         <div style="height:3px;border-radius:2px;background:var(--border);margin-top:3px">
-          <div style="height:100%;border-radius:2px;background:${{color}};width:${{bar}}%"></div>
+          <div style="height:100%;border-radius:2px;${{barStyle}}"></div>
         </div>
       </div>
-      <span style="font-size:12px;font-weight:700;color:${{color}};white-space:nowrap;flex-shrink:0">${{lbl}}</span>
+      <span style="font-size:12px;font-weight:700;color:${{lblColor}};white-space:nowrap;flex-shrink:0">${{lbl}}</span>
     </div>`;
   }}).join('');
 }}
