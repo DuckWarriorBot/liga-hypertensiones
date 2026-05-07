@@ -1655,7 +1655,8 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
             <th title="Puntos si empata todo lo que queda" style="color:#fbbf24">Con E</th>
             <th title="¿Puede alcanzar el ascenso directo?">Ascenso</th>
             <th title="¿Puede alcanzar el playoff?">Playoff</th>
-            <th title="¿Tiene riesgo matemático de descenso?">Salvación</th>
+            <th title="¿Puede salvarse matemáticamente? (sus puntos máximos ≥ puntos del 18º)">Salvación</th>
+            <th title="¿Puede aún descender matemáticamente? (el 18º puede alcanzarle con sus puntos máximos)">Descenso</th>
           </tr></thead>
           <tbody id="scenariosBody"></tbody>
         </table>
@@ -2739,7 +2740,8 @@ function renderScenarios() {{
     const empPts  = t.pts + rndLeft;
     const canAscend   = maxPts >= pts2;
     const canPlayoff  = maxPts >= pts6;
-    const canRelegate = t.pts <= pts18 && quedanPts > 0;
+    const canSave     = maxPts >= pts18;           // sus max pts llegan al nivel del 18º → puede salvarse
+    const canDescend  = pts18 + quedanPts >= t.pts; // el 18º puede alcanzarle → aún en peligro
     const zone  = getZoneClass(t.pos);
     const color = getColor(t.name);
     return `<tr class="${{zone}}" style="background:linear-gradient(90deg,${{color}}18 0%,transparent 120px)">
@@ -2751,7 +2753,8 @@ function renderScenarios() {{
       <td style="color:#fbbf24;font-weight:600">${{empPts}}</td>
       <td style="font-size:11px">${{canAscend?'<span style="color:#4ade80;font-weight:700">✓</span>':'<span style="color:#475569">✗</span>'}}</td>
       <td style="font-size:11px">${{canPlayoff?'<span style="color:#fbbf24;font-weight:700">✓</span>':'<span style="color:#475569">✗</span>'}}</td>
-      <td style="font-size:11px">${{canRelegate?'<span style="color:#f87171;font-weight:700">⚠</span>':'<span style="color:#4ade80;font-weight:700">✓</span>'}}</td>
+      <td style="font-size:11px">${{canSave?'<span style="color:#4ade80;font-weight:700">✓</span>':'<span style="color:#ef4444;font-weight:700">✗</span>'}}</td>
+      <td style="font-size:11px">${{canDescend?'<span style="color:#f87171;font-weight:700">✓</span>':'<span style="color:#475569">✗</span>'}}</td>
     </tr>`;
   }}).join('');
 }}
