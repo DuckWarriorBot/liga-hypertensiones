@@ -61,16 +61,8 @@ TEAM_BADGES = {
     'Cultural Leonesa': 'https://cdn.resfu.com/img_data/equipos/877.png',
 }
 
-# Sobreescribir con IDs dinámicos de besoccer_ids.json (se actualiza con fetch_all.py)
-# Esto garantiza que nuevos equipos promovidos/descendidos tengan su escudo correcto.
-_bs_ids_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'besoccer_ids.json')
-if os.path.exists(_bs_ids_path):
-    try:
-        _shield_ids = json.load(open(_bs_ids_path, encoding='utf-8')).get('shield_ids', {})
-        for _name, _sid in _shield_ids.items():
-            TEAM_BADGES[_name] = f'https://cdn.resfu.com/img_data/equipos/{_sid}.png'
-    except Exception:
-        pass  # fallback al dict hardcodeado
+# Nota: besoccer_ids.json NO sobreescribe TEAM_BADGES — los IDs hardcodeados son correctos.
+# La función fetch_besoccer_shields produce IDs incorrectos por matching posicional fallback.
 
 # Stats GF/GC + local/visitante extraidos de la tabla oficial de Marca
 TEAM_EXTRA_STATS = {
