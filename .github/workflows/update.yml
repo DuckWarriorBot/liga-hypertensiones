@@ -2,12 +2,9 @@ name: Actualizar Liga Hypertensiones
 
 on:
   schedule:
-    # Cada 10 minutos entre 13:00 y 23:59 UTC+2 (11:00-21:59 UTC)
-    # → cubre todas las ventanas de partido de Segunda División
     - cron: '*/10 11-21 * * *'
-    # Cada hora fuera de esa ventana (madrugada/mañana)
     - cron: '0 0-10,22-23 * * *'
-  workflow_dispatch:   # botón "Run workflow" manual en GitHub
+  workflow_dispatch:
 
 jobs:
   update-and-deploy:
@@ -15,27 +12,22 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      # ── 1. Checkout del repositorio ──────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ── 2. Python ────────────────────────────────────────────────────────
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Instalar dependencias Python
+      - name: Instalar dependencias
         run: pip install -r requirements.txt
 
-      # ── 3. Playwright Chromium ───────────────────────────────────────────
-      - name: Instalar Chromium (Playwright)
+      - name: Instalar Chromium
         run: python -m playwright install chromium --with-deps
 
-      # ── 4. Restaurar predictions_history.json del caché ──────────────────
-      #    Así conservamos el historial entre runs sin commitearlo
-      - name: Restaurar caché de predictions_history
+      - name: Restaurar predictions_history
         uses: actions/cache@v4
         with:
           path: predictions_history.json
@@ -43,40 +35,35 @@ jobs:
           restore-keys: |
             predictions-history-
 
-      # ── 5. Pipeline de actualización ─────────────────────────────────────
-      - name: fetch_all.py  (Marca.com)
+      - name: fetch_all
         run: python fetch_all.py
 
-      - name: fetch_flashscore.py  (Flashscore live)
+      - name: fetch_flashscore
         run: python fetch_flashscore.py
 
-      - name: fetch_predictions_history.py
+      - name: fetch_predictions_history
         run: python fetch_predictions_history.py
 
-      - name: build.py  (genera index.html + version.json)
+      - name: build
         run: python build.py
 
-      # ── 6. Deploy SFTP a IONOS ───────────────────────────────────────────
-      - name: Deploy a IONOS via SFTP
+      - name: Deploy SFTP
         env:
-          SFTP_SERVER:   ${{ secrets.SFTP_SERVER }}
-          SFTP_PORT:     ${{ secrets.SFTP_PORT }}
-          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
-          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-          SFTP_PATH:     ${{ secrets.SFTP_PATH }}
+          SFTP_HOST: ${{ secrets.SFTP_SERVER }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_USER: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASS: ${{ secrets.SFTP_PASSWORD }}
         run: |
-          sudo apt-get install -y lftp
-          lftp -c "
-            set sftp:auto-confirm yes;
-            set net:timeout 30;
-            set net:max-retries 3;
-            open sftp://${SFTP_USERNAME}:${SFTP_PASSWORD}@${SFTP_SERVER}:${SFTP_PORT:-22};
-            cd "${SFTP_PATH:-.}";
-            put index.html;
-            put version.json;
-            put liga_data.json;
-            put scores_data.json;
-            put predictions.json;
-            put predictions_history.json;
-            bye
-          "
+          python - <<'EOF'
+          import paramiko, os
+          files = ['index.html','version.json','liga_data.json','scores_data.json','predictions.json','predictions_history.json']
+          t = paramiko.Transport((os.environ['SFTP_HOST'], int(os.environ.get('SFTP_PORT', 22))))
+          t.connect(username=os.environ['SFTP_USER'], password=os.environ['SFTP_PASS'])
+          s = paramiko.SFTPClient.from_transport(t)
+          for f in files:
+              if os.path.exists(f):
+                  s.put(f, f)
+                  print(f'OK {f}')
+          s.close(); t.close()
+          EOF
+
