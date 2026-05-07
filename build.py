@@ -84,29 +84,29 @@ TEAM_BADGES = {
     'Real Zaragoza':    'https://cdn.resfu.com/img_data/equipos/2136.png',
     'Cultural Leonesa': 'https://cdn.resfu.com/img_data/equipos/877.png',
     # ── Equipos de temporadas históricas (BeSoccer CDN) ──────────────────
-    'Levante':            'https://cdn.resfu.com/img_data/equipos/1535.png',
-    'Cartagena':          'https://cdn.resfu.com/img_data/equipos/660.png',
-    'Elche':              'https://cdn.resfu.com/img_data/equipos/1000.png',
-    'Eldense':            'https://cdn.resfu.com/img_data/equipos/2847.png',
-    'Espanyol':           'https://cdn.resfu.com/img_data/equipos/1021.png',
-    'Tenerife':           'https://cdn.resfu.com/img_data/equipos/2214.png',
-    'Girona':             'https://cdn.resfu.com/img_data/equipos/1137.png',
-    'Mallorca':           'https://cdn.resfu.com/img_data/equipos/1631.png',
-    'Real Oviedo':        'https://cdn.resfu.com/img_data/equipos/2073.png',
-    'Alavés':             'https://cdn.resfu.com/img_data/equipos/127.png',
-    'Rayo Vallecano':     'https://cdn.resfu.com/img_data/equipos/2090.png',
-    'Lugo':               'https://cdn.resfu.com/img_data/equipos/1609.png',
-    'Ponferradina':       'https://cdn.resfu.com/img_data/equipos/2009.png',
-    'Alcorcón':           'https://cdn.resfu.com/img_data/equipos/131.png',
-    'Amorebieta':         'https://cdn.resfu.com/img_data/equipos/195.png',
-    'Ibiza':              'https://cdn.resfu.com/img_data/equipos/23459.png',
-    'Fuenlabrada':        'https://cdn.resfu.com/img_data/equipos/1107.png',
-    'Numancia':           'https://cdn.resfu.com/img_data/equipos/1789.png',
-    'Racing Club Ferrol': 'https://cdn.resfu.com/img_data/equipos/2079.png',
-    'Sabadell':           'https://cdn.resfu.com/img_data/equipos/2111.png',
-    'UD Logroñés':        'https://cdn.resfu.com/img_data/equipos/1590.png',
-    'Villarreal B':       'https://cdn.resfu.com/img_data/equipos/2665.png',
-    'Extremadura':        'https://cdn.resfu.com/img_data/equipos/1056.png',
+    'Levante':            'https://cdn.resfu.com/img_data/equipos/1547.png',
+    'Cartagena':          'https://cdn.resfu.com/img_data/equipos/643.png',
+    'Elche':              'https://cdn.resfu.com/img_data/equipos/975.png',
+    'Eldense':            'https://cdn.resfu.com/img_data/equipos/977.png',
+    'Espanyol':           'https://cdn.resfu.com/img_data/equipos/998.png',
+    'Tenerife':           'https://cdn.resfu.com/img_data/equipos/2477.png',
+    'Girona':             'https://cdn.resfu.com/img_data/equipos/1236.png',
+    'Mallorca':           'https://cdn.resfu.com/img_data/equipos/1623.png',
+    'Real Oviedo':        'https://cdn.resfu.com/img_data/equipos/2115.png',
+    'Alavés':             'https://cdn.resfu.com/img_data/equipos/137.png',
+    'Rayo Vallecano':     'https://cdn.resfu.com/img_data/equipos/2080.png',
+    'Lugo':               'https://cdn.resfu.com/img_data/equipos/1598.png',
+    'Ponferradina':       'https://cdn.resfu.com/img_data/equipos/2301.png',
+    'Alcorcón':           'https://cdn.resfu.com/img_data/equipos/64.png',
+    'Amorebieta':         'https://cdn.resfu.com/img_data/equipos/213.png',
+    'Ibiza':              'https://cdn.resfu.com/img_data/equipos/1352.png',
+    'Fuenlabrada':        'https://cdn.resfu.com/img_data/equipos/1179.png',
+    'Numancia':           'https://cdn.resfu.com/img_data/equipos/1832.png',
+    'Racing Club Ferrol': 'https://cdn.resfu.com/img_data/equipos/2055.png',
+    'Sabadell':           'https://cdn.resfu.com/img_data/equipos/2198.png',
+    'UD Logroñés':        'https://cdn.resfu.com/img_data/equipos/1578.png',
+    'Villarreal B':       'https://cdn.resfu.com/img_data/equipos/2717.png',
+    'Extremadura':        'https://cdn.resfu.com/img_data/equipos/1026.png',
 }
 
 # Nota: besoccer_ids.json NO sobreescribe TEAM_BADGES — los IDs hardcodeados son correctos.
@@ -2237,7 +2237,9 @@ function computeStandingsForRound(round) {{
       else if (canPlayoff && dPlay <= dDesc) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
       else                                   t.situacion = `A ${{dDesc}} DEL DESCENSO`;
     }} else {{
-      t.situacion = `A ${{pts18 - t.pts}} DE SALVACI\u00d3N`;
+      const needed = pts18 - t.pts;
+      // Matemáticamente descendido: aunque gane todo no alcanza al 18º
+      t.situacion = needed > quedanRnd ? 'DESCENSO' : `A ${{needed}} DE SALVACI\u00d3N`;
     }}
   }});
   return teams;
