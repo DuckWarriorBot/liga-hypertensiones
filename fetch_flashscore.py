@@ -276,6 +276,90 @@ def _parse_events(page, is_results):
 
     return events
 
+def scrape_live_scores(page):
+    """
+    Detecta partidos en curso en /partidos/ (ya cargado por scrape_fixtures).
+    Un partido está en vivo si su .event__time muestra minutos (ej. "35'") o "HT".
+    Devuelve lista de dicts: {home, away, score_h, score_a, minute}.
+    """
+    not_mapped = set()
+    raw = page.evaluate(r"""
+    () => {
+      const results = [];
+      document.querySelectorAll('.event__match').forEach(el => {
+        const tm = el.querySelector('.event__time');
+        const timeRaw = tm ? tm.innerText.trim() : '';
+        // En vivo: tiene minutos "35'" o "HT" o "45+2'"
+        if (!/\d+'|^HT$/i.test(timeRaw)) return;
+
+        const home = el.querySelector('.event__homeParticipant, .event__participant--home');
+        const away = el.querySelector('.event__awayParticipant, .event__participant--away');
+        const parts = el.querySelectorAll('.event__participant');
+        const homeName = home ? home.innerText.trim()
+                              : (parts[0] ? parts[0].innerText.trim() : '');
+        const awayName = away ? away.innerText.trim()
+                              : (parts[1] ? parts[1].innerText.trim() : '');
+
+        const sh = el.querySelector('.event__score--home');
+        const sa = el.querySelector('.event__score--away');
+        const scoreH = sh ? sh.innerText.trim() : '';
+        const scoreA = sa ? sa.innerText.trim() : '';
+        if (!scoreH || !scoreA) return;
+
+        results.push({ home: homeName, away: awayName,
+                       scoreH, scoreA, minute: timeRaw });
+      });
+      return results;
+    }
+    """)
+    live_events = []
+    for row in raw:
+        home_int = map_team(row['home'])
+        away_int = map_team(row['away'])
+        if not home_int:
+            not_mapped.add(row['home'])
+            continue
+        if not away_int:
+            not_mapped.add(row['away'])
+            continue
+        try:
+            score_h = int(row['scoreH'])
+            score_a = int(row['scoreA'])
+        except (ValueError, KeyError):
+            continue
+        live_events.append({
+            'home': home_int, 'away': away_int,
+            'score_h': score_h, 'score_a': score_a,
+            'minute': row['minute'],
+        })
+    if not_mapped:
+        print(f'  ⚠  Live: equipos sin mapear: {not_mapped}', flush=True)
+    print(f'  ✓ {len(live_events)} partidos en vivo detectados', flush=True)
+    return live_events
+
+
+def update_live_scores(scores, live_list):
+    """
+    Actualiza scores['live_scores'] con los partidos en curso.
+    Siempre limpia primero (estado volátil).
+    Estructura: {teamName: {opponent, score_h, score_a, minute, is_home}}
+    """
+    scores['live_scores'] = {}
+    for m in live_list:
+        home, away = m['home'], m['away']
+        hg, ag = m['score_h'], m['score_a']
+        minute = m['minute']
+        scores['live_scores'][home] = {
+            'opponent': away, 'score_h': hg, 'score_a': ag,
+            'minute': minute, 'is_home': True,
+        }
+        scores['live_scores'][away] = {
+            'opponent': home, 'score_h': hg, 'score_a': ag,
+            'minute': minute, 'is_home': False,
+        }
+    return len(live_list)
+
+
 # ── Scrapers ─────────────────────────────────────────────────────────────────
 
 def scrape_results(page):
@@ -420,14 +504,17 @@ def main():
         try:
             result_list  = scrape_results(page)
             fixture_list = scrape_fixtures(page)
+            live_list    = scrape_live_scores(page)   # página ya en /partidos/
         finally:
             browser.close()
 
     n_scores = update_scores(liga, scores, result_list)
     n_fix    = update_fixtures(liga, fixture_list)
+    n_live   = update_live_scores(scores, live_list)
 
-    print(f'  Scores actualizados/añadidos : {n_scores}', flush=True)
+    print(f'  Scores actualizados/añadidos  : {n_scores}', flush=True)
     print(f'  Fixtures actualizados/añadidos: {n_fix}', flush=True)
+    print(f'  Partidos en vivo              : {n_live}', flush=True)
 
     SCORES_F.write_text(json.dumps(scores, ensure_ascii=False, indent=2), encoding='utf-8')
     LIGA_F.write_text(json.dumps(liga, ensure_ascii=False, indent=2), encoding='utf-8')

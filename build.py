@@ -316,6 +316,49 @@ header h1 {{
   color: var(--muted);
   white-space: nowrap;
 }}
+/* ===== NEXT-MATCH BANNER ===== */
+#nextMatchBanner {{
+  background: linear-gradient(90deg, rgba(57,255,20,.06) 0%, rgba(57,255,20,.02) 100%);
+  border-bottom: 1px solid rgba(57,255,20,.15);
+  padding: 5px 24px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}}
+.nm-dot {{
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #39ff14;
+  flex-shrink: 0;
+  animation: nmPulse 2s ease-in-out infinite;
+}}
+@keyframes nmPulse {{
+  0%,100% {{ opacity:1; transform:scale(1); }}
+  50% {{ opacity:.35; transform:scale(.65); }}
+}}
+.nm-label {{
+  color: #39ff14;
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}}
+.nm-teams {{
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+}}
+.nm-countdown {{
+  margin-left: auto;
+  font-weight: 700;
+  color: #39ff14;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .5px;
+  flex-shrink: 0;
+}}
 
 /* ===== TABS ===== */
 nav {{
@@ -1266,6 +1309,14 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>
 </header>
 
+<!-- NEXT MATCH BANNER -->
+<div id="nextMatchBanner">
+  <span class="nm-dot"></span>
+  <span class="nm-label">Próximo choque hypertenso</span>
+  <span class="nm-teams" id="nmTeams"></span>
+  <span class="nm-countdown" id="nmCountdown"></span>
+</div>
+
 <!-- LIVE MATCH BAR -->
 <div class="live-bar" id="liveBar"></div>
 
@@ -1455,7 +1506,22 @@ let selectedTeams = new Set();
 
 let currentRound = LIGA_DATA.total_rounds;
 let standingsRound = LIGA_DATA.total_rounds; // which jornada to show in standings
-let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome}}
+let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome, minute}}
+
+// Poblar liveState desde datos embebidos (partidos en curso)
+(function() {{
+  const ls = SCORES_DATA.live_scores || {{}};
+  Object.entries(ls).forEach(([name, m]) => {{
+    liveState[name] = {{
+      opponent:  m.opponent,
+      diff:      m.is_home ? (m.score_h - m.score_a) : (m.score_a - m.score_h),
+      homeGoals: m.score_h,
+      awayGoals: m.score_a,
+      isHome:    m.is_home,
+      minute:    m.minute,
+    }};
+  }});
+}})();
 
 // ===== COMPUTED STANDINGS =====
 function computeStandingsForRound(round) {{
@@ -2354,20 +2420,19 @@ async function fetchAndUpdate() {{
       const newScores = await scoresResp.json();
       LIGA_DATA   = newLiga;
       SCORES_DATA = newScores;
-      // Live state desde scores de la ronda actual
+      // Actualizar liveState desde live_scores del JSON fresco
       liveState = {{}};
-      if (isMatchTime()) {{
-        const curRound = LIGA_DATA.total_rounds - 1;
-        LIGA_DATA.teams.forEach(name => {{
-          const sc = (SCORES_DATA[name] || {{}})[String(curRound)];
-          if (sc) {{
-            const [gf, gc] = sc.split('-').map(Number);
-            const opp = (LIGA_DATA.opponents_by_team?.[name] || [])[curRound];
-            if (opp) liveState[name] = {{ opponent: opp, diff: gf-gc,
-              homeGoals: gf, awayGoals: gc, isHome: true }};
-          }}
-        }});
-      }}
+      const freshLive = newScores.live_scores || {{}};
+      Object.entries(freshLive).forEach(([name, m]) => {{
+        liveState[name] = {{
+          opponent:  m.opponent,
+          diff:      m.is_home ? (m.score_h - m.score_a) : (m.score_a - m.score_h),
+          homeGoals: m.score_h,
+          awayGoals: m.score_a,
+          isHome:    m.is_home,
+          minute:    m.minute,
+        }};
+      }});
     }} else {{
       throw new Error('local-json-' + ligaResp.status);
     }}
@@ -2400,6 +2465,7 @@ async function fetchAndUpdate() {{
     if (!lastUpdateTime) lastUpdateTime = new Date();
   }} finally {{
     updateLiveBar();
+    updateNextMatchBanner();
     renderStandings();
     renderTeams();
     renderPredictions();
@@ -2572,6 +2638,59 @@ function openTeamModal(name) {{
 function closeModal() {{ document.getElementById('teamModal').classList.remove('open'); }}
 document.getElementById('teamModal').addEventListener('click', e => {{ if(e.target===e.currentTarget) closeModal(); }});
 
+// ===== NEXT MATCH COUNTDOWN =====
+function getNextFixture() {{
+  const now = new Date();
+  let best = null;
+  let bestDt = null;
+  for (const f of (LIGA_DATA.fixtures || [])) {{
+    if (!f.date || !f.time) continue;
+    const parts = f.date.split('/');
+    const tparts = f.time.split(':');
+    if (parts.length < 2 || tparts.length < 2) continue;
+    const dd = parseInt(parts[0], 10);
+    const mm = parseInt(parts[1], 10);
+    const hh = parseInt(tparts[0], 10);
+    const mi = parseInt(tparts[1], 10);
+    // Temporada 25/26: meses ≥ 8 → 2025, meses ≤ 7 → 2026
+    const yr = mm >= 8 ? 2025 : 2026;
+    const dt = new Date(yr, mm - 1, dd, hh, mi, 0);
+    if (dt > now && (!bestDt || dt < bestDt)) {{
+      best = f;
+      bestDt = dt;
+    }}
+  }}
+  return {{ fixture: best, dt: bestDt }};
+}}
+
+function updateNextMatchBanner() {{
+  const banner = document.getElementById('nextMatchBanner');
+  const teamsEl = document.getElementById('nmTeams');
+  const cdEl = document.getElementById('nmCountdown');
+  if (!banner || !teamsEl || !cdEl) return;
+  const {{ fixture: f, dt: matchDt }} = getNextFixture();
+  if (!f || !matchDt) {{ banner.style.display = 'none'; return; }}
+  const now = new Date();
+  const diff = matchDt - now;
+  if (diff <= 0) {{ banner.style.display = 'none'; return; }}
+  const totalH = Math.floor(diff / 3600000);
+  const mins   = Math.floor((diff % 3600000) / 60000);
+  const secs   = Math.floor((diff % 60000) / 1000);
+  const days   = Math.floor(totalH / 24);
+  const hours  = totalH % 24;
+  let timeStr;
+  if (days >= 2) {{
+    timeStr = days + 'd ' + hours + 'h ' + mins + 'm';
+  }} else if (totalH >= 1) {{
+    timeStr = totalH + 'h ' + String(mins).padStart(2,'0') + 'm ' + String(secs).padStart(2,'0') + 's';
+  }} else {{
+    timeStr = mins + 'm ' + String(secs).padStart(2,'0') + 's';
+  }}
+  teamsEl.textContent = f.home + ' vs ' + f.away;
+  cdEl.textContent = '\u23f1 ' + timeStr;
+  banner.style.display = 'flex';
+}}
+
 // ===== INIT =====
 function init() {{
   renderStandings();
@@ -2579,6 +2698,8 @@ function init() {{
   renderTeams();
   renderPredictions();
   updateStatusBar();
+  updateNextMatchBanner();
+  setInterval(updateNextMatchBanner, 1000);
   scheduleUpdate();
   fetchAndUpdate();
 }}
