@@ -282,30 +282,25 @@ header {{
   display: flex;
   align-items: center;
   gap: 16px;
-  height: 64px;
+  height: 80px;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow);
 }}
 .logo {{
-  height: 56px;
-  width: auto;
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  margin: -20px -8px -20px 0;
 }}
 .logo img {{
-  height: 56px;
-  width: auto;
-  border-radius: 6px;
-  filter: drop-shadow(0 0 8px rgba(57,255,20,.55));
+  width: 280px;
+  height: auto;
+  filter: drop-shadow(0 0 10px rgba(57,255,20,.6));
 }}
 header h1 {{
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #f0f0f0;
-  white-space: nowrap;
+  display: none;
 }}
 .rounds-badge {{
   margin-left: auto;
