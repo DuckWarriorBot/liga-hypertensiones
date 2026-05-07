@@ -473,6 +473,8 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
   main {{ padding: 0 7px 0 10px; }}
   /* Forma label: salto de línea antes de los botones de forma */
   .forma-label {{ flex-basis: 100%; margin-left: 0 !important; }}
+  /* Análisis: scatter + rankings en columna, ancho completo */
+  .analisis-top-grid {{ grid-template-columns: 1fr !important; }}
 }}
 
 /* ===== MAIN CONTENT ===== */
@@ -1573,7 +1575,7 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 <!-- ============================== TAB 6: ANÁLISIS ============================== -->
 <div class="tab-panel" id="tab-analisis">
   <div class="gap-section">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+    <div class="analisis-top-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
       <div class="card">
         <div class="card-title">⚡ Ataque vs Defensa</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">GF (eje X) · GC (eje Y) · líneas = media liga</div>
