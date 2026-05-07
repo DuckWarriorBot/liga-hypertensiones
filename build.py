@@ -278,21 +278,25 @@ body {{
 header {{
   background: linear-gradient(135deg, #0a0a0a 0%, #1e1e1e 100%);
   border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 96px;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}}
+.header-top {{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  height: 80px;
 }}
 .logo {{
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  margin: -30px -4px -30px 0;
+  margin: -26px -4px -26px 0;
 }}
 .logo img {{
   width: 380px;
@@ -302,8 +306,18 @@ header {{
 header h1 {{
   display: none;
 }}
+.header-meta {{
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding-left: 20px;
+  border-left: 1px solid var(--border);
+}}
 .rounds-badge {{
-  margin-left: auto;
+  flex-shrink: 0;
   background: var(--card2);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -312,14 +326,11 @@ header h1 {{
   color: var(--muted);
   white-space: nowrap;
 }}
-/* ===== NEXT-MATCH BANNER ===== */
+/* ===== NEXT-MATCH (inline en header-meta) ===== */
 #nextMatchBanner {{
-  background: linear-gradient(90deg, rgba(57,255,20,.06) 0%, rgba(57,255,20,.02) 100%);
-  border-bottom: 1px solid rgba(57,255,20,.15);
-  padding: 5px 24px;
   display: none;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-size: 12px;
   color: var(--muted);
 }}
@@ -347,8 +358,8 @@ header h1 {{
   color: var(--text);
   flex-shrink: 0;
 }}
+.nm-sep {{ color: var(--border); flex-shrink: 0; }}
 .nm-countdown {{
-  margin-left: auto;
   font-weight: 700;
   color: #39ff14;
   font-variant-numeric: tabular-nums;
@@ -358,8 +369,8 @@ header h1 {{
 
 /* ===== TABS ===== */
 nav {{
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,.3);
+  border-top: 1px solid var(--border);
   display: flex;
   gap: 2px;
   padding: 0 16px;
@@ -1130,17 +1141,13 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 .mt-20 {{ margin-top: 20px; }}
 .gap-section {{ display: flex; flex-direction: column; gap: 20px; }}
 
-/* ===== STATUS BAR ===== */
+/* ===== STATUS BAR (inline en header-meta) ===== */
 .status-bar {{
-  background: var(--card2);
-  border-bottom: 1px solid var(--border);
-  padding: 5px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
+  gap: 10px;
+  font-size: 11px;
   color: var(--muted);
-  gap: 12px;
   flex-wrap: wrap;
 }}
 .status-text {{ display: flex; align-items: center; gap: 8px; }}
@@ -1286,42 +1293,41 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- HEADER UNIFICADO (sticky) -->
 <header>
-  <div class="logo">
-    <img src="logo.png" alt="Liga Hypertensiones" />
+  <div class="header-top">
+    <div class="logo">
+      <img src="logo.png" alt="Liga Hypertensiones" />
+    </div>
+    <h1>Liga Hypertensiones 25/26</h1>
+    <div class="header-meta">
+      <div id="nextMatchBanner">
+        <span class="nm-dot"></span>
+        <span class="nm-label">Próximo choque</span>
+        <span class="nm-teams" id="nmTeams"></span>
+        <span class="nm-sep">·</span>
+        <span class="nm-countdown" id="nmCountdown"></span>
+      </div>
+      <div class="status-bar">
+        <div class="status-text" id="statusText">
+          <span style="color:var(--muted);font-size:11px">⟳ Iniciando actualización automática...</span>
+        </div>
+        <button class="refresh-btn" onclick="fetchAndUpdate()" title="Actualizar datos ahora">⟳ Actualizar</button>
+      </div>
+    </div>
+    <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>
   </div>
-  <h1>Liga Hypertensiones 25/26</h1>
-  <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>
+  <nav id="mainNav">
+    <button class="active" data-tab="clasificacion" onclick="switchTab('clasificacion')">🏆 Clasificación</button>
+    <button data-tab="evolucion" onclick="switchTab('evolucion')">📈 Evolución</button>
+    <button data-tab="resultados" onclick="switchTab('resultados')">📋 Resultados</button>
+    <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
+    <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
+  </nav>
 </header>
-
-<!-- NEXT MATCH BANNER -->
-<div id="nextMatchBanner">
-  <span class="nm-dot"></span>
-  <span class="nm-label">Próximo choque hypertenso</span>
-  <span class="nm-teams" id="nmTeams"></span>
-  <span class="nm-countdown" id="nmCountdown"></span>
-</div>
 
 <!-- LIVE MATCH BAR -->
 <div class="live-bar" id="liveBar"></div>
-
-<!-- STATUS BAR -->
-<div class="status-bar">
-  <div class="status-text" id="statusText">
-    <span style="color:var(--muted);font-size:11px">⟳ Iniciando actualización automática...</span>
-  </div>
-  <button class="refresh-btn" onclick="fetchAndUpdate()" title="Actualizar datos ahora">⟳ Actualizar ahora</button>
-</div>
-
-<!-- NAV TABS -->
-<nav id="mainNav">
-  <button class="active" data-tab="clasificacion" onclick="switchTab('clasificacion')">🏆 Clasificación</button>
-  <button data-tab="evolucion" onclick="switchTab('evolucion')">📈 Evolución</button>
-  <button data-tab="resultados" onclick="switchTab('resultados')">📋 Resultados</button>
-  <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
-  <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
-</nav>
 
 <main>
 
