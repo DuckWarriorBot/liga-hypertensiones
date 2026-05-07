@@ -2658,10 +2658,10 @@ function buildScatterChart() {{
       c.setLineDash([]);
       c.font = 'bold 9px Segoe UI,system-ui,sans-serif';
       c.fillStyle = 'rgba(148,163,184,.45)';
-      c.textAlign = 'left';  c.fillText('\uD83D\uDD25 Coladero', chartArea.left+4, chartArea.top+12);
-      c.textAlign = 'right'; c.fillText('Sólidos \uD83D\uDCCA', chartArea.right-4, chartArea.top+12);
-      c.textAlign = 'left';  c.fillText('\uD83D\uDEE1 Robustos', chartArea.left+4, chartArea.bottom-4);
-      c.textAlign = 'right'; c.fillText('Killers \u26A1', chartArea.right-4, chartArea.bottom-4);
+      c.textAlign = 'left';  c.fillText('Coladero', chartArea.left+4, chartArea.top+12);
+      c.textAlign = 'right'; c.fillText('S\u00f3lidos', chartArea.right-4, chartArea.top+12);
+      c.textAlign = 'left';  c.fillText('Robustos', chartArea.left+4, chartArea.bottom-4);
+      c.textAlign = 'right'; c.fillText('Killers', chartArea.right-4, chartArea.bottom-4);
       c.restore();
     }}
   }};
