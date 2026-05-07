@@ -1878,7 +1878,7 @@ function getColor(name) {{ return TEAM_COLORS[name] || '#6b7280'; }}
 function readable(hex) {{
   if (!hex || hex.length < 7) return '#f0f0f0';
   const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
-  return (r*299+g*587+b*114)/1000 < 100 ? '#f0f0f0' : hex;
+  return (r*299+g*587+b*114)/1000 < 20 ? '#f0f0f0' : hex;
 }}
 function crestHTML(name, size=28) {{
   const kit     = TEAM_KIT_FULL[name] || {{}};
