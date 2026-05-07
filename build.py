@@ -650,14 +650,14 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 }}
 .pts-bar {{
   flex: 1;
-  height: 6px;
+  height: 10px;
   background: var(--card2);
-  border-radius: 3px;
+  border-radius: 5px;
   min-width: 60px;
 }}
 .pts-fill {{
   height: 100%;
-  border-radius: 3px;
+  border-radius: 5px;
   transition: width .6s ease;
 }}
 
@@ -2020,7 +2020,7 @@ function drawStandingsTable() {{
       <td>
         <div class="pts-bar-cell">
           <span class="pts-value">${{t.pts}}</span>
-          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:linear-gradient(180deg,${{kPrimary}} 50%,${{kSecondary}} 50%);border:1px solid ${{kPrimary}};box-sizing:border-box"></div></div>
+          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:linear-gradient(180deg,${{kPrimary}} 50%,${{kSecondary}} 50%);box-shadow:0 0 0 0.5px ${{kPrimary}};box-sizing:border-box"></div></div>
         </div>
       </td>
       <td>${{formHTML(results.slice(0, standingsRound))}}</td>
@@ -2748,7 +2748,7 @@ function renderRanking(mode) {{
         ? `background:linear-gradient(90deg,#22c55e,#4ade80);width:${{bar}}%`   // infrapuntuado: verde
         : `background:linear-gradient(90deg,#ef4444,#f87171);width:${{bar}}%`;  // sobrepuntuado: rojo
     }} else {{
-      barStyle = `background:linear-gradient(180deg,${{kfPri}} 50%,${{kfSec}} 50%);border:1px solid ${{kfPri}};box-sizing:border-box;width:${{bar}}%`;
+      barStyle = `background:linear-gradient(180deg,${{kfPri}} 50%,${{kfSec}} 50%);box-shadow:0 0 0 0.5px ${{kfPri}};box-sizing:border-box;width:${{bar}}%`;
     }}
     const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : color;
     return `<div style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
@@ -2756,7 +2756,7 @@ function renderRanking(mode) {{
       ${{crestHTML(t.name,22)}}
       <div style="flex:1;min-width:0">
         <div style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${{t.name}}</div>
-        <div style="height:3px;border-radius:2px;background:var(--border);margin-top:3px">
+        <div style="height:6px;border-radius:3px;background:var(--border);margin-top:3px">
           <div style="height:100%;border-radius:2px;${{barStyle}}"></div>
         </div>
       </div>
