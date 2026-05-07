@@ -2817,7 +2817,7 @@ function renderH2H() {{
   const crossEnabled = () => localStorage.getItem('h2h_cross') !== '0';
   let html = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
   html += '<div style="font-size:10px;color:var(--muted)">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
-  html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:10px;color:var(--muted);user-select:none"><input type="checkbox" id="h2hCrossToggle" style="accent-color:#39ff14;width:13px;height:13px;cursor:pointer"> Cruz hover</label>';
+  html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:10px;color:var(--muted);user-select:none"><input type="checkbox" id="h2hCrossToggle" style="accent-color:#39ff14;width:13px;height:13px;cursor:pointer"> Cruz de Selecci\u00f3n</label>';
   html += '</div>';
   html += '<table class="h2h-matrix" style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
   html += '<th style="min-width:95px;text-align:right;padding-right:6px;font-size:9px;color:var(--muted);white-space:nowrap">Local \\ Visitante</th>';
