@@ -1889,7 +1889,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
       <span></span><span></span><span></span>
     </button>
     <div class="logo">
-      <img src="logo.png" alt="Liga Hypertensiones" width="380" height="253" fetchpriority="high" />
+      <img src="logo.png" alt="Liga Hypertensiones" width="380" height="133" fetchpriority="high" />
     </div>
     <h1>Liga Hypertensiones 25/26</h1>
     <div class="header-meta">
