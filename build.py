@@ -409,6 +409,8 @@ html = f"""<!DOCTYPE html>
 <title>⚡ Liga Hypertensiones 25/26</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
+<link rel="preconnect" href="https://cdn.resfu.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.resfu.com">
 <meta name="description" content="Clasificación, estadísticas y análisis de la Liga Hypertensiones 25/26">
 <meta property="og:title" content="⚡ Liga Hypertensiones 25/26">
 <meta property="og:description" content="Clasificación, estadísticas y análisis de la Liga Hypertensiones 25/26">
@@ -1887,7 +1889,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
       <span></span><span></span><span></span>
     </button>
     <div class="logo">
-      <img src="logo.png" alt="Liga Hypertensiones" />
+      <img src="logo.png" alt="Liga Hypertensiones" width="380" height="253" fetchpriority="high" />
     </div>
     <h1>Liga Hypertensiones 25/26</h1>
     <div class="header-meta">
