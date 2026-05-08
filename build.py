@@ -4969,7 +4969,11 @@ function init() {{
   updateNextMatchBanner();
   setInterval(updateNextMatchBanner, 1000);
   scheduleUpdate();
-  fetchAndUpdate();
+  // Fetch inmediato solo en servidor local; en GitHub Pages/file:// los datos ya
+  // van embebidos en el HTML y el fetch remoto solo genera warnings innecesarios
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {{
+    fetchAndUpdate();
+  }}
 }}
 init();
 </script>
