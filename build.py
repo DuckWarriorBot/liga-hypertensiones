@@ -4750,9 +4750,9 @@ function openMatchStatsModal(home, away, jornada) {{
     const aPct = (100-parseFloat(hPct)).toFixed(1);
     return `<div style="margin:5px 0">
       <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px">
-        <span style="font-weight:700;min-width:30px;color:${{hcT}}">${{hv}}</span>
+        <span style="font-weight:700;min-width:30px;color:#fff">${{hv}}</span>
         <span style="font-size:10px;color:var(--muted);flex:1;text-align:center">${{s.label}}</span>
-        <span style="font-weight:700;min-width:30px;text-align:right;color:${{acT}}">${{av}}</span>
+        <span style="font-weight:700;min-width:30px;text-align:right;color:#fff">${{av}}</span>
       </div>
       <div style="display:flex;height:3px;border-radius:2px;overflow:hidden;margin-top:2px">
         <div style="width:${{hPct}}%;background:${{hc}};opacity:.85"></div>
@@ -4763,9 +4763,9 @@ function openMatchStatsModal(home, away, jornada) {{
   const ph = m.possession_home, pa = m.possession_away;
   const possHTML = (ph!=null&&pa!=null) ? `<div style="margin:8px 0 10px;padding:8px;background:rgba(255,255,255,.04);border-radius:6px">
     <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13px;margin-bottom:5px">
-      <span style="font-weight:800;color:${{hcT}}">${{ph.toFixed(1)}}%</span>
+      <span style="font-weight:800;color:#fff">${{ph.toFixed(1)}}%</span>
       <span style="font-size:10px;color:var(--muted)">Posesión</span>
-      <span style="font-weight:800;color:${{acT}}">${{pa.toFixed(1)}}%</span>
+      <span style="font-weight:800;color:#fff">${{pa.toFixed(1)}}%</span>
     </div>
     <div style="display:flex;height:6px;border-radius:3px;overflow:hidden">
       <div style="width:${{ph}}%;background:${{hc}}"></div>
