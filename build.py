@@ -322,7 +322,8 @@ if os.path.exists(_history_path):
     # Embeber todos los datos necesarios para switchSeason completo
     _history_lite = {'seasons': {}}
     _HIST_KEYS = ['label','total_rounds','total_season_rounds','teams','final_standings',
-                  'results_by_team','scores_by_team','opponents_by_team','venue_by_team']
+                  'results_by_team','scores_by_team','opponents_by_team','venue_by_team',
+                  'playoff']
     for _label, _sdata in _history_raw.get('seasons', {}).items():
         _history_lite['seasons'][_label] = {k: _sdata[k] for k in _HIST_KEYS if k in _sdata}
     history_js = json.dumps(_history_lite, ensure_ascii=False)
