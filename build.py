@@ -818,9 +818,10 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   min-width: 0;
   max-width: 100%;
 }}
-/* Breakpoint 1400px: scatter + rankings en columna */
-@media (max-width: 1400px) {{
-  .analisis-top-grid {{ grid-template-columns: 1fr; }}
+/* Breakpoint 1100px: grids análisis en columna */
+@media (max-width: 1100px) {{
+  .analisis-top-grid,
+  .analisis-bottom-grid {{ grid-template-columns: 1fr; }}
 }}
 
 /* Grid análisis inferior: radar + consistencia 50/50 */
@@ -858,7 +859,6 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 @media (max-width: 889px) {{
   .radar-layout {{ flex-direction: column; }}
   .radar-team-list {{ flex-direction: row; flex-wrap: wrap; max-width: 100%; max-height: none; min-width: 0; }}
-  .analisis-bottom-grid {{ grid-template-columns: 1fr !important; }}
 }}
 
 /* ===== RADAR TEAM SELECTOR ===== */
