@@ -1762,7 +1762,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   flex: 1;
   min-width: 0;
 }}
-.playoff-team.winner {{ color: var(--win); font-weight: 700; }}
+.playoff-team.winner {{ color: var(--text); font-weight: 700; }}
 .playoff-team.loser {{ opacity: .5; }}
 .playoff-team span {{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 .playoff-score {{
