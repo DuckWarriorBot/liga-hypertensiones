@@ -1499,6 +1499,8 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   padding: 24px;
   max-width: 500px;
   width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: var(--shadow);
   transform: scale(.96);
   transition: transform .2s;
@@ -2007,6 +2009,10 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   <div class="gap-section">
     <div class="card">
       <div class="card-title">📋 Resultados por jornada</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">
+        <button class="hist-sort-btn active" id="rsort-clas" onclick="setResultsSort('clas')">🏆 Clasificación</button>
+        <button class="hist-sort-btn" id="rsort-alfa" onclick="setResultsSort('alfa')">🔤 Alfabético</button>
+      </div>
       <div class="round-selector">
         <button class="round-btn" id="btnPrevRound" onclick="changeRound(-1)">‹</button>
         <label>Jornada</label>
@@ -2181,6 +2187,14 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title" id="modalTitle"></div>
     <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- MODAL match stats -->
+<div class="modal-overlay" id="matchModal">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="closeMatchModal()">✕</button>
+    <div id="matchModalBody"></div>
   </div>
 </div>
 
@@ -2876,6 +2890,13 @@ function renderRoundResults() {{
   const idx = currentRound - 1;
   const grid = document.getElementById('resultsGrid');
   const oppsMap = LIGA_DATA.opponents_by_team || {{}};
+  // Ordenar equipos según modo
+  let teamList = [...LIGA_DATA.teams]; // por defecto alfabético
+  if (resultsSortMode === 'clas') {{
+    const standingsMap = {{}};
+    computeStandingsForRound(Math.min(currentRound, LIGA_DATA.total_rounds)).forEach((t,i) => {{ standingsMap[t.name] = i; }});
+    teamList.sort((a,b) => (standingsMap[a]??99) - (standingsMap[b]??99));
+  }}
   // Índice global de fixtures por "home|away" → {{date, time}}
   // Usamos opponents_by_team como fuente de verdad para el rival;
   // fixtures solo aporta fecha/hora/local (buscando por nombres de equipos).
@@ -2885,7 +2906,7 @@ function renderRoundResults() {{
       allFix[f.home + '|' + f.away] = {{ date: f.date, time: f.time }};
     }});
   }}
-  grid.innerHTML = LIGA_DATA.teams.map(name => {{
+  grid.innerHTML = teamList.map(name => {{
     if (!played) {{
       // Rival correcto desde opponents_by_team; fecha/hora desde allFix
       const opp2 = oppsMap[name]?.[idx];
@@ -2935,7 +2956,13 @@ function renderRoundResults() {{
     const scMap2    = SCORES_DATA.scores_by_team || SCORES_DATA;
     const venueMap2 = SCORES_DATA.venue_by_team  || {{}};
     const rawScore  = (scMap2[name]||{{}})[String(idx)];
-    const venue2    = (venueMap2[name]||{{}})[String(idx)];
+    let venue2      = (venueMap2[name]||{{}})[String(idx)];
+    // Corregir venue usando AS_STATS (fuente más fiable que scores_data)
+    if (opp && AS_STATS.length) {{
+      const _asFix = AS_STATS.find(s => s.jornada === currentRound &&
+        ((s.home === name && s.away === opp) || (s.home === opp && s.away === name)));
+      if (_asFix) venue2 = _asFix.home === name ? 'H' : 'A';
+    }}
     let displayScore = rawScore;
     if (rawScore && venue2==='A') {{
       const p = rawScore.split('-');
@@ -2951,7 +2978,10 @@ function renderRoundResults() {{
     const dotColor = r==='V'?'#22c55e':r==='E'?'#fbbf24':'#ef4444';
     const liveEntry = typeof liveState !== 'undefined' && liveState[name];
     const liveClass = liveEntry ? ` live-${{r}}` : '';
-    return `<div class="result-card result-badge-${{r}}${{liveClass}}">
+    const _mh = venue2==='H' ? name : (opp||'');
+    const _ma = venue2==='A' ? name : (opp||'');
+    const _ca = (opp&&venue2) ? ` data-home="${{_mh}}" data-away="${{_ma}}" data-jornada="${{currentRound}}" onclick="openMatchStatsModal(this.dataset.home,this.dataset.away,+this.dataset.jornada)" title="Ver estadísticas del partido" style="cursor:pointer"` : '';
+    return `<div class="result-card result-badge-${{r}}${{liveClass}}"${{_ca}}>
       <div class="team-cell" style="gap:8px">
         <div style="position:relative;flex-shrink:0">
           ${{crestHTML(name)}}
@@ -2966,6 +2996,14 @@ function renderRoundResults() {{
     </div>`;
   }}).join('');
   renderHistoryTable();
+}}
+let resultsSortMode = 'clas'; // 'clas' | 'alfa'
+function setResultsSort(mode) {{
+  resultsSortMode = mode;
+  document.querySelectorAll('[id^="rsort-"]').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('rsort-'+mode);
+  if (btn) btn.classList.add('active');
+  renderRoundResults();
 }}
 function changeRound(delta) {{
   document.getElementById('roundInput').value = currentRound + delta;
@@ -4566,8 +4604,8 @@ function buildTeamAsStatsModal(name) {{
     avgs[f] = vals.length ? vals.reduce((s,v)=>s+v,0)/vals.length : null;
   }}
 
-  // Mostrar últimos 10 partidos (tabla compacta)
-  const last10 = matches.slice(-10).reverse();
+  // Mostrar todos los partidos (orden desc)
+  const last10 = matches.slice().reverse();
 
   function fmtv(v, dec) {{ return v === null ? '—' : v.toFixed(dec ?? 1); }}
 
@@ -4605,8 +4643,8 @@ function buildTeamAsStatsModal(name) {{
     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:12px;">
       ${{avgCells}}
     </div>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Últimos ${{last10.length}} partidos</div>
-    <div style="overflow-x:auto;">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Todos los partidos (${{last10.length}})</div>
+    <div style="max-height:260px;overflow-y:auto;overflow-x:auto;">
       <table style="width:100%;border-collapse:collapse;font-size:11px;">
         <thead><tr style="color:var(--muted);font-size:10px;">
           <th style="text-align:left;padding:3px 4px">J</th>
@@ -4626,6 +4664,106 @@ function buildTeamAsStatsModal(name) {{
 
 function closeModal() {{ document.getElementById('teamModal').classList.remove('open'); }}
 document.getElementById('teamModal').addEventListener('click', e => {{ if(e.target===e.currentTarget) closeModal(); }});
+
+// ===== MATCH STATS MODAL =====
+function openMatchStatsModal(home, away, jornada) {{
+  const modal = document.getElementById('matchModal');
+  const body  = document.getElementById('matchModalBody');
+  const m = AS_STATS.find(s => s.home === home && s.away === away && s.jornada === jornada);
+  const scMap = SCORES_DATA.scores_by_team || SCORES_DATA;
+  const scoreRaw = (scMap[home]||{{}})[String(jornada-1)];
+
+  // ── Selección de colores diferenciados ─────────────────────────────
+  function hexToRgb(hex) {{
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return [r,g,b];
+  }}
+  function colorDist(h1,h2) {{
+    if (!h1||!h2) return 999;
+    try {{
+      const [r1,g1,b1]=hexToRgb(h1), [r2,g2,b2]=hexToRgb(h2);
+      return Math.sqrt((r1-r2)**2+(g1-g2)**2+(b1-b2)**2);
+    }} catch(e) {{ return 999; }}
+  }}
+  // Paleta de alternativas
+  const ALT_COLORS = ['#f59e0b','#60a5fa','#a78bfa','#34d399','#fb923c','#f472b6','#38bdf8','#facc15'];
+  let hc = (TEAM_COLORS[home] && TEAM_COLORS[home] !== '#cccccc') ? TEAM_COLORS[home] : '#f59e0b';
+  let ac = (TEAM_COLORS[away] && TEAM_COLORS[away] !== '#cccccc') ? TEAM_COLORS[away] : '#60a5fa';
+  // Si los colores son muy similares (distancia < 80), elegir alternativa para visitante
+  if (colorDist(hc, ac) < 80) {{
+    const alt = ALT_COLORS.find(c => colorDist(hc, c) >= 80 && colorDist(ac, c) >= 80)
+             || ALT_COLORS.find(c => colorDist(hc, c) >= 60)
+             || '#60a5fa';
+    ac = alt;
+  }}
+  const headerHTML = `<div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <div style="text-align:center;flex:1;min-width:0">
+        ${{crestHTML(home,40)}}
+        <div style="font-size:11px;margin-top:5px;font-weight:600;word-break:break-word">${{home}}</div>
+      </div>
+      <div style="text-align:center;flex-shrink:0">
+        <div style="font-size:24px;font-weight:900;letter-spacing:3px;color:var(--text)">${{scoreRaw||'—'}}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">J${{jornada}} · Opta/AS.com</div>
+      </div>
+      <div style="text-align:center;flex:1;min-width:0">
+        ${{crestHTML(away,40)}}
+        <div style="font-size:11px;margin-top:5px;font-weight:600;word-break:break-word">${{away}}</div>
+      </div>
+    </div>
+  </div>`;
+  if (!m) {{
+    body.innerHTML = headerHTML + `<div style="text-align:center;padding:16px;color:var(--muted);font-size:12px">Sin estadísticas Opta disponibles</div>`;
+    modal.classList.add('open'); return;
+  }}
+  const STATS = [
+    {{ key:'shots_inside',    label:'Disparos a puerta'   }},
+    {{ key:'shots_outside',   label:'Disparos fuera'      }},
+    {{ key:'shots_blocked',   label:'Disparos bloqueados' }},
+    {{ key:'shots_received',  label:'Disparos recibidos'  }},
+    {{ key:'fouls_committed', label:'Faltas cometidas'    }},
+    {{ key:'fouls_received',  label:'Faltas recibidas'    }},
+    {{ key:'yellow_cards',    label:'Tarjetas amarillas'  }},
+    {{ key:'red_cards',       label:'Tarjetas rojas'      }},
+    {{ key:'poss_recoveries', label:'Recuperaciones'      }},
+    {{ key:'poss_losses',     label:'Pérdidas de balón'   }},
+    {{ key:'offsides',        label:'Fueras de juego'     }},
+  ];
+  function statRow(s) {{
+    const hv = m[s.key+'_home'], av = m[s.key+'_away'];
+    if (hv===null||hv===undefined||av===null||av===undefined) return '';
+    const total = (hv+av)||1;
+    const hPct = (hv/total*100).toFixed(1);
+    const aPct = (100-parseFloat(hPct)).toFixed(1);
+    return `<div style="margin:5px 0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px">
+        <span style="font-weight:700;min-width:30px;color:${{hc}}">${{hv}}</span>
+        <span style="font-size:10px;color:var(--muted);flex:1;text-align:center">${{s.label}}</span>
+        <span style="font-weight:700;min-width:30px;text-align:right;color:${{ac}}">${{av}}</span>
+      </div>
+      <div style="display:flex;height:3px;border-radius:2px;overflow:hidden;margin-top:2px">
+        <div style="width:${{hPct}}%;background:${{hc}};opacity:.85"></div>
+        <div style="width:${{aPct}}%;background:${{ac}};opacity:.7"></div>
+      </div>
+    </div>`;
+  }}
+  const ph = m.possession_home, pa = m.possession_away;
+  const possHTML = (ph!=null&&pa!=null) ? `<div style="margin:8px 0 10px;padding:8px;background:rgba(255,255,255,.04);border-radius:6px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13px;margin-bottom:5px">
+      <span style="font-weight:800;color:${{hc}}">${{ph.toFixed(1)}}%</span>
+      <span style="font-size:10px;color:var(--muted)">Posesión</span>
+      <span style="font-weight:800;color:${{ac}}">${{pa.toFixed(1)}}%</span>
+    </div>
+    <div style="display:flex;height:6px;border-radius:3px;overflow:hidden">
+      <div style="width:${{ph}}%;background:${{hc}}"></div>
+      <div style="width:${{pa}}%;background:${{ac}}"></div>
+    </div>
+  </div>` : '';
+  body.innerHTML = headerHTML + possHTML + STATS.map(statRow).filter(Boolean).join('');
+  modal.classList.add('open');
+}}
+function closeMatchModal() {{ document.getElementById('matchModal').classList.remove('open'); }}
+document.getElementById('matchModal').addEventListener('click', e => {{ if(e.target===e.currentTarget) closeMatchModal(); }});
 
 // ===== NEXT MATCH COUNTDOWN =====
 function getNextFixture() {{
@@ -4790,7 +4928,7 @@ function switchSeason(label) {{
   const rb = document.getElementById('roundsBadge');
   if (rb) rb.textContent = 'Jornada ' + LIGA_DATA.total_rounds + ' / ' + LIGA_DATA.total_season_rounds;
   const ri = document.getElementById('roundInput');
-  if (ri) {{ ri.max = LIGA_DATA.total_rounds; ri.value = LIGA_DATA.total_rounds; }}
+  if (ri) {{ ri.max = LIGA_DATA.total_season_rounds; ri.value = LIGA_DATA.total_rounds; }}
 
   // Ocultar elementos irrelevantes en modo histórico
   const liveBar = document.getElementById('liveBar');
