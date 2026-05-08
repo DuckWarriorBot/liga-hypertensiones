@@ -805,6 +805,49 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 }}
 .card-legend b {{ color: var(--text); opacity: .6; font-weight: 600; }}
 
+/* Breakpoint 1400px: scatter + rankings en columna */
+@media (max-width: 1400px) {{
+  .analisis-top-grid {{ grid-template-columns: 1fr !important; }}
+}}
+
+/* Grid análisis inferior: radar + consistencia 50/50 */
+.analisis-bottom-grid {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}}
+
+/* Layout interno del radar: lista equipo izquierda + chart derecha */
+.radar-layout {{
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}}
+.radar-team-list {{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 120px;
+  max-width: 140px;
+  max-height: 360px;
+  overflow-y: auto;
+  flex-shrink: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}}
+.radar-team-list .radar-team-btn {{
+  justify-content: flex-start;
+  width: 100%;
+  border-radius: 6px;
+  padding: 4px 8px;
+}}
+@media (max-width: 889px) {{
+  .radar-layout {{ flex-direction: column; }}
+  .radar-team-list {{ flex-direction: row; flex-wrap: wrap; max-width: 100%; max-height: none; min-width: 0; }}
+  .analisis-bottom-grid {{ grid-template-columns: 1fr !important; }}
+}}
+
 /* ===== RADAR TEAM SELECTOR ===== */
 .radar-team-btn {{
   display: inline-flex;
@@ -2245,21 +2288,24 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
       <div class="card-legend"><b>Fila</b> equipo local &nbsp;·&nbsp; <b>Columna</b> equipo visitante &nbsp;·&nbsp; Cada celda muestra el marcador del partido (goles local – goles visitante) &nbsp;·&nbsp; <span style="color:#39ff14">■</span> Victoria del equipo de la fila &nbsp;·&nbsp; <span style="color:#f59e0b">■</span> Empate &nbsp;·&nbsp; <span style="color:#ef4444">■</span> Derrota del equipo de la fila &nbsp;·&nbsp; <b>Cruz de Selección</b> activa una capa de oscurecimiento fuera de la fila y columna del cursor para facilitar la lectura</div>
     </div>
 
-    <!-- Radar por equipo -->
-    <div class="card">
-      <div class="card-title">🕸️ Radar por Equipo</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">6 dimensiones normalizadas al 0–100 respecto al resto de equipos · Selecciona hasta 3 equipos</div>
-      <div id="radarTeamSelector" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
-      <div class="chart-container" style="height:380px;max-width:520px;margin:0 auto"><canvas id="radarChart"></canvas></div>
-      <div class="card-legend"><b>Ataque</b> GF/partido &nbsp;·&nbsp; <b>Defensa</b> inverso de GC/partido &nbsp;·&nbsp; <b>Local</b> PPG en casa &nbsp;·&nbsp; <b>Visitante</b> PPG fuera &nbsp;·&nbsp; <b>Consistencia</b> inverso de la desviación estándar de puntos &nbsp;·&nbsp; <b>Momentum</b> PPG en las últimas 5 jornadas · Todos los ejes normalizados: 100 = mejor del grupo, 0 = peor</div>
-    </div>
-
-    <!-- Consistencia -->
-    <div class="card">
-      <div class="card-title">📏 Consistencia — Regularidad de Resultados</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Desviación estándar de puntos por partido · cuanto menor, más regular el equipo</div>
-      <div class="chart-container" style="height:480px"><canvas id="consistenciaChart"></canvas></div>
-      <div class="card-legend"><b>Barra corta / verde</b> equipo muy regular (resultados predecibles) &nbsp;·&nbsp; <b>Barra larga / roja</b> equipo errático (alterna victorias y derrotas) &nbsp;·&nbsp; La desviación estándar mide cuánto varían sus puntos: 0 = siempre el mismo resultado, ~1.5 = muy volátil &nbsp;·&nbsp; Los puntos por partido van de 0 (derrota), 1 (empate) a 3 (victoria)</div>
+    <!-- Radar por equipo y Consistencia: 50/50 -->
+    <div class="analisis-bottom-grid">
+      <!-- Radar por equipo -->
+      <div class="card">
+        <div class="card-title">🕸️ Radar por Equipo</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px">6 dimensiones normalizadas al 0–100 · Selecciona hasta 3 equipos</div>
+        <div class="radar-layout">
+          <div class="radar-team-list" id="radarTeamSelector"></div>
+          <div style="flex:1;min-width:0"><canvas id="radarChart" style="width:100%;height:360px"></canvas></div>
+        </div>
+        <div class="card-legend"><b>Ataque</b> GF/partido · <b>Defensa</b> inv. GC/p · <b>Local/Visitante</b> PPG · <b>Consistencia</b> inv. std · <b>Momentum</b> PPG últ.5 · Todos normalizados: 100=mejor, 0=peor</div>
+      </div>
+      <!-- Consistencia -->
+      <div class="card">
+        <div class="card-title">📈 Consistencia — V/E/D por equipo</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px">% de victorias, empates y derrotas · ordenado por % victorias</div>
+        <div class="chart-container" style="height:420px"><canvas id="consistenciaChart"></canvas></div>
+      </div>
     </div>
 
 
@@ -3880,6 +3926,8 @@ function applyAnalisisFilter() {{
 
 function initAnalysisTab() {{
   buildAnalisisSelector();
+  // Siempre inicializar radar con top 3
+  _radarSelected = computeStandings().slice(0, 3).map(t => t.name);
   buildScatterChart();
   renderRanking(rankingMode);
   renderScenarios();
