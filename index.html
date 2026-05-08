@@ -3054,104 +3054,7 @@ function renderPlayoff() {
   if (!el) return;
   const po = LIGA_DATA.playoff;
 
-  if (!po) {
-    if (_historicalMode) {
-      // Mostrar playoff histórico: ascendidos directos + 4 equipos del playoff
-      var st = LIGA_DATA.final_standings || [];
-      var promoted  = st.slice(0, 2);   // 1º y 2º: ascenso directo
-      var playTeams = st.slice(2, 6);   // 3º-6º: participantes del playoff
-
-      function teamRowH(t, pos, note) {
-        var bd = TEAM_BADGES[t.name] || '';
-        var cr = bd ? '<img src="' + bd + '" alt="' + t.name + '" style="width:24px;height:24px;object-fit:contain;">'
-                    : '<span style="font-size:10px;color:var(--muted)">' + t.name.substring(0,3).toUpperCase() + '</span>';
-        return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">'
-             + '<span style="width:22px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)">' + pos + '</span>'
-             + cr
-             + '<span style="flex:1;font-weight:600">' + t.name + '</span>'
-             + '<span style="font-size:11px;color:var(--muted)">' + t.pts + ' pts</span>'
-             + (note ? '<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:' + note.bg + ';color:' + note.fg + ';font-weight:700;margin-left:6px">' + note.text + '</span>' : '')
-             + '</div>';
-      }
-
-      var html = '<div class="card">';
-      html += '<div class="card-title">🏆 Ascenso Directo</div>';
-      promoted.forEach(function(t,i) {
-        html += teamRowH(t, i+1, {bg:'var(--win)', fg:'#0a0a0a', text:'ASCENSO DIRECTO'});
-      });
-      html += '</div>';
-
-      // Ganador del playoff
-      var currentLabel = LIGA_DATA.label || '';
-      var playoffWinner = HIST_PLAYOFF_WINNERS[currentLabel] || null;
-      if (playoffWinner) {
-        var pwBd = TEAM_BADGES[playoffWinner] || '';
-        var pwCrest = pwBd
-          ? '<img src="' + pwBd + '" alt="' + playoffWinner + '" style="width:44px;height:44px;object-fit:contain;flex-shrink:0;">'
-          : '<span style="font-size:18px;font-weight:700;color:var(--muted)">' + playoffWinner.substring(0,3).toUpperCase() + '</span>';
-        var pwKf = TEAM_KIT_FULL[playoffWinner] || {};
-        var pwColor = pwKf.primary || TEAM_COLORS[playoffWinner] || '#f5c500';
-        html += '<div class="card" style="margin-top:16px;background:linear-gradient(135deg,' + pwColor + '22,' + pwColor + '44);border:2px solid ' + pwColor + '88;">';
-        html += '<div class="card-title" style="color:' + pwColor + '">🎉 Ganador del Playoff · Ascendido</div>';
-        html += '<div style="display:flex;align-items:center;gap:14px;padding:8px 0;">';
-        html += '<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;">' + pwCrest + '</div>';
-        html += '<div><div style="font-size:20px;font-weight:800;color:' + pwColor + '">' + playoffWinner + '</div>';
-        html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">Ascenso vía playoff · ' + currentLabel + '</div></div>';
-        html += '</div></div>';
-      }
-
-      html += '<div class="card" style="margin-top:16px;">';
-      html += '<div class="card-title">⚡ Playoff de Ascenso (3º – 6º)</div>';
-      html += '<div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Semifinales: 3º vs 6º · 4º vs 5º &nbsp;·&nbsp; Final: ganadores</div>';
-      if (playTeams.length > 0) {
-        html += '<div style="margin-bottom:16px;">';
-        html += '<div style="display:flex;gap:12px;flex-wrap:wrap;">';
-        playTeams.forEach(function(t,i) {
-          var pos = i+3;
-          var bd = TEAM_BADGES[t.name] || '';
-          var cr = bd ? '<img src="' + bd + '" alt="' + t.name + '" style="width:40px;height:40px;object-fit:contain;">'
-                      : '<span style="font-size:11px;color:var(--muted);font-weight:700">' + t.name.substring(0,3).toUpperCase() + '</span>';
-          var kf = TEAM_KIT_FULL[t.name] || {};
-          var primary = kf.primary || getColor(t.name) || '#444';
-          var secondary = kf.secondary || '#1e1e1e';
-          html += '<div style="flex:1;min-width:120px;background:linear-gradient(135deg,' + secondary + '22,' + primary + '33);'
-               + 'border:1px solid ' + primary + '55;border-radius:10px;padding:12px;text-align:center;">';
-          html += '<div style="font-size:10px;color:var(--muted);margin-bottom:4px">' + pos + 'º clasificado</div>';
-          html += '<div style="width:40px;height:40px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center">' + cr + '</div>';
-          html += '<div style="font-size:12px;font-weight:700;color:' + primary + '">' + t.name + '</div>';
-          html += '<div style="font-size:11px;color:var(--muted)">' + t.pts + ' pts</div>';
-          html += '</div>';
-        });
-        html += '</div>';
-        html += '</div>';
-        // Cuadro de eliminatorias
-        html += '<div style="background:var(--card2);border-radius:8px;padding:12px;font-size:11px;color:var(--muted);text-align:center;">';
-        if (playTeams.length >= 4) {
-          html += '<div style="margin-bottom:8px;color:var(--text);font-weight:600">Semifinales</div>';
-          html += '<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">';
-          [[0,3],[1,2]].forEach(function(pair) {
-            var a = playTeams[pair[0]], b = playTeams[pair[1]];
-            if (!a || !b) return;
-            var bdA = TEAM_BADGES[a.name] ? '<img src="'+TEAM_BADGES[a.name]+'" style="width:18px;height:18px;object-fit:contain;">' : a.name.substring(0,3).toUpperCase();
-            var bdB = TEAM_BADGES[b.name] ? '<img src="'+TEAM_BADGES[b.name]+'" style="width:18px;height:18px;object-fit:contain;">' : b.name.substring(0,3).toUpperCase();
-            html += '<div style="display:flex;align-items:center;gap:8px;">' + bdA + '<span style="color:var(--text)">' + a.name + '</span><span>vs</span>' + bdB + '<span style="color:var(--text)">' + b.name + '</span></div>';
-          });
-          html += '</div>';
-        }
-        html += '<div style="color:var(--muted);font-style:italic;font-size:10px">'
-             + (playoffWinner ? ('Ganador: ' + playoffWinner + ' · Partidos individuales no almacenados') : 'Resultados de partidos no almacenados')
-             + '</div>';
-        html += '</div>';
-      }
-      html += '</div>';
-
-      el.innerHTML = html;
-      return;
-    }
-    el.innerHTML = '<div class="card"><div class="playoff-pending">🏆 El playoff de ascenso comenzará al finalizar la jornada 42.</div></div>';
-    return;
-  }
-
+  // ── Helpers compartidos ────────────────────────────────────────────────────
   function crest(name, sz) {
     sz = sz || 20;
     const bd = TEAM_BADGES[name] || '';
@@ -3183,7 +3086,6 @@ function renderPlayoff() {
       html += '</div>';
     }
     if (agg) {
-      var aggParts = agg.split('-').map(Number);
       var aggWinner = winner || '';
       html += '<div class="playoff-agg decided" style="margin-top:6px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:8px;">';
       html += '<span style="font-size:11px;color:var(--muted)">Global:</span>';
@@ -3195,6 +3097,91 @@ function renderPlayoff() {
     }
     html += '</div>';
     return html;
+  }
+
+  if (!po) {
+    if (_historicalMode) {
+      // Sin datos de playoff — solo mostrar clasificación
+      var st = LIGA_DATA.final_standings || [];
+      var html2 = '<div class="card"><div class="card-title">🏆 Ascenso Directo</div>';
+      st.slice(0,2).forEach(function(t,i) {
+        var bd = TEAM_BADGES[t.name]||'';
+        var cr = bd?'<img src="'+bd+'" alt="'+t.name+'" style="width:24px;height:24px;object-fit:contain;">':'<span style="font-size:10px;color:var(--muted)">'+t.name.substring(0,3).toUpperCase()+'</span>';
+        html2+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="width:22px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)">'+(i+1)+'</span>'+cr+'<span style="flex:1;font-weight:600">'+t.name+'</span><span style="font-size:11px;color:var(--muted)">'+t.pts+' pts</span><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:var(--win);color:#0a0a0a;font-weight:700;margin-left:6px">ASCENSO DIRECTO</span></div>';
+      });
+      html2 += '</div>';
+      el.innerHTML = html2;
+      return;
+    }
+    el.innerHTML = '<div class="card"><div class="playoff-pending">🏆 El playoff de ascenso comenzará al finalizar la jornada 42.</div></div>';
+    return;
+  }
+
+  var html = '';
+
+  // ── Modo histórico: ascenso directo + ganador del playoff + bracket ────────
+  if (_historicalMode) {
+    var st = LIGA_DATA.final_standings || [];
+    var currentLabel = LIGA_DATA.label || '';
+
+    // Bloque ascenso directo
+    html += '<div class="card" style="margin-bottom:16px;">';
+    html += '<div class="card-title">🏆 Ascenso Directo</div>';
+    st.slice(0,2).forEach(function(t,i) {
+      var bd = TEAM_BADGES[t.name]||'';
+      var cr = bd?'<img src="'+bd+'" alt="'+t.name+'" style="width:24px;height:24px;object-fit:contain;">':'<span style="font-size:10px;color:var(--muted)">'+t.name.substring(0,3).toUpperCase()+'</span>';
+      html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="width:22px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)">'+(i+1)+'</span>'+cr+'<span style="flex:1;font-weight:600">'+t.name+'</span><span style="font-size:11px;color:var(--muted)">'+t.pts+' pts</span><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:var(--win);color:#0a0a0a;font-weight:700;margin-left:6px">ASCENSO DIRECTO</span></div>';
+    });
+    html += '</div>';
+
+    // Banner ganador del playoff
+    var playoffWinner = (po.final && po.final.winner) || HIST_PLAYOFF_WINNERS[currentLabel] || null;
+    if (playoffWinner) {
+      var pwBd = TEAM_BADGES[playoffWinner] || '';
+      var pwCrest = pwBd ? '<img src="' + pwBd + '" alt="' + playoffWinner + '" style="width:44px;height:44px;object-fit:contain;flex-shrink:0;">'
+                         : '<span style="font-size:18px;font-weight:700;color:var(--muted)">' + playoffWinner.substring(0,3).toUpperCase() + '</span>';
+      var pwKf = TEAM_KIT_FULL[playoffWinner] || {};
+      var pwColor = pwKf.primary || getColor(playoffWinner) || '#f5c500';
+      html += '<div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,' + pwColor + '22,' + pwColor + '44);border:2px solid ' + pwColor + '88;">';
+      html += '<div class="card-title" style="color:' + pwColor + '">🎉 Ganador del Playoff · Ascendido</div>';
+      html += '<div style="display:flex;align-items:center;gap:14px;padding:8px 0;">';
+      html += '<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;">' + pwCrest + '</div>';
+      html += '<div><div style="font-size:20px;font-weight:800;color:' + pwColor + '">' + playoffWinner + '</div>';
+      html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">Ascenso vía playoff · ' + currentLabel + '</div></div>';
+      html += '</div></div>';
+    }
+
+    // Bracket completo igual que temporada actual
+    html += '<div class="card" style="margin-bottom:16px;">';
+    html += '<div class="card-title">⚡ Playoff de Ascenso</div>';
+    html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">3º-6º · 4º-5º · Final · Doble partido · Pasa el mejor global</div>';
+
+    var sf1h = po.semis[0], sf2h = po.semis[1], finh = po.final;
+    function sfLabelH(sf) {
+      var h = sf.team_high || '?', l = sf.team_low || '?';
+      return crest(h,16) + ' <span>' + h + '</span><span style="color:var(--muted);margin:0 6px">vs</span>' + crest(l,16) + ' <span>' + l + '</span>';
+    }
+    var finHh = finh.matches[0] ? finh.matches[0].home : (sf1h.winner || '?');
+    var finAh = finh.matches[0] ? finh.matches[0].away : (sf2h.winner || '?');
+
+    html += '<div class="playoff-bracket">';
+    html += '<div class="playoff-column">';
+    html += '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Semifinales</div>';
+    html += tieHTML(sf1h, sfLabelH(sf1h));
+    html += '<div style="height:8px"></div>';
+    html += tieHTML(sf2h, sfLabelH(sf2h));
+    html += '</div>';
+    html += '<div class="playoff-connector"><span>→</span><span style="font-size:11px;color:var(--muted)">Ganadores</span><span>→</span></div>';
+    html += '<div class="playoff-column">';
+    html += '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Final</div>';
+    html += '<div class="playoff-final-box">';
+    html += tieHTML(finh, crest(finHh,16) + ' <span>' + finHh + '</span><span style="color:var(--muted);margin:0 6px">vs</span>' + crest(finAh,16) + ' <span>' + finAh + '</span>');
+    html += '</div></div>';
+    html += '</div>'; // .playoff-bracket
+    html += '</div>'; // .card
+
+    el.innerHTML = html;
+    return;
   }
 
   var html = '';
@@ -4618,7 +4605,7 @@ init();
 
 <script>
 (function(){
-  var BUILD_TS = '2026-05-08T12:48:50';
+  var BUILD_TS = '2026-05-08T12:54:40';
   function checkVersion(){
     fetch('version.json?_=' + Date.now())
       .then(function(r){ return r.json(); })
