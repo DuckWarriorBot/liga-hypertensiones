@@ -4629,6 +4629,7 @@ function buildTeamAsStatsModal(name) {{
     const so     = m['shots_outside_' + side];
     const rec    = m['shots_received_' + side];
     const yc     = m['yellow_cards_' + side];
+    const rc     = m['red_cards_' + side];
     return `<tr>
       <td style="font-size:10px;color:var(--muted);width:12px">${{m.jornada}}</td>
       <td style="font-size:10px;color:var(--muted);width:14px;text-align:center">${{venue}}</td>
@@ -4638,6 +4639,7 @@ function buildTeamAsStatsModal(name) {{
       <td style="font-size:11px;text-align:center">${{so !== null && so !== undefined ? so : '—'}}</td>
       <td style="font-size:11px;text-align:center;color:#f87171">${{rec !== null && rec !== undefined ? rec : '—'}}</td>
       <td style="font-size:11px;text-align:center;color:#fbbf24">${{yc !== null && yc !== undefined ? yc : '—'}}</td>
+      <td style="font-size:11px;text-align:center;color:#ef4444">${{rc !== null && rc !== undefined ? rc : '—'}}</td>
     </tr>`;
   }}).join('');
 
@@ -4659,6 +4661,7 @@ function buildTeamAsStatsModal(name) {{
           <th title="Disparos fuera" style="padding:3px 4px">D.F</th>
           <th title="Disparos recibidos" style="padding:3px 4px;color:#f87171">Rec.</th>
           <th title="Tarjetas amarillas" style="padding:3px 4px;color:#fbbf24">🟨</th>
+          <th title="Tarjetas rojas" style="padding:3px 4px;color:#ef4444">🟥</th>
         </tr></thead>
         <tbody>${{tableRows}}</tbody>
       </table>
