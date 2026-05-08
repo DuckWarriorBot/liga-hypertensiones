@@ -3602,6 +3602,40 @@ function renderPlayoff() {{
   html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">3\u00ba-6\u00ba \u00b7 4\u00ba-5\u00ba \u00b7 Final \u00b7 Doble partido \u00b7 Pasa el mejor global</div>';
 
   // \u2500\u2500 Bracket \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // En temporada actual: comprobar si las plazas de playoff ya estan decididas
+  if (!_historicalMode) {{
+    const _st   = LIGA_DATA.final_standings || [];
+    const _rem  = (LIGA_DATA.total_season_rounds||42) - (LIGA_DATA.total_rounds||0);
+    const _pts6 = _st[5] ? _st[5].pts : 0;
+    const _pts7 = _st[6] ? _st[6].pts : 0;
+    const _locked = _rem <= 0 || (_pts7 + _rem * 3 < _pts6);
+    if (!_locked) {{
+      var _bd, _cr, _bg, _fc;
+      html += '<div style="margin-bottom:14px;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.3);border-radius:10px;padding:14px;text-align:center;">';
+      html += '<div style="font-size:20px;margin-bottom:6px">⏳ Por decidir</div>';
+      html += '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">Quedan <strong style="color:#facc15">' + _rem + '</strong> jornada' + (_rem===1?'':'s') + ' para fijar las plazas del playoff</div>';
+      html += '<div style="font-size:11px;color:var(--muted);margin-bottom:10px">Clasificacion provisional</div>';
+      _st.slice(0,8).forEach(function(t,i) {{
+        var pos = i+1;
+        var inPlay = pos>=3 && pos<=6;
+        _bd = TEAM_BADGES[t.name] || '';
+        _cr = _bd ? '<img src="'+_bd+'" alt="'+t.name+'" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;">' : '<span style="font-size:9px;color:var(--muted)">'+t.name.substring(0,3).toUpperCase()+'</span>';
+        _bg = pos<=2?'rgba(34,197,94,.15)':inPlay?'rgba(250,204,21,.15)':'transparent';
+        _fc = pos<=2?'#4ade80':inPlay?'#facc15':'var(--muted)';
+        html += '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;background:'+_bg+';margin-bottom:3px">';
+        html += '<span style="width:18px;font-size:11px;font-weight:700;color:'+_fc+'">'+pos+'</span>'+_cr;
+        html += '<span style="flex:1;font-size:11px;font-weight:'+(inPlay?'700':'400')+'">'+t.name+'</span>';
+        html += '<span style="font-size:11px;color:var(--muted)">'+t.pts+' pts</span>';
+        if (pos<=2) html += '<span style="font-size:9px;background:rgba(34,197,94,.2);color:#4ade80;padding:1px 6px;border-radius:8px;font-weight:700">ASCENSO</span>';
+        else if (inPlay) html += '<span style="font-size:9px;background:rgba(250,204,21,.2);color:#facc15;padding:1px 6px;border-radius:8px;font-weight:700">PLAYOFF</span>';
+        html += '</div>';
+      }});
+      html += '</div>';
+      html += '</div>';
+      el.innerHTML = html;
+      return;
+    }}
+  }}
   var sf1 = po.semis[0];
   var sf2 = po.semis[1];
   var fin = po.final;
@@ -4080,7 +4114,27 @@ function renderH2H() {{
   const el = document.getElementById('h2hGrid');
   if (!el) return;
   const teams = (LIGA_DATA.final_standings || LIGA_DATA.teams.map(n=>({{name:n}}))).map(t=>t.name);
-  const h2h   = LIGA_DATA.h2h_data || {{}};
+  // ── Calcular h2h dinámicamente desde datos disponibles ──
+  const resMap = LIGA_DATA.results_by_team   || {{}};
+  const oppMap = LIGA_DATA.opponents_by_team  || {{}};
+  const scMap  = SCORES_DATA.scores_by_team  || {{}};
+  const venMap = SCORES_DATA.venue_by_team   || {{}};
+  const h2h = {{}};
+  for (const team of teams) {{
+    const res = resMap[team] || [];
+    const opp = oppMap[team] || [];
+    const sc  = scMap[team]  || {{}};
+    const ven = venMap[team] || {{}};
+    for (let i = 0; i < res.length; i++) {{
+      const opponent = opp[i];
+      const venue    = ven[String(i)];
+      if (!opponent || venue !== 'H') continue;
+      const result = res[i];
+      const score  = sc[String(i)] || '-';
+      if (!h2h[team]) h2h[team] = {{}};
+      h2h[team][opponent] = {{ res: result, score }};
+    }}
+  }}
   const abbr  = n => n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,3);
   const bg    = r => r==='V'?'rgba(57,255,20,.70)':r==='E'?'rgba(245,158,11,.70)':r==='D'?'rgba(239,68,68,.70)':'var(--card2)';
   const tc    = r => r==='V'?'#0a0a0a':r==='E'?'#0a0a0a':r==='D'?'#fff':'var(--muted)';

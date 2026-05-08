@@ -202,17 +202,63 @@ def build_playoff_structure(playoff_matches, final_standings):
     if len(final_standings) < 6 or not playoff_matches:
         return None
 
-    p3 = final_standings[2]['name']
-    p4 = final_standings[3]['name']
-    p5 = final_standings[4]['name']
-    p6 = final_standings[5]['name']
+    valid = [m for m in playoff_matches if m.get('home') and m.get('away')]
+    if not valid:
+        return None
 
-    # Agrupar partidos por par de equipos
+    # Mapeo de nombres de equipos a los nombres canónicos del clasificación.
+    # Buscamos en el top-10 (no solo top-6) para manejar errores de desempate.
+    top10_names = [t['name'] for t in final_standings[:10]]
+
+    def _best_match(raw):
+        """Devuelve el nombre canónico más cercano en top10 para raw."""
+        if raw in top10_names:
+            return raw
+        rn = _norm(raw)
+        for k in top10_names:
+            if _norm(k) == rn:
+                return k
+        for k in top10_names:
+            kn = _norm(k)
+            if rn in kn or kn in rn:
+                return k
+        for k in top10_names:
+            if _norm(k)[:5] == rn[:5]:
+                return k
+        return raw  # sin match: mantener original
+
+    # Agrupar partidos por par de equipos (nombres canónicos)
     pair_matches = defaultdict(list)
-    for m in playoff_matches:
-        if m['home'] and m['away']:
-            key = tuple(sorted([m['home'], m['away']]))
-            pair_matches[key].append(m)
+    for m in valid:
+        canon_home = _best_match(m['home'])
+        canon_away = _best_match(m['away'])
+        m = dict(m, home=canon_home, away=canon_away)
+        key = tuple(sorted([canon_home, canon_away]))
+        pair_matches[key].append(m)
+
+    # Determinar los 4 equipos del playoff directamente de los partidos scrapeados.
+    # Cada equipo se cuenta según cuántos pares distintos tiene. El de mayor pos en
+    # standings actúa como "high seed" de su semifinal.
+    po_teams_raw = set()
+    for key in pair_matches:
+        po_teams_raw.update(key)
+
+    # Ordenar por posición en clasificación (si el equipo no aparece → pos 999)
+    standings_pos = {t['name']: i for i, t in enumerate(final_standings)}
+
+    # ── Detectar bracket automáticamente ──────────────────────────────────
+    # La final es el par donde AMBOS equipos aparecen en 2 llaves distintas
+    # (semifinalistas que ganaron su llave). Los otros 2 pares son las semis.
+    from collections import Counter
+    team_pair_count = Counter()
+    for key in pair_matches:
+        for team in key:
+            team_pair_count[team] += 1
+
+    # Finalistas: los 2 equipos que aparecen en 2 pares
+    finalists = {t for t, c in team_pair_count.items() if c >= 2}
+    final_key = next((k for k in pair_matches if set(k) == finalists), None)
+    semi_keys = [k for k in pair_matches if k != final_key]
 
     def build_tie(team_high, team_low):
         """Construye un tie (eliminatoria a doble partido) entre dos equipos."""
@@ -260,17 +306,40 @@ def build_playoff_structure(playoff_matches, final_standings):
         return {'team_high': team_high, 'team_low': team_low,
                 'matches': match_structs, 'agg': agg_str, 'winner': winner}
 
-    sf1 = build_tie(p3, p6); sf1['id'] = 'sf1'
-    sf2 = build_tie(p4, p5); sf2['id'] = 'sf2'
+    # Construir semis desde las llaves detectadas
+    def _high_low(pair_key):
+        a, b = pair_key
+        return (a, b) if standings_pos.get(a, 999) < standings_pos.get(b, 999) else (b, a)
 
-    # La final es el par que NO es sf1 ni sf2
-    sf_keys = {tuple(sorted([p3, p6])), tuple(sorted([p4, p5]))}
-    final_key = next((k for k in pair_matches if k not in sf_keys), None)
+    if len(semi_keys) == 2 and final_key:
+        h1, l1 = _high_low(semi_keys[0])
+        h2, l2 = _high_low(semi_keys[1])
+        # SF1 = la semi donde el high seed tiene menor posición (más arriba en clasificación)
+        if standings_pos.get(h1, 999) <= standings_pos.get(h2, 999):
+            sf1 = build_tie(h1, l1); sf1['id'] = 'sf1'
+            sf2 = build_tie(h2, l2); sf2['id'] = 'sf2'
+        else:
+            sf1 = build_tie(h2, l2); sf1['id'] = 'sf1'
+            sf2 = build_tie(h1, l1); sf2['id'] = 'sf2'
+    else:
+        # Fallback: usar clasificación (3vs6, 4vs5)
+        po_teams_sorted = sorted(po_teams_raw, key=lambda t: standings_pos.get(t, 999))
+        if len(po_teams_sorted) >= 4:
+            p3, p4, p5, p6 = po_teams_sorted[:4]
+        else:
+            p3 = final_standings[2]['name']; p4 = final_standings[3]['name']
+            p5 = final_standings[4]['name']; p6 = final_standings[5]['name']
+        sf1 = build_tie(p3, p6); sf1['id'] = 'sf1'
+        sf2 = build_tie(p4, p5); sf2['id'] = 'sf2'
+        final_key = None
 
+    # Construir final
     if final_key:
-        fw1 = sf1.get('winner') or p3
-        fw2 = sf2.get('winner') or p4
+        fw1 = sf1.get('winner') or sf1['team_high']
+        fw2 = sf2.get('winner') or sf2['team_high']
         fin = build_tie(fw1, fw2)
+        fh, fl = _high_low(final_key)
+        fin = build_tie(fh, fl)
     else:
         fw1 = sf1.get('winner') or ''
         fw2 = sf2.get('winner') or ''
