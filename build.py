@@ -417,7 +417,7 @@ html = f"""<!DOCTYPE html>
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://hypertensiones.alejandrobeltran.es/logo.png">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 <style>
 /* ===== RESET & BASE ===== */
 *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -430,7 +430,7 @@ html = f"""<!DOCTYPE html>
   --accent:    #e0e0e0;
   --accent2:   #999999;
   --text:      #f0f0f0;
-  --muted:     #888888;
+  --muted:     #9a9a9a;
   --win:       #22c55e;
   --draw:      #f59e0b;
   --loss:      #ef4444;
@@ -1907,7 +1907,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
     </div>
     <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>
     <div class="season-select-wrap">
-      <label>Temporada</label>
+      <label for="seasonSelect">Temporada</label>
       <select class="season-select" id="seasonSelect" onchange="switchSeason(this.value)">
         <option value="_actual_">25/26 ★</option>
         {season_options_html}
@@ -3062,7 +3062,7 @@ function renderHistoryTable(sortBy) {{
         if (oppF) {{
           const badgeF = TEAM_BADGES[oppF];
           const innerF = badgeF
-            ? `<img src="${{badgeF}}" alt="${{oppF}}" style="opacity:.4;filter:grayscale(.3)" onerror="this.style.display='none'">`
+            ? `<img src="${{badgeF}}" alt="${{oppF}}" width="14" height="14" style="opacity:.4;filter:grayscale(.3)" onerror="this.style.display='none'">`
             : `<span style="font-size:8px;color:var(--muted);opacity:.6">${{oppF.substring(0,3).toUpperCase()}}</span>`;
           return `<td class="cell-future" title="J${{i+1}} \u00b7 vs ${{oppF}}">${{innerF}}</td>`;
         }}
@@ -3088,7 +3088,7 @@ function renderHistoryTable(sortBy) {{
         : `${{lbl}}${{scoreTxt}}${{oppTxt}}`;
       const badge  = opp ? TEAM_BADGES[opp] : null;
       const inner  = badge
-        ? `<img src="${{badge}}" alt="${{opp}}" onerror="this.style.display='none'">`
+        ? `<img src="${{badge}}" alt="${{opp}}" width="18" height="18" onerror="this.style.display='none'">`
         : `<span style="font-size:10px;font-weight:700">${{r}}</span>`;
       return `<td class="cell-${{r}}" title="${{tip}}">${{inner}}</td>`;
     }}).join('');
