@@ -1763,6 +1763,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   min-width: 0;
 }}
 .playoff-team.winner {{ color: var(--text); font-weight: 700; }}
+.playoff-agg.decided {{ color: var(--text); }}
 .playoff-team.loser {{ opacity: .5; }}
 .playoff-team span {{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 .playoff-score {{
@@ -3487,8 +3488,8 @@ function renderPlayoff() {{
       var aggWinner = winner || '';
       html += '<div class="playoff-agg decided" style="margin-top:6px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:8px;">';
       html += '<span style="font-size:11px;color:var(--muted)">Global:</span>';
-      html += '<span style="font-weight:800;font-size:15px">' + agg + '</span>';
-      if (aggWinner) html += '<span style="font-size:11px;color:var(--muted)">\u00b7 Pasa:</span><strong style="font-size:12px">' + aggWinner + '</strong>';
+      html += '<span style="font-weight:800;font-size:15px;color:var(--text)">' + agg + '</span>';
+      if (aggWinner) html += '<span style="font-size:11px;color:var(--muted)">\u00b7 Pasa:</span><strong style="font-size:12px;color:var(--text)">' + aggWinner + '</strong>';
       html += '</div>';
     }} else {{
       html += '<div class="playoff-agg">Eliminatoria a doble partido</div>';
@@ -3544,7 +3545,7 @@ function renderPlayoff() {{
       html += '<div class="card-title" style="color:' + pwColor + '">\U0001f389 Ganador del Playoff \u00b7 Ascendido</div>';
       html += '<div style="display:flex;align-items:center;gap:14px;padding:8px 0;">';
       html += '<div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;">' + pwCrest + '</div>';
-      html += '<div><div style="font-size:20px;font-weight:800;color:' + pwColor + '">' + playoffWinner + '</div>';
+      html += '<div><div style="font-size:20px;font-weight:800;color:var(--text)">' + playoffWinner + '</div>';
       html += '<div style="font-size:11px;color:var(--muted);margin-top:2px">Ascenso vía playoff \u00b7 ' + currentLabel + '</div></div>';
       html += '</div></div>';
     }}
