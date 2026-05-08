@@ -1708,6 +1708,19 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
 <!-- ============================== TAB 6: ANÁLISIS ============================== -->
 <div class="tab-panel" id="tab-analisis">
   <div class="gap-section">
+    <!-- Selector de equipos análisis -->
+    <div class="card" style="padding:14px 20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:700;color:var(--text)">🎯 Filtrar equipos <span style="color:var(--muted);font-weight:400;font-size:11px">· selecciona para destacar sus datos en todos los gráficos · sin selección = todos visibles</span></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="hist-sort-btn" onclick="analisisSelectTop(6)">Top 6</button>
+          <button class="hist-sort-btn" onclick="analisisSelectTop(10)">Top 10</button>
+          <button class="hist-sort-btn" onclick="analisisSelectAll()">Todos</button>
+          <button class="hist-sort-btn" onclick="analisisSelectNone()">Ninguno</button>
+        </div>
+      </div>
+      <div class="team-selector" id="analisisTeamSelector" style="max-height:100px;margin-bottom:0"></div>
+    </div>
     <div class="analisis-top-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
       <div class="card">
         <div class="card-title">⚡ Ataque vs Defensa</div>
@@ -1814,13 +1827,6 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
       <div class="card-legend"><b>Barra corta / verde</b> equipo muy regular (resultados predecibles) &nbsp;·&nbsp; <b>Barra larga / roja</b> equipo errático (alterna victorias y derrotas) &nbsp;·&nbsp; La desviación estándar mide cuánto varían sus puntos: 0 = siempre el mismo resultado, ~1.5 = muy volátil &nbsp;·&nbsp; Los puntos por partido van de 0 (derrota), 1 (empate) a 3 (victoria)</div>
     </div>
 
-    <!-- Bump chart posiciones -->
-    <div class="card">
-      <div class="card-title">📉 Evolución de Posiciones (Bump Chart)</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Posición en la tabla tras cada jornada · línea hacia arriba = mejora</div>
-      <div class="chart-container" style="height:500px"><canvas id="bumpChart"></canvas></div>
-      <div class="card-legend"><b>Eje Y</b> posición en tabla (1 = líder, arriba) &nbsp;·&nbsp; <b>Eje X</b> jornada &nbsp;·&nbsp; Solo se muestran equipos activos · Pasa el cursor sobre un punto para ver el equipo y posición exacta</div>
-    </div>
 
   </div>
 </div>
@@ -3309,7 +3315,123 @@ function renderPlayoff() {
   el.innerHTML = html;
 }
 
+// ===== ANÁLISIS: SELECTOR DE EQUIPOS =====
+let analisisFilter = new Set(); // vacío = todos visibles
+
+function buildAnalisisSelector() {
+  const el = document.getElementById('analisisTeamSelector');
+  if (!el) return;
+  const teams = computeStandings().map(t => t.name);
+  el.innerHTML = teams.map(name => {
+    const color = getColor(name);
+    const badge = TEAM_BADGES[name];
+    const sel = analisisFilter.has(name) ? 'badge-sel' : '';
+    const opacity = (analisisFilter.size === 0 || analisisFilter.has(name)) ? '1' : '0.35';
+    const imgTag = badge
+      ? `<img src="${badge}" alt="${name}" style="opacity:${opacity};filter:drop-shadow(0 0 4px ${color}99)">`
+      : `<div style="width:32px;height:32px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;opacity:${opacity}">${getInitials(name)}</div>`;
+    return `<label class="team-check-badge ${sel}" title="${name}">
+      <input type="checkbox" value="${name}" ${analisisFilter.has(name)?'checked':''} onchange="toggleAnalisisTeam('${name.replace(/'/g,"\'")}',this.checked)">
+      ${imgTag}
+    </label>`;
+  }).join('');
+}
+
+function toggleAnalisisTeam(name, checked) {
+  if (checked) analisisFilter.add(name); else analisisFilter.delete(name);
+  buildAnalisisSelector();
+  applyAnalisisFilter();
+}
+function analisisSelectTop(n) {
+  analisisFilter.clear();
+  computeStandings().slice(0,n).forEach(t => analisisFilter.add(t.name));
+  buildAnalisisSelector(); applyAnalisisFilter();
+}
+function analisisSelectAll() {
+  analisisFilter.clear();
+  buildAnalisisSelector(); applyAnalisisFilter();
+}
+function analisisSelectNone() {
+  analisisFilter.clear();
+  buildAnalisisSelector(); applyAnalisisFilter();
+}
+
+function applyAnalisisFilter() {
+  const sel = analisisFilter;
+  const none = sel.size === 0; // sin selección: todos al 100%
+
+  // Dimear datasets en charts Chart.js
+  // Para scatter (usa pointStyle=image): ajustar pointRadius
+  if (scatterChart) {
+    scatterChart.data.datasets.forEach(ds => {
+      const name = ds.label;
+      const active = none || sel.has(name);
+      ds.pointRadius      = active ? (ds.pointStyle instanceof Image ? 14 : 8) : (ds.pointStyle instanceof Image ? 5 : 3);
+      ds.pointHoverRadius = active ? (ds.pointStyle instanceof Image ? 17 : 11) : (ds.pointStyle instanceof Image ? 6 : 4);
+    });
+    scatterChart.update('none');
+  }
+
+  // Para local/visitante (bar chart con labels = equipos, 4 datasets fijos)
+  if (localVisitanteChart) {
+    const lvLabels = localVisitanteChart.data.labels || [];
+    const lvBaseColors = ['#39FF14','#00F5FF','#FF00FF','#FFE000'];
+    const lvBaseBg     = ['#39FF1455','#00F5FF55','#FF00FF33','#FFE00033'];
+    localVisitanteChart.data.datasets.forEach((ds, di) => {
+      const baseC  = lvBaseColors[di] || '#888';
+      const baseBg = lvBaseBg[di] || '#88888844';
+      ds.backgroundColor = lvLabels.map(name => (none || sel.has(name)) ? baseBg : baseBg.replace(/[\da-f]{2}\)$/i,'0a)'));
+      ds.borderColor     = lvLabels.map(name => (none || sel.has(name)) ? baseC : baseC + '25');
+    });
+    localVisitanteChart.update('none');
+  }
+
+  // Dimear filas en tablas (rankings, escenarios, advStats)
+  function dimTableRows(tableId) {
+    const tbody = document.querySelector(`#${tableId} tbody`) || document.getElementById(tableId);
+    if (!tbody) return;
+    tbody.querySelectorAll('tr').forEach(row => {
+      const nameCell = row.querySelector('.team-name-text');
+      if (!nameCell) return;
+      const name = nameCell.textContent.trim();
+      row.style.opacity = (none || sel.has(name)) ? '' : '0.2';
+    });
+  }
+  dimTableRows('standingsTable');
+  dimTableRows('scenariosTable');
+  dimTableRows('advStatsTable');
+  ['rankingList'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.querySelectorAll('[data-team]').forEach(row => {
+      const name = row.getAttribute('data-team');
+      row.style.opacity = (none || sel.has(name)) ? '' : '0.2';
+    });
+  });
+
+  // Consistencia chart: opacidad de barras
+  if (consistenciaChart) {
+    const baseColors = ['rgba(34,197,94,0.85)','rgba(245,158,11,0.85)','rgba(239,68,68,0.85)'];
+    const dimColors  = ['rgba(34,197,94,0.12)','rgba(245,158,11,0.12)','rgba(239,68,68,0.12)'];
+    consistenciaChart.data.datasets.forEach((ds, di) => {
+      ds.backgroundColor = consistenciaChart.data.labels.map(name => {
+        const active = none || sel.has(name);
+        return active ? baseColors[di] : dimColors[di];
+      });
+    });
+    consistenciaChart.update('none');
+  }
+
+  // Radar: cuando hay selección, actualizar _radarSelected con los seleccionados (si caben ≤3)
+  if (!none && sel.size > 0 && sel.size <= 3) {
+    _radarSelected = [...sel];
+    buildRadarSelector();
+    buildRadarChart();
+  }
+}
+
 function initAnalysisTab() {
+  buildAnalisisSelector();
   buildScatterChart();
   renderRanking(rankingMode);
   renderScenarios();
@@ -3319,7 +3441,6 @@ function initAnalysisTab() {
   buildRadarSelector();
   buildRadarChart();
   buildConsistenciaChart();
-  buildBumpChart();
 }
 
 // ===== ADVANCED STATS (AS.com / Opta) =====
@@ -3612,65 +3733,71 @@ function buildConsistenciaChart() {
   if (!ctx) return;
   if (consistenciaChart) consistenciaChart.destroy();
   const standings = computeStandings();
+  // Ordenar por % victorias desc
   const data = standings.map(t => {
     const res = LIGA_DATA.results_by_team[t.name] || [];
-    const pts_arr = res.map(r => r==='V'?3:r==='E'?1:0);
-    const mean = pts_arr.length > 0 ? pts_arr.reduce((s,v)=>s+v,0)/pts_arr.length : 0;
-    const variance = pts_arr.length > 1 ? pts_arr.reduce((s,v)=>s+(v-mean)**2,0)/(pts_arr.length-1) : 0;
-    return { name: t.name, stddev: Math.sqrt(variance), mean };
-  }).sort((a, b) => a.stddev - b.stddev);  // más consistente primero
-
-  const maxStd = Math.max(...data.map(d => d.stddev));
-  const colors = data.map(d => {
-    const ratio = d.stddev / (maxStd || 1);
-    // verde → rojo según ratio
-    const r = Math.round(ratio * 220);
-    const g = Math.round((1 - ratio) * 180 + 50);
-    return `rgba(${r},${g},60,0.85)`;
-  });
-
-  const _glowPlugin = {
-    id: 'glowBars',
-    beforeDatasetDraw(chart, args) {
-      chart.ctx.save();
-      chart.ctx.shadowColor = chart.data.datasets[args.index].borderColor || '#fff';
-      chart.ctx.shadowBlur = 12;
-    },
-    afterDatasetDraw(chart) { chart.ctx.restore(); }
-  };
+    const pj = res.length || 1;
+    const wins   = res.filter(r=>r==='V').length;
+    const draws  = res.filter(r=>r==='E').length;
+    const losses = res.filter(r=>r==='D').length;
+    return { name: t.name, pct_v: wins/pj*100, pct_e: draws/pj*100, pct_d: losses/pj*100, wins, draws, losses, pj: res.length };
+  }).sort((a,b) => b.pct_v - a.pct_v);
 
   consistenciaChart = new Chart(ctx.getContext('2d'), {
     type: 'bar',
     data: {
       labels: data.map(d => d.name),
-      datasets: [{
-        label: 'Desv. estándar pts/partido',
-        data: data.map(d => +d.stddev.toFixed(3)),
-        backgroundColor: colors,
-        borderColor: colors.map(c => c.replace('0.85', '1')),
-        borderWidth: 1.5,
-      }]
+      datasets: [
+        {
+          label: '% Victorias',
+          data: data.map(d => +d.pct_v.toFixed(1)),
+          backgroundColor: 'rgba(34,197,94,0.85)',
+          borderColor: '#22c55e',
+          borderWidth: 1,
+        },
+        {
+          label: '% Empates',
+          data: data.map(d => +d.pct_e.toFixed(1)),
+          backgroundColor: 'rgba(245,158,11,0.85)',
+          borderColor: '#f59e0b',
+          borderWidth: 1,
+        },
+        {
+          label: '% Derrotas',
+          data: data.map(d => +d.pct_d.toFixed(1)),
+          backgroundColor: 'rgba(239,68,68,0.85)',
+          borderColor: '#ef4444',
+          borderWidth: 1,
+        },
+      ]
     },
-    plugins: [_glowPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
       indexAxis: 'y',
       plugins: {
-        legend: { display: false },
+        legend: { position: 'top', labels: { color: '#94a3b8', boxWidth: 12, font: {size: 11} } },
         tooltip: {
           callbacks: {
-            label: c => ` Desv. estándar: ${c.parsed.x.toFixed(3)} · Media pts/p: ${data[c.dataIndex].mean.toFixed(2)}`
+            label: c => {
+              const d = data[c.dataIndex];
+              if (c.datasetIndex === 0) return ` Victorias: ${d.wins} (${d.pct_v.toFixed(1)}%)`;
+              if (c.datasetIndex === 1) return ` Empates: ${d.draws} (${d.pct_e.toFixed(1)}%)`;
+              return ` Derrotas: ${d.losses} (${d.pct_d.toFixed(1)}%)`;
+            },
+            title: items => `${items[0].label} · ${data[items[0].dataIndex].pj} partidos`
           }
         }
       },
       scales: {
         x: {
+          stacked: true,
+          max: 100,
           grid: { color: '#2d3f5f44' },
-          ticks: { color: '#94a3b8', font: {size: 10} },
-          title: { display: true, text: 'Desviación estándar (menor = más regular)', color: '#64748b', font: {size: 10} }
+          ticks: { color: '#94a3b8', font: {size: 10}, callback: v => v+'%' },
+          title: { display: true, text: '% partidos', color: '#64748b', font: {size: 10} }
         },
-        y: { grid: { display: false }, ticks: { color: '#94a3b8', font: {size: 10} } }
+        y: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8', font: {size: 10} } }
       }
     }
   });
@@ -3888,7 +4015,7 @@ function renderRanking(mode) {
       barStyle = `background:linear-gradient(180deg,${kfPri} 50%,${kfSec} 50%);box-shadow:0 0 0 1.5px ${kfPri};box-sizing:border-box;width:${bar}%`;
     }
     const lblColor = mode==='xpts' ? (((valObj.luck??0)>=0)?'#4ade80':'#f87171') : readable(kfPri);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
+    return `<div data-team="${t.name}" style="display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)">
       <span style="width:18px;text-align:right;font-size:11px;color:var(--muted)">${i+1}</span>
       ${crestHTML(t.name,22)}
       <div style="flex:1;min-width:0">
@@ -4950,7 +5077,7 @@ init();
 
 <script>
 (function(){
-  var BUILD_TS = '2026-05-08T13:53:30';
+  var BUILD_TS = '2026-05-08T14:06:27';
   function checkVersion(){
     fetch('version.json?_=' + Date.now())
       .then(function(r){ return r.json(); })
