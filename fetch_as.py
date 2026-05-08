@@ -31,6 +31,18 @@ if hasattr(sys.stdout, 'reconfigure'):
 else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
+# ── Mapeo nombres AS.com → nombres internos del sistema ──────────────────────
+AS_NAME_MAP = {
+    'A. D. Ceuta':   'Ceuta',
+    'Burgos CF':     'Burgos',
+    'Cultural':      'Cultural Leonesa',
+    'R. Sociedad B': 'Real Sociedad B',
+    'Real Valladolid': 'Valladolid',
+}
+
+def norm_name(n):
+    return AS_NAME_MAP.get(n, n)
+
 # ── Configuración ─────────────────────────────────────────────────────────────
 SEASON          = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else "2025_2026"
 BASE_URL        = "https://as.com/resultados/futbol/segunda"
@@ -210,8 +222,8 @@ def main():
                     print(f"  ok {m['home']} vs {m['away']} (ya procesado)")
                     continue
 
-                home = m.get('home', '?')
-                away = m.get('away', '?')
+                home = norm_name(m.get('home', '?'))
+                away = norm_name(m.get('away', '?'))
                 print(f"  -> {home} vs {away}  [{match_id[:10]}]", end='', flush=True)
 
                 stats = get_match_stats(page, jornada_n, match_id)
