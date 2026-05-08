@@ -485,11 +485,11 @@ header {{
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  margin: -26px -4px -26px 0;
+  margin: 0 16px 0 0;
 }}
 .logo img {{
-  padding-top: 20px;
-  width: 380px;
+  padding-top: 0;
+  width: 250px;
   height: auto;
   filter: drop-shadow(0 0 12px rgba(57,255,20,.7));
   pointer-events: none;
@@ -648,7 +648,7 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
 .hamburger-btn.open span:nth-child(3) {{ transform: translateY(-7px) rotate(-45deg); }}
 
 /* ===== MOBILE RESPONSIVE ===== */
-@media (max-width: 640px) {{
+@media (max-width: 889px) {{
   .hamburger-btn {{ display: flex; position: absolute; top: 12px; right: 16px; }}
   header {{ position: sticky; }}
   .header-top {{
@@ -665,7 +665,7 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     height: 100px;
   }}
   .logo img {{
-    width: 380px;
+    width: 280px;
     padding-top: 0;
     align-items: center;
   }}
@@ -805,7 +805,26 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
 }}
 .card-legend b {{ color: var(--text); opacity: .6; font-weight: 600; }}
 
-/* ===== STANDINGS TABLE ===== */
+/* ===== RADAR TEAM SELECTOR ===== */
+.radar-team-btn {{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}}
+.radar-team-btn:hover {{ border-color: var(--accent); color: var(--text); }}
+.radar-team-btn.active {{ color: #0a0a0a; border-color: transparent; }}
+
+
 .standings-wrapper {{
   overflow-x: auto;
 }}
@@ -1889,7 +1908,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
       <span></span><span></span><span></span>
     </button>
     <div class="logo">
-      <img src="logo.png" alt="Liga Hypertensiones" width="380" height="133" fetchpriority="high" />
+      <img src="logo.png" alt="Liga Hypertensiones" width="250" height="88" fetchpriority="high" />
     </div>
     <h1>Liga Hypertensiones 25/26</h1>
     <div class="header-meta">
@@ -2175,6 +2194,32 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
       <div id="h2hGrid" style="overflow-x:auto"></div>
       <div class="card-legend"><b>Fila</b> equipo local &nbsp;·&nbsp; <b>Columna</b> equipo visitante &nbsp;·&nbsp; Cada celda muestra el marcador del partido (goles local – goles visitante) &nbsp;·&nbsp; <span style="color:#39ff14">■</span> Victoria del equipo de la fila &nbsp;·&nbsp; <span style="color:#f59e0b">■</span> Empate &nbsp;·&nbsp; <span style="color:#ef4444">■</span> Derrota del equipo de la fila &nbsp;·&nbsp; <b>Cruz de Selección</b> activa una capa de oscurecimiento fuera de la fila y columna del cursor para facilitar la lectura</div>
     </div>
+
+    <!-- Radar por equipo -->
+    <div class="card">
+      <div class="card-title">🕸️ Radar por Equipo</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">6 dimensiones normalizadas al 0–100 respecto al resto de equipos · Selecciona hasta 3 equipos</div>
+      <div id="radarTeamSelector" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
+      <div class="chart-container" style="height:380px;max-width:520px;margin:0 auto"><canvas id="radarChart"></canvas></div>
+      <div class="card-legend"><b>Ataque</b> GF/partido &nbsp;·&nbsp; <b>Defensa</b> inverso de GC/partido &nbsp;·&nbsp; <b>Local</b> PPG en casa &nbsp;·&nbsp; <b>Visitante</b> PPG fuera &nbsp;·&nbsp; <b>Consistencia</b> inverso de la desviación estándar de puntos &nbsp;·&nbsp; <b>Momentum</b> PPG en las últimas 5 jornadas · Todos los ejes normalizados: 100 = mejor del grupo, 0 = peor</div>
+    </div>
+
+    <!-- Consistencia -->
+    <div class="card">
+      <div class="card-title">📏 Consistencia — Regularidad de Resultados</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Desviación estándar de puntos por partido · cuanto menor, más regular el equipo</div>
+      <div class="chart-container" style="height:480px"><canvas id="consistenciaChart"></canvas></div>
+      <div class="card-legend"><b>Barra corta / verde</b> equipo muy regular (resultados predecibles) &nbsp;·&nbsp; <b>Barra larga / roja</b> equipo errático (alterna victorias y derrotas) &nbsp;·&nbsp; La desviación estándar mide cuánto varían sus puntos: 0 = siempre el mismo resultado, ~1.5 = muy volátil &nbsp;·&nbsp; Los puntos por partido van de 0 (derrota), 1 (empate) a 3 (victoria)</div>
+    </div>
+
+    <!-- Bump chart posiciones -->
+    <div class="card">
+      <div class="card-title">📉 Evolución de Posiciones (Bump Chart)</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Posición en la tabla tras cada jornada · línea hacia arriba = mejora</div>
+      <div class="chart-container" style="height:500px"><canvas id="bumpChart"></canvas></div>
+      <div class="card-legend"><b>Eje Y</b> posición en tabla (1 = líder, arriba) &nbsp;·&nbsp; <b>Eje X</b> jornada &nbsp;·&nbsp; Solo se muestran equipos activos · Pasa el cursor sobre un punto para ver el equipo y posición exacta</div>
+    </div>
+
   </div>
 </div>
 
@@ -3289,6 +3334,10 @@ function setFormMode(n) {{
 // ===== ANÁLISIS TAB =====
 let scatterChart = null;
 let localVisitanteChart = null;
+let radarChart = null;
+let consistenciaChart = null;
+let bumpChart = null;
+let _radarSelected = [];
 let rankingMode = 'off';
 
 // ===== HISTORIA =====
@@ -3665,6 +3714,10 @@ function initAnalysisTab() {{
   buildLocalVisitanteChart();
   if (!document.getElementById('h2hGrid').hasChildNodes()) renderH2H();
   buildAdvStatsTable();
+  buildRadarSelector();
+  buildRadarChart();
+  buildConsistenciaChart();
+  buildBumpChart();
 }}
 
 // ===== ADVANCED STATS (AS.com / Opta) =====
@@ -3815,6 +3868,294 @@ function initAnalysisTab() {{
     }}).join('');
   }}
 }})();
+
+
+// ===== RADAR CHART =====
+function buildRadarSelector() {{
+  const container = document.getElementById('radarTeamSelector');
+  if (!container) return;
+  const teams = computeStandings().map(t => t.name);
+  // Default: top 3
+  if (_radarSelected.length === 0) _radarSelected = teams.slice(0, 3);
+  container.innerHTML = teams.map(name => {{
+    const color = getColor(name);
+    const active = _radarSelected.includes(name);
+    const badge = TEAM_BADGES[name] ? `<img src="${{TEAM_BADGES[name]}}" style="width:14px;height:14px;object-fit:contain">` : '';
+    return `<button class="radar-team-btn${{active?' active':''}}" style="${{active?`background:${{color}};`:''}}" onclick="toggleRadarTeam('${{name.replace(/'/g,"\\'")}}')">
+      ${{badge}}<span>${{name}}</span>
+    </button>`;
+  }}).join('');
+}}
+
+function toggleRadarTeam(name) {{
+  if (_radarSelected.includes(name)) {{
+    if (_radarSelected.length === 1) return; // mínimo 1
+    _radarSelected = _radarSelected.filter(n => n !== name);
+  }} else {{
+    if (_radarSelected.length >= 3) _radarSelected.shift(); // máximo 3, descarta el más viejo
+    _radarSelected.push(name);
+  }}
+  buildRadarSelector();
+  buildRadarChart();
+}}
+
+function computeRadarStats() {{
+  const standings = computeStandings();
+  const all = standings.map(t => {{
+    const hw = computeHomeAwayStats(t.name);
+    // Momentum: PPG últimas 5 jornadas
+    const res = LIGA_DATA.results_by_team[t.name] || [];
+    const last5 = res.slice(-5);
+    const momPts = last5.reduce((s, r) => s + (r==='V'?3:r==='E'?1:0), 0);
+    const momPpg = last5.length > 0 ? momPts / last5.length : 0;
+    // Consistencia: desviación estándar de puntos por partido
+    const pts_arr = res.map(r => r==='V'?3:r==='E'?1:0);
+    const mean = pts_arr.length > 0 ? pts_arr.reduce((s,v)=>s+v,0)/pts_arr.length : 0;
+    const variance = pts_arr.length > 1 ? pts_arr.reduce((s,v)=>s+(v-mean)**2,0)/(pts_arr.length-1) : 0;
+    const stddev = Math.sqrt(variance);
+    return {{
+      name: t.name,
+      attack: t.played > 0 ? t.gf / t.played : 0,
+      defense: t.played > 0 ? t.gc / t.played : 0,   // menor = mejor
+      home_ppg: hw.home_played > 0 ? hw.home_pts / hw.home_played : 0,
+      away_ppg: hw.away_played > 0 ? hw.away_pts / hw.away_played : 0,
+      consistency: stddev,  // menor = mejor
+      momentum: momPpg,
+    }};
+  }});
+  // Normalizar 0-100
+  function norm(arr, invert) {{
+    const vals = arr.filter(v => v !== null && !isNaN(v));
+    const mn = Math.min(...vals), mx = Math.max(...vals);
+    return arr.map(v => {{
+      if (mn === mx) return 50;
+      const n = (v - mn) / (mx - mn) * 100;
+      return invert ? 100 - n : n;
+    }});
+  }}
+  const attack_n      = norm(all.map(t => t.attack),      false);
+  const defense_n     = norm(all.map(t => t.defense),     true);  // menos GC = mejor
+  const home_n        = norm(all.map(t => t.home_ppg),    false);
+  const away_n        = norm(all.map(t => t.away_ppg),    false);
+  const consist_n     = norm(all.map(t => t.consistency), true);  // menor std = mejor
+  const momentum_n    = norm(all.map(t => t.momentum),    false);
+  return all.map((t, i) => ({{
+    name: t.name,
+    values: [attack_n[i], defense_n[i], home_n[i], away_n[i], consist_n[i], momentum_n[i]],
+    raw: t,
+  }}));
+}}
+
+function buildRadarChart() {{
+  const ctx = document.getElementById('radarChart');
+  if (!ctx) return;
+  if (radarChart) radarChart.destroy();
+  const allStats = computeRadarStats();
+  const labels = ['Ataque', 'Defensa', 'Local', 'Visitante', 'Consistencia', 'Momentum'];
+  const datasets = _radarSelected.map(name => {{
+    const s = allStats.find(t => t.name === name);
+    if (!s) return null;
+    const color = getColor(name);
+    return {{
+      label: name,
+      data: s.values,
+      backgroundColor: color + '33',
+      borderColor: color,
+      borderWidth: 2,
+      pointBackgroundColor: color,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+    }};
+  }}).filter(Boolean);
+  radarChart = new Chart(ctx.getContext('2d'), {{
+    type: 'radar',
+    data: {{ labels, datasets }},
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {{
+        r: {{
+          min: 0, max: 100,
+          ticks: {{ stepSize: 25, color: '#94a3b8', font: {{size: 9}}, backdropColor: 'transparent' }},
+          grid: {{ color: 'rgba(148,163,184,.2)' }},
+          angleLines: {{ color: 'rgba(148,163,184,.2)' }},
+          pointLabels: {{ color: '#f0f0f0', font: {{size: 12, weight: 'bold'}} }},
+        }}
+      }},
+      plugins: {{
+        legend: {{ position: 'bottom', labels: {{ color: '#94a3b8', boxWidth: 12, font: {{size: 11}} }} }},
+        tooltip: {{
+          callbacks: {{
+            label: function(c) {{
+              const s = computeRadarStats().find(t => t.name === c.dataset.label);
+              if (!s) return `${{c.dataset.label}}: ${{c.parsed.r.toFixed(0)}}`;
+              const rawLabels = ['GF/p', 'GC/p', 'PPG casa', 'PPG fuera', 'StdDev', 'PPG ult5'];
+              const rawVals = [
+                s.raw.attack.toFixed(2), s.raw.defense.toFixed(2),
+                s.raw.home_ppg.toFixed(2), s.raw.away_ppg.toFixed(2),
+                s.raw.consistency.toFixed(2), s.raw.momentum.toFixed(2),
+              ];
+              return `${{c.dataset.label}} · ${{c.label}}: ${{c.parsed.r.toFixed(0)}} (${{rawLabels[c.dataIndex]}}=${{rawVals[c.dataIndex]}})`;
+            }}
+          }}
+        }}
+      }}
+    }}
+  }});
+}}
+
+// ===== CONSISTENCIA CHART =====
+function buildConsistenciaChart() {{
+  const ctx = document.getElementById('consistenciaChart');
+  if (!ctx) return;
+  if (consistenciaChart) consistenciaChart.destroy();
+  const standings = computeStandings();
+  const data = standings.map(t => {{
+    const res = LIGA_DATA.results_by_team[t.name] || [];
+    const pts_arr = res.map(r => r==='V'?3:r==='E'?1:0);
+    const mean = pts_arr.length > 0 ? pts_arr.reduce((s,v)=>s+v,0)/pts_arr.length : 0;
+    const variance = pts_arr.length > 1 ? pts_arr.reduce((s,v)=>s+(v-mean)**2,0)/(pts_arr.length-1) : 0;
+    return {{ name: t.name, stddev: Math.sqrt(variance), mean }};
+  }}).sort((a, b) => a.stddev - b.stddev);  // más consistente primero
+
+  const maxStd = Math.max(...data.map(d => d.stddev));
+  const colors = data.map(d => {{
+    const ratio = d.stddev / (maxStd || 1);
+    // verde → rojo según ratio
+    const r = Math.round(ratio * 220);
+    const g = Math.round((1 - ratio) * 180 + 50);
+    return `rgba(${{r}},${{g}},60,0.85)`;
+  }});
+
+  const _glowPlugin = {{
+    id: 'glowBars',
+    beforeDatasetDraw(chart, args) {{
+      chart.ctx.save();
+      chart.ctx.shadowColor = chart.data.datasets[args.index].borderColor || '#fff';
+      chart.ctx.shadowBlur = 12;
+    }},
+    afterDatasetDraw(chart) {{ chart.ctx.restore(); }}
+  }};
+
+  consistenciaChart = new Chart(ctx.getContext('2d'), {{
+    type: 'bar',
+    data: {{
+      labels: data.map(d => d.name),
+      datasets: [{{
+        label: 'Desv. estándar pts/partido',
+        data: data.map(d => +d.stddev.toFixed(3)),
+        backgroundColor: colors,
+        borderColor: colors.map(c => c.replace('0.85', '1')),
+        borderWidth: 1.5,
+      }}]
+    }},
+    plugins: [_glowPlugin],
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {{
+        legend: {{ display: false }},
+        tooltip: {{
+          callbacks: {{
+            label: c => ` Desv. estándar: ${{c.parsed.x.toFixed(3)}} · Media pts/p: ${{data[c.dataIndex].mean.toFixed(2)}}`
+          }}
+        }}
+      }},
+      scales: {{
+        x: {{
+          grid: {{ color: '#2d3f5f44' }},
+          ticks: {{ color: '#94a3b8', font: {{size: 10}} }},
+          title: {{ display: true, text: 'Desviación estándar (menor = más regular)', color: '#64748b', font: {{size: 10}} }}
+        }},
+        y: {{ grid: {{ display: false }}, ticks: {{ color: '#94a3b8', font: {{size: 10}} }} }}
+      }}
+    }}
+  }});
+}}
+
+// ===== BUMP CHART =====
+function buildBumpChart() {{
+  const ctx = document.getElementById('bumpChart');
+  if (!ctx) return;
+  if (bumpChart) bumpChart.destroy();
+  const totalRounds = LIGA_DATA.total_rounds;
+  const teams = LIGA_DATA.teams;
+  // Calcular posición de cada equipo en cada jornada
+  const posMatrix = {{}};  // posMatrix[team][round] = position
+  for (let r = 1; r <= totalRounds; r++) {{
+    const standings = computeStandingsForRound(r);
+    standings.forEach((t, i) => {{
+      if (!posMatrix[t.name]) posMatrix[t.name] = [];
+      posMatrix[t.name][r] = i + 1;
+    }});
+  }}
+  const labels = Array.from({{length: totalRounds}}, (_, i) => `J${{i+1}}`);
+  const datasets = teams.map(name => {{
+    const color = getColor(name);
+    return {{
+      label: name,
+      data: Array.from({{length: totalRounds}}, (_, i) => posMatrix[name]?.[i+1] ?? null),
+      borderColor: color,
+      backgroundColor: color + '22',
+      borderWidth: 1.5,
+      pointRadius: 2,
+      pointHoverRadius: 5,
+      tension: 0.3,
+      fill: false,
+      spanGaps: false,
+    }};
+  }});
+  bumpChart = new Chart(ctx.getContext('2d'), {{
+    type: 'line',
+    data: {{ labels, datasets }},
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {{
+        legend: {{ display: false }},
+        tooltip: {{
+          mode: 'index',
+          intersect: false,
+          callbacks: {{
+            title: items => `${{items[0].label}}`,
+            label: c => c.parsed.y !== null ? ` ${{c.dataset.label}}: ${{c.parsed.y}}º` : null,
+            afterBody: items => {{
+              // Ordenar por posición
+              return items
+                .filter(i => i.parsed.y !== null)
+                .sort((a,b) => a.parsed.y - b.parsed.y)
+                .slice(0, 5)
+                .map(i => `  ${{i.parsed.y}}º ${{i.dataset.label}}`);
+            }}
+          }},
+          filter: item => item.parsed.y !== null,
+        }}
+      }},
+      scales: {{
+        x: {{
+          grid: {{ color: '#1e2d40' }},
+          ticks: {{ color: '#64748b', font: {{size: 9}}, maxRotation: 0 }}
+        }},
+        y: {{
+          reverse: true,
+          min: 1,
+          max: teams.length,
+          grid: {{ color: '#1e2d4066' }},
+          ticks: {{
+            color: '#94a3b8',
+            font: {{size: 10}},
+            stepSize: 1,
+            callback: v => `${{v}}º`
+          }},
+          title: {{ display: true, text: 'Posición', color: '#64748b', font: {{size: 10}} }}
+        }}
+      }},
+      interaction: {{ mode: 'nearest', intersect: false, axis: 'x' }},
+      animation: {{ duration: 600 }},
+    }}
+  }});
+}}
 
 
 function buildScatterChart() {{
