@@ -818,11 +818,6 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   min-width: 0;
   max-width: 100%;
 }}
-/* Breakpoint 1100px: grids análisis en columna */
-@media (max-width: 1100px) {{
-  .analisis-top-grid,
-  .analisis-bottom-grid {{ grid-template-columns: 1fr; }}
-}}
 
 /* Grid análisis inferior: radar + consistencia 50/50 */
 .analisis-bottom-grid {{
@@ -830,6 +825,12 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   align-items: start;
+}}
+
+/* Breakpoint 1100px: grids análisis en columna */
+@media (max-width: 1100px) {{
+  .analisis-top-grid,
+  .analisis-bottom-grid {{ grid-template-columns: 1fr; }}
 }}
 
 /* Layout interno del radar: lista equipo izquierda + chart derecha */
