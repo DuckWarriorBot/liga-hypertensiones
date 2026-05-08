@@ -662,35 +662,21 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
   font-weight: 700;
   border-color: var(--accent);
 }
-/* Botones rankings compactos */
-.rank-tabs {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 0;
-  margin-bottom: 10px;
-  scrollbar-width: none;
-}
-.rank-tabs::-webkit-scrollbar { display: none; }
-.rank-tab {
-  background: none;
-  border: none;
-  color: var(--muted);
-  padding: 4px 8px;
+/* Select rankings */
+#rankingSelect {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
   cursor: pointer;
-  font-size: 11px;
-  white-space: nowrap;
-  transition: color .15s;
-  border-radius: 0;
+  margin-bottom: 10px;
+  width: 100%;
+  appearance: auto;
 }
-.rank-tab:not(:last-child)::after {
-  content: '|';
-  margin-left: 8px;
-  color: var(--border);
-  pointer-events: none;
-}
-.rank-tab.active { color: var(--accent); font-weight: 700; }
-.rank-tab:hover:not(.active) { color: var(--text); }
+#rankingSelect:focus { outline: none; border-color: var(--accent); }
+#rankingSelect option { background: var(--card2); color: var(--text); }
 .team-selector {
   max-height: 160px;
   overflow-y: auto;
@@ -718,7 +704,7 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
 .team-check-badge.badge-sel { border-color: var(--accent); background: rgba(255,255,255,.06); }
 .team-check-badge input { display:none; }
 .team-check-badge img { width:32px; height:32px; object-fit:contain; display:block; }
-#analisisTeamSelector { overflow:hidden; }
+#analisisTeamSelector { overflow:hidden; justify-content:center; }
 #analisisTeamSelector .team-check-badge { padding:2px; border-radius:5px; }
 #analisisTeamSelector .team-check-badge img { width:22px; height:22px; }
 .team-color-dot {
@@ -1818,19 +1804,19 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
       </div>
       <div class="card">
         <div class="card-title">🏅 Rankings</div>
-        <div class="rank-tabs">
-          <button class="rank-tab active" id="rank-off"  onclick="switchRanking('off')">⚽ Ataque</button>
-          <button class="rank-tab" id="rank-def"  onclick="switchRanking('def')">🛡 Defensa</button>
-          <button class="rank-tab" id="rank-dif"  onclick="switchRanking('dif')">↕ Dif. Goles</button>
-          <button class="rank-tab" id="rank-ppg"  onclick="switchRanking('ppg')">📊 PPG</button>
-          <button class="rank-tab" id="rank-forma" onclick="switchRanking('forma')">🔥 Forma</button>
-          <button class="rank-tab" id="rank-racha" onclick="switchRanking('racha')">⚡ Racha</button>
-          <button class="rank-tab" id="rank-home" onclick="switchRanking('home')">🏠 Local</button>
-          <button class="rank-tab" id="rank-away" onclick="switchRanking('away')">✈️ Visitante</button>
-          <button class="rank-tab" id="rank-gfpj" onclick="switchRanking('gfpj')">🎯 GF/PJ</button>
-          <button class="rank-tab" id="rank-gcpj" onclick="switchRanking('gcpj')">🔒 GC/PJ</button>
-          <button class="rank-tab" id="rank-xpts" onclick="switchRanking('xpts')" title="Puntos pitagóricos esperados basados en GF/GC · diferencia con puntos reales = suerte">📐 xPts</button>
-        </div>
+        <select id="rankingSelect" onchange="switchRanking(this.value)">
+          <option value="off">⚽ Ataque</option>
+          <option value="def">🛡 Defensa</option>
+          <option value="dif">↕ Dif. Goles</option>
+          <option value="ppg">📊 PPG</option>
+          <option value="forma">🔥 Forma</option>
+          <option value="racha">⚡ Racha</option>
+          <option value="home">🏠 Local</option>
+          <option value="away">✈️ Visitante</option>
+          <option value="gfpj">🎯 GF/PJ</option>
+          <option value="gcpj">🔒 GC/PJ</option>
+          <option value="xpts">📐 xPts</option>
+        </select>
         <div id="rankingList" style="max-height:290px;overflow-y:auto"></div>
         <div class="card-legend"><b>Ataque</b> GF por partido &nbsp;·&nbsp; <b>Defensa</b> GC por partido (menos = mejor) &nbsp;·&nbsp; <b>PPG</b> puntos por partido (media general) &nbsp;·&nbsp; <b>Local/Visitante</b> PPG jugando en casa / fuera &nbsp;·&nbsp; <b>xPts</b> puntos pitagóricos = GF²÷(GF²+GC²)×PJ×3 · Ordenado de más infrapuntuado (mala suerte, barra verde) a más sobrepuntuado (con suerte, barra roja) · <b>xPts &gt; Pts reales</b> → merece más puntos de los que tiene · <b>xPts &lt; Pts reales</b> → ha tenido suerte, puede bajar</div>
       </div>
@@ -4077,9 +4063,8 @@ function buildScatterChart() {
 
 function switchRanking(mode) {
   rankingMode = mode;
-  document.querySelectorAll('.rank-tab[id^="rank-"]').forEach(b=>b.classList.remove('active'));
-  const btn = document.getElementById('rank-'+mode);
-  if (btn) btn.classList.add('active');
+  const sel = document.getElementById('rankingSelect');
+  if (sel) sel.value = mode;
   renderRanking(mode);
 }
 
@@ -5238,7 +5223,7 @@ init();
 
 <script>
 (function(){
-  var BUILD_TS = '2026-05-08T14:34:20';
+  var BUILD_TS = '2026-05-08T14:42:12';
   function checkVersion(){
     fetch('version.json?_=' + Date.now())
       .then(function(r){ return r.json(); })
