@@ -389,6 +389,17 @@ else:
     pred_hist_js = '{}'
     print('  ⚠ predictions_history.json no encontrado – ejecuta fetch_predictions_history.py')
 
+# Estadísticas avanzadas de partidos (generadas por fetch_as.py desde AS.com / Opta)
+_as_stats_path = os.path.join(os.path.dirname(__file__), 'as_stats.json')
+if os.path.exists(_as_stats_path):
+    with open(_as_stats_path, 'r', encoding='utf-8') as _f:
+        _as_raw = json.load(_f)
+    as_stats_js = json.dumps(_as_raw, ensure_ascii=False)
+    print(f"[build] as_stats.json cargado: {len(_as_raw)} partidos")
+else:
+    as_stats_js = '[]'
+    print('[build] INFO: as_stats.json no encontrado — ejecuta fetch_as.py')
+
 html = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2117,6 +2128,36 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
       <div class="card-legend"><b>Pts Local/Visitante</b> suma de puntos obtenidos jugando en casa / a domicilio &nbsp;·&nbsp; <b>GF Local/Visitante</b> goles marcados en casa / fuera &nbsp;·&nbsp; Calculado sobre todos los partidos jugados de la temporada · Los equipos aparecen ordenados por puntos totales (mayor arriba)</div>
     </div>
 
+    <!-- Estadísticas Avanzadas AS.com -->
+    <div class="card" id="advStatsCard">
+      <div class="card-title">📊 Estadísticas Avanzadas (Opta / AS.com)</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Promedios por partido · Ordenar por columna · Solo temporada actual</div>
+      <div id="advStatsFilter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
+      <div class="standings-wrapper" style="overflow-x:auto">
+        <table class="standings-table" id="advStatsTable">
+          <thead>
+            <tr>
+              <th style="min-width:130px;text-align:left;cursor:pointer" data-advcol="name" onclick="sortAdvStats(this)">Equipo</th>
+              <th title="Posesión media %" style="cursor:pointer" data-advcol="possession" onclick="sortAdvStats(this)">Pos.%</th>
+              <th title="Disparos a puerta por partido (dentro del marco)" style="cursor:pointer" data-advcol="shots_inside" onclick="sortAdvStats(this)">D.Puerta</th>
+              <th title="Disparos fuera del marco por partido" style="cursor:pointer" data-advcol="shots_outside" onclick="sortAdvStats(this)">D.Fuera</th>
+              <th title="Disparos bloqueados por partido" style="cursor:pointer" data-advcol="shots_blocked" onclick="sortAdvStats(this)">D.Bloq</th>
+              <th title="Disparos recibidos (tiros del rival)" style="cursor:pointer" data-advcol="shots_received" onclick="sortAdvStats(this)">Recib.</th>
+              <th title="Faltas cometidas por partido" style="cursor:pointer" data-advcol="fouls_committed" onclick="sortAdvStats(this)">Faltas</th>
+              <th title="Tarjetas amarillas por partido" style="cursor:pointer" data-advcol="yellow_cards" onclick="sortAdvStats(this)">🟨</th>
+              <th title="Tarjetas rojas por partido" style="cursor:pointer" data-advcol="red_cards" onclick="sortAdvStats(this)">🟥</th>
+              <th title="Pérdidas de posesión por partido" style="cursor:pointer" data-advcol="poss_losses" onclick="sortAdvStats(this)">Pérd.</th>
+              <th title="Recuperaciones de posesión por partido" style="cursor:pointer" data-advcol="poss_recoveries" onclick="sortAdvStats(this)">Recup.</th>
+              <th title="Fueras de juego por partido" style="cursor:pointer" data-advcol="offsides" onclick="sortAdvStats(this)">OFJ</th>
+              <th title="Partidos con estadísticas disponibles" style="cursor:pointer;color:var(--muted)" data-advcol="pj" onclick="sortAdvStats(this)">PJ</th>
+            </tr>
+          </thead>
+          <tbody id="advStatsBody"></tbody>
+        </table>
+      </div>
+      <div class="card-legend"><b>Pos.%</b> posesión media &nbsp;·&nbsp; <b>D.Puerta</b> disparos dentro del marco &nbsp;·&nbsp; <b>D.Fuera</b> fuera del marco &nbsp;·&nbsp; <b>D.Bloq</b> disparos bloqueados &nbsp;·&nbsp; <b>Recib.</b> disparos recibidos del rival &nbsp;·&nbsp; <b>Pérd.</b> pérdidas de posesión &nbsp;·&nbsp; <b>Recup.</b> recuperaciones de posesión &nbsp;·&nbsp; Haz clic en cualquier columna para ordenar · Fuente: AS.com / Opta</div>
+    </div>
+
     <!-- Head-to-head matrix -->
     <div class="card">
       <div class="card-title">⚔️ Resultados directos (todos vs todos)</div>
@@ -2156,6 +2197,7 @@ const BESOCCER_NAME = {besoccer_map_js};
 let SCORES_DATA = {scores_js};
 const PRED_HISTORY = {pred_hist_js};
 const HISTORY_DATA = {history_js};
+const AS_STATS = {as_stats_js};
 // Ganadores del playoff de ascenso por temporada histórica
 const HIST_PLAYOFF_WINNERS = {{
   '2019/20': 'Elche',
@@ -3577,7 +3619,158 @@ function initAnalysisTab() {{
   renderScenarios();
   buildLocalVisitanteChart();
   if (!document.getElementById('h2hGrid').hasChildNodes()) renderH2H();
+  buildAdvStatsTable();
 }}
+
+// ===== ADVANCED STATS (AS.com / Opta) =====
+(function() {{
+  // Calcular promedios por equipo a partir de AS_STATS[]
+  function computeTeamAdvStats() {{
+    const acc = {{}};
+    const FIELDS = ['possession','shots_inside','shots_outside','shots_blocked',
+                    'shots_received','fouls_committed','yellow_cards','red_cards',
+                    'poss_losses','poss_recoveries','offsides'];
+    const HOME_FIELDS = FIELDS.map(f => f + '_home');
+    const AWAY_FIELDS = FIELDS.map(f => f + '_away');
+    for (const m of AS_STATS) {{
+      for (let i = 0; i < FIELDS.length; i++) {{
+        const key = FIELDS[i];
+        if (m.home) {{
+          if (!acc[m.home]) acc[m.home] = {{ pj: 0 }};
+          const v = m[HOME_FIELDS[i]];
+          if (v !== undefined && v !== null) {{
+            acc[m.home][key] = (acc[m.home][key] || 0) + v;
+            acc[m.home]['_n_' + key] = (acc[m.home]['_n_' + key] || 0) + 1;
+          }}
+        }}
+        if (m.away) {{
+          if (!acc[m.away]) acc[m.away] = {{ pj: 0 }};
+          const v = m[AWAY_FIELDS[i]];
+          if (v !== undefined && v !== null) {{
+            acc[m.away][key] = (acc[m.away][key] || 0) + v;
+            acc[m.away]['_n_' + key] = (acc[m.away]['_n_' + key] || 0) + 1;
+          }}
+        }}
+      }}
+      if (m.home) acc[m.home].pj = (acc[m.home].pj || 0) + 1;
+      if (m.away) acc[m.away].pj = (acc[m.away].pj || 0) + 1;
+    }}
+    // Calcular medias
+    const result = [];
+    for (const [name, d] of Object.entries(acc)) {{
+      const row = {{ name, pj: d.pj }};
+      for (const key of FIELDS) {{
+        const n = d['_n_' + key] || 0;
+        row[key] = n > 0 ? d[key] / n : null;
+      }}
+      result.push(row);
+    }}
+    return result;
+  }}
+
+  let _advData = null;
+  let _advSortCol = 'shots_inside';
+  let _advSortAsc = false;
+
+  window.buildAdvStatsTable = function() {{
+    if (_historicalMode) {{
+      const card = document.getElementById('advStatsCard');
+      if (card) card.style.display = 'none';
+      return;
+    }}
+    const card = document.getElementById('advStatsCard');
+    if (card) card.style.display = '';
+    _advData = computeTeamAdvStats();
+    renderAdvStats();
+  }};
+
+  window.sortAdvStats = function(th) {{
+    const col = th.getAttribute('data-advcol');
+    if (_advSortCol === col) {{ _advSortAsc = !_advSortAsc; }}
+    else {{ _advSortCol = col; _advSortAsc = col === 'name'; }}
+    renderAdvStats();
+    // Actualizar indicador visual
+    document.querySelectorAll('#advStatsTable th').forEach(h => {{
+      h.style.color = '';
+    }});
+    th.style.color = 'var(--gold)';
+  }};
+
+  function renderAdvStats() {{
+    if (!_advData) return;
+    const tbody = document.getElementById('advStatsBody');
+    if (!tbody) return;
+
+    const data = [..._advData].sort((a, b) => {{
+      const va = a[_advSortCol] ?? (_advSortAsc ? Infinity : -Infinity);
+      const vb = b[_advSortCol] ?? (_advSortAsc ? Infinity : -Infinity);
+      if (typeof va === 'string') return _advSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+      return _advSortAsc ? va - vb : vb - va;
+    }});
+
+    // Calcular min/max de cada campo para heat coloring
+    const FIELDS = ['possession','shots_inside','shots_outside','shots_blocked',
+                    'shots_received','fouls_committed','yellow_cards','red_cards',
+                    'poss_losses','poss_recoveries','offsides'];
+    const minMax = {{}};
+    for (const f of FIELDS) {{
+      const vals = _advData.map(r => r[f]).filter(v => v !== null);
+      minMax[f] = {{ min: Math.min(...vals), max: Math.max(...vals) }};
+    }}
+
+    // Campos donde mayor es mejor (verde arriba)
+    const HIGHER_IS_BETTER = new Set(['possession','shots_inside','shots_outside','shots_blocked','poss_recoveries']);
+    // Campos donde menor es mejor (verde abajo)
+    // shots_received, fouls_committed, yellow_cards, red_cards, poss_losses, offsides
+
+    function heatColor(field, value) {{
+      if (value === null) return '';
+      const {{ min, max }} = minMax[field];
+      if (max === min) return '';
+      const norm = (value - min) / (max - min); // 0=min, 1=max
+      const isGoodHigh = HIGHER_IS_BETTER.has(field);
+      // goodRatio: 1 = verde (mejor), 0 = rojo (peor)
+      const goodRatio = isGoodHigh ? norm : 1 - norm;
+      if (goodRatio > 0.66) return 'rgba(34,197,94,0.18)';
+      if (goodRatio < 0.33) return 'rgba(239,68,68,0.18)';
+      return '';
+    }}
+
+    function fmt(v, dec) {{
+      if (v === null || v === undefined) return '<span style="color:var(--muted)">—</span>';
+      return v.toFixed(dec ?? 1);
+    }}
+
+    tbody.innerHTML = data.map(row => {{
+      const color = getColor(row.name);
+      const cells = [
+        ['possession',      fmt(row.possession, 1)],
+        ['shots_inside',    fmt(row.shots_inside, 1)],
+        ['shots_outside',   fmt(row.shots_outside, 1)],
+        ['shots_blocked',   fmt(row.shots_blocked, 1)],
+        ['shots_received',  fmt(row.shots_received, 1)],
+        ['fouls_committed', fmt(row.fouls_committed, 1)],
+        ['yellow_cards',    fmt(row.yellow_cards, 2)],
+        ['red_cards',       fmt(row.red_cards, 2)],
+        ['poss_losses',     fmt(row.poss_losses, 0)],
+        ['poss_recoveries', fmt(row.poss_recoveries, 1)],
+        ['offsides',        fmt(row.offsides, 1)],
+      ];
+      const tdCells = cells.map(([f, v]) => {{
+        const bg = heatColor(f, row[f]);
+        const style = bg ? ` style="background:${{bg}}"` : '';
+        return `<td${{style}}>${{v}}</td>`;
+      }}).join('');
+
+      return `<tr style="background:linear-gradient(90deg,${{color}}18 0%,transparent 130px)">
+        <td><div class="team-cell">${{crestHTML(row.name,22)}}<span class="team-name-text">${{row.name}}</span></div></td>
+        ${{tdCells}}
+        <td style="color:var(--muted);font-size:11px">${{row.pj}}</td>
+      </tr>`;
+    }}).join('');
+  }}
+}})();
+
 
 function buildScatterChart() {{
   const standings = computeStandings();
@@ -4292,6 +4485,16 @@ function openTeamModal(name) {{
     </div>
     <canvas id="miniChart" height="120"></canvas>`;
   document.getElementById('teamModal').classList.add('open');
+  // Estadísticas avanzadas AS.com — añadir sección al modal
+  const _asSection = buildTeamAsStatsModal(name);
+  if (_asSection) {{
+    const _mc = document.getElementById('miniChart');
+    if (_mc && _mc.parentNode) {{
+      const _div = document.createElement('div');
+      _div.innerHTML = _asSection;
+      _mc.parentNode.insertBefore(_div, _mc);
+    }}
+  }}
   // Rellenar círculos de historial (función separada para no romper el template literal)
   document.getElementById('historyDots').innerHTML = buildHistoryDots(name, results);
   // mini chart: barras de predicción + línea de posición
@@ -4337,6 +4540,90 @@ function openTeamModal(name) {{
     }});
   }},50);
 }}
+function buildTeamAsStatsModal(name) {{
+  if (_historicalMode) return null;
+  // Filtrar partidos del equipo
+  const matches = AS_STATS.filter(m => m.home === name || m.away === name);
+  if (!matches.length) return null;
+
+  const FIELDS = ['possession','shots_inside','shots_outside','shots_blocked',
+                  'shots_received','fouls_committed','yellow_cards','red_cards',
+                  'poss_recoveries','poss_losses','offsides'];
+  const LABELS_MAP = {{
+    possession:'Posesión%', shots_inside:'D.Puerta', shots_outside:'D.Fuera',
+    shots_blocked:'D.Bloq', shots_received:'Recibidos', fouls_committed:'Faltas',
+    yellow_cards:'Amarillas', red_cards:'Rojas',
+    poss_recoveries:'Recup.', poss_losses:'Pérd.', offsides:'OFJ'
+  }};
+
+  // Calcular promedios
+  const avgs = {{}};
+  for (const f of FIELDS) {{
+    const vals = matches.map(m => {{
+      const side = m.home === name ? 'home' : 'away';
+      return m[f + '_' + side];
+    }}).filter(v => v !== null && v !== undefined);
+    avgs[f] = vals.length ? vals.reduce((s,v)=>s+v,0)/vals.length : null;
+  }}
+
+  // Mostrar últimos 10 partidos (tabla compacta)
+  const last10 = matches.slice(-10).reverse();
+
+  function fmtv(v, dec) {{ return v === null ? '—' : v.toFixed(dec ?? 1); }}
+
+  const avgCells = FIELDS.map(f => `
+    <div style="text-align:center;">
+      <div style="font-weight:700;font-size:13px;color:var(--accent)">${{fmtv(avgs[f], f==='possession'||f==='shots_inside'||f==='shots_outside'||f==='poss_recoveries'||f==='poss_losses'?1:2)}}</div>
+      <div style="font-size:10px;color:var(--muted)">${{LABELS_MAP[f]}}</div>
+    </div>`).join('');
+
+  const tableRows = last10.map(m => {{
+    const isHome = m.home === name;
+    const side   = isHome ? 'home' : 'away';
+    const opp    = isHome ? m.away : m.home;
+    const venue  = isHome ? 'H' : 'A';
+    const posv   = m['possession_' + side];
+    const si     = m['shots_inside_' + side];
+    const so     = m['shots_outside_' + side];
+    const rec    = m['shots_received_' + side];
+    const yc     = m['yellow_cards_' + side];
+    return `<tr>
+      <td style="font-size:10px;color:var(--muted);width:12px">${{m.jornada}}</td>
+      <td style="font-size:10px;color:var(--muted);width:12px;text-align:center">${{venue}}</td>
+      <td><div class="team-cell" style="gap:4px">${{crestHTML(opp,14)}}<span style="font-size:11px">${{opp}}</span></div></td>
+      <td style="font-size:11px;text-align:center">${{posv !== null && posv !== undefined ? posv.toFixed(1)+'%' : '—'}}</td>
+      <td style="font-size:11px;text-align:center;color:#4ade80">${{si !== null && si !== undefined ? si : '—'}}</td>
+      <td style="font-size:11px;text-align:center">${{so !== null && so !== undefined ? so : '—'}}</td>
+      <td style="font-size:11px;text-align:center;color:#f87171">${{rec !== null && rec !== undefined ? rec : '—'}}</td>
+      <td style="font-size:11px;text-align:center;color:#fbbf24">${{yc !== null && yc !== undefined ? yc : '—'}}</td>
+    </tr>`;
+  }}).join('');
+
+  return `
+  <div style="margin:14px 0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px;">
+    <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">📊 Estadísticas Avanzadas <span style="font-weight:400;font-size:10px">(media ${{matches.length}} partidos · Opta/AS.com)</span></div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:12px;">
+      ${{avgCells}}
+    </div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Últimos ${{last10.length}} partidos</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
+        <thead><tr style="color:var(--muted);font-size:10px;">
+          <th style="text-align:left;padding:3px 4px">J</th>
+          <th style="padding:3px 4px"></th>
+          <th style="text-align:left;padding:3px 4px">Rival</th>
+          <th title="Posesión" style="padding:3px 4px">Pos.</th>
+          <th title="Disparos a puerta" style="padding:3px 4px;color:#4ade80">D.P</th>
+          <th title="Disparos fuera" style="padding:3px 4px">D.F</th>
+          <th title="Disparos recibidos" style="padding:3px 4px;color:#f87171">Rec.</th>
+          <th title="Tarjetas amarillas" style="padding:3px 4px;color:#fbbf24">🟨</th>
+        </tr></thead>
+        <tbody>${{tableRows}}</tbody>
+      </table>
+    </div>
+  </div>`;
+}}
+
 function closeModal() {{ document.getElementById('teamModal').classList.remove('open'); }}
 document.getElementById('teamModal').addEventListener('click', e => {{ if(e.target===e.currentTarget) closeModal(); }});
 
