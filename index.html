@@ -301,7 +301,7 @@ nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
   /* Forma label: salto de línea antes de los botones de forma */
   .forma-label { flex-basis: 100%; margin-left: 0 !important; }
   /* Análisis: scatter + rankings en columna, ancho completo */
-  .analisis-top-grid { grid-template-columns: 1fr !important; }
+  .analisis-top-grid { grid-template-columns: 1fr; }
 
   /* ===== TABLA CLASIFICACIÓN MOBILE ===== */
   /* Full-bleed: el wrapper sobresale del padding del card */
@@ -402,9 +402,22 @@ main { padding: 24px; max-width: 1400px; margin: 0 auto; }
 }
 .card-legend b { color: var(--text); opacity: .6; font-weight: 600; }
 
+/* Grid análisis superior: scatter + rankings */
+.analisis-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+/* Los hijos del grid nunca se salen del contenedor */
+.analisis-top-grid > *,
+.analisis-bottom-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
 /* Breakpoint 1400px: scatter + rankings en columna */
 @media (max-width: 1400px) {
-  .analisis-top-grid { grid-template-columns: 1fr !important; }
+  .analisis-top-grid { grid-template-columns: 1fr; }
 }
 
 /* Grid análisis inferior: radar + consistencia 50/50 */
@@ -1796,7 +1809,7 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
       </div>
       <div class="team-selector" id="analisisTeamSelector" style="max-height:100px;margin-bottom:0"></div>
     </div>
-    <div class="analisis-top-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+    <div class="analisis-top-grid">
       <div class="card">
         <div class="card-title">⚡ Ataque vs Defensa</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">GF (eje X) · GC (eje Y) · líneas = media liga</div>
@@ -5225,7 +5238,7 @@ init();
 
 <script>
 (function(){
-  var BUILD_TS = '2026-05-08T14:24:19';
+  var BUILD_TS = '2026-05-08T14:30:12';
   function checkVersion(){
     fetch('version.json?_=' + Date.now())
       .then(function(r){ return r.json(); })
