@@ -1036,6 +1036,9 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
 .team-check-badge.badge-sel {{ border-color: var(--accent); background: rgba(255,255,255,.06); }}
 .team-check-badge input {{ display:none; }}
 .team-check-badge img {{ width:32px; height:32px; object-fit:contain; display:block; }}
+#analisisTeamSelector {{ overflow:hidden; }}
+#analisisTeamSelector .team-check-badge {{ padding:2px; border-radius:5px; }}
+#analisisTeamSelector .team-check-badge img {{ width:22px; height:22px; }}
 .team-color-dot {{
   width: 10px;
   height: 10px;
@@ -3344,6 +3347,7 @@ let radarChart = null;
 let consistenciaChart = null;
 let bumpChart = null;
 let _radarSelected = [];
+let _scatterBadgeImgs = {{}};
 let rankingMode = 'off';
 
 // ===== HISTORIA =====
@@ -3759,13 +3763,25 @@ function applyAnalisisFilter() {{
   const none = sel.size === 0; // sin selección: todos al 100%
 
   // Dimear datasets en charts Chart.js
-  // Para scatter (usa pointStyle=image): ajustar pointRadius
+  // Para scatter: activos con escudo, inactivos como círculo oscuro pequeño
   if (scatterChart) {{
     scatterChart.data.datasets.forEach(ds => {{
       const name = ds.label;
       const active = none || sel.has(name);
-      ds.pointRadius      = active ? (ds.pointStyle instanceof Image ? 14 : 8) : (ds.pointStyle instanceof Image ? 5 : 3);
-      ds.pointHoverRadius = active ? (ds.pointStyle instanceof Image ? 17 : 11) : (ds.pointStyle instanceof Image ? 6 : 4);
+      const img = _scatterBadgeImgs[name];
+      if (active) {{
+        ds.pointStyle      = img || 'circle';
+        ds.pointRadius      = img ? 14 : 8;
+        ds.pointHoverRadius = img ? 17 : 11;
+        ds.backgroundColor  = img ? 'transparent' : getColor(name) + 'cc';
+        ds.borderColor      = img ? 'transparent' : getColor(name);
+      }} else {{
+        ds.pointStyle      = 'circle';
+        ds.pointRadius      = 4;
+        ds.pointHoverRadius = 5;
+        ds.backgroundColor  = getColor(name) + '22';
+        ds.borderColor      = getColor(name) + '35';
+      }}
     }});
     scatterChart.update('none');
   }}
@@ -4317,14 +4333,14 @@ function buildScatterChart() {{
     }}
   }};
   // Pre-carga escudos como Image para usarlos como pointStyle
-  const badgeImgs = {{}};
   standings.forEach(t => {{
-    if (TEAM_BADGES[t.name]) {{
+    if (TEAM_BADGES[t.name] && !_scatterBadgeImgs[t.name]) {{
       const img = new Image(28, 28);
       img.src = TEAM_BADGES[t.name];
-      badgeImgs[t.name] = img;
+      _scatterBadgeImgs[t.name] = img;
     }}
   }});
+  const badgeImgs = _scatterBadgeImgs;
   scatterChart = new Chart(ctx.getContext('2d'), {{
     type: 'scatter',
     data: {{
