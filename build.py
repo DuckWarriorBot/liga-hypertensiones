@@ -2849,11 +2849,13 @@ function predMiniBar(name) {{
 function liveScoreCell(name) {{
   const ls = liveState[name];
   if (!ls) return '';
-  const col = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
+  const isFT  = ls.minute === 'FT';
+  const col   = isFT ? '#94a3b8' : (ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24');
   const score = ls.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
   const minRaw = ls.minute || '';
-  const minStr = (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
-  return `<span class="live-score-pill" style="background:${{col}}22;color:${{col}}"><span class="live-dot-indicator"></span>${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>`;
+  const minStr = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
+  const dot    = isFT ? '' : '<span class="live-dot-indicator"></span>';
+  return `<span class="live-score-pill" style="background:${{col}}22;color:${{col}}">${{dot}}${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>`;
 }}
 
 function changeStandingsRound(delta) {{
@@ -3323,15 +3325,17 @@ function renderRoundResults() {{
         const ls = (lsName && lsName.opponent === fx.opp) ? lsName
                  : (lsOpp  && lsOpp.opponent  === name)   ? lsOpp : null;
         if (ls) {{
-          // Partido en VIVO
-          const teamDiff = ls.opponent === fx.opp ? ls.diff : -ls.diff;
-          const liveClass = teamDiff > 0 ? 'live-V' : teamDiff < 0 ? 'live-D' : 'live-E';
-          const liveCol   = teamDiff > 0 ? '#22c55e' : teamDiff < 0 ? '#ef4444' : '#fbbf24';
+          // Partido en VIVO o recién terminado (FT)
+          const isFT      = ls.minute === 'FT';
+          const teamDiff  = ls.opponent === fx.opp ? ls.diff : -ls.diff;
+          const liveClass = isFT ? '' : (teamDiff > 0 ? 'live-V' : teamDiff < 0 ? 'live-D' : 'live-E');
+          const liveCol   = isFT ? '#94a3b8' : (teamDiff > 0 ? '#22c55e' : teamDiff < 0 ? '#ef4444' : '#fbbf24');
           const scoreH    = ls.isHome ? ls.homeGoals : ls.awayGoals;
           const scoreA    = ls.isHome ? ls.awayGoals : ls.homeGoals;
           const scoreDisp = fx.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
           const minRaw    = ls.minute || '';
-          const minStr    = minRaw === 'HT' ? "D'" : minRaw;
+          const minStr    = isFT ? 'FIN' : (minRaw === 'HT' ? "D'" : minRaw);
+          const dot       = isFT ? '' : '<span class="live-dot-indicator"></span>';
           return `<div class="result-card ${{liveClass}}" style="">
             <div class="team-cell" style="gap:8px">
               <div style="flex-shrink:0">${{crestHTML(name)}}</div>
@@ -3340,7 +3344,7 @@ function renderRoundResults() {{
                 <div class="result-detail" style="display:flex;align-items:center;gap:4px">${{oppCrestF}}<span>${{fx.opp}}</span></div>
                 <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
                   <span style="font-size:13px;font-weight:800;letter-spacing:1px;color:${{liveCol}};background:${{liveCol}}22;border-radius:6px;padding:1px 7px;white-space:nowrap">${{scoreDisp}}</span>
-                  <span class="live-score-pill" style="background:${{liveCol}}22;color:${{liveCol}};font-size:9px;padding:1px 5px"><span class="live-dot-indicator"></span>${{minStr || '🔴'}}</span>
+                  <span class="live-score-pill" style="background:${{liveCol}}22;color:${{liveCol}};font-size:9px;padding:1px 5px">${{dot}}${{minStr || (isFT ? 'FIN' : '🔴')}}</span>
                   ${{venueLabel ? `<span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueLabel}}</span>` : ''}}
                 </div>
               </div>
@@ -3536,11 +3540,14 @@ function renderHistoryTable(sortBy) {{
         // Partido en vivo
         const lsEntry = liveState[name];
         if (lsEntry && lsEntry.opponent === oppAtIdx) {{
-          const liveCol = lsEntry.diff > 0 ? '#4ade80' : lsEntry.diff < 0 ? '#f87171' : '#fbbf24';
+          const isFT    = lsEntry.minute === 'FT';
+          const liveCol = isFT ? '#94a3b8' : (lsEntry.diff > 0 ? '#4ade80' : lsEntry.diff < 0 ? '#f87171' : '#fbbf24');
           const minRaw  = lsEntry.minute || '';
-          const minStr  = (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
+          const minStr  = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
           const liveScore = lsEntry.isHome ? `${{lsEntry.homeGoals}}-${{lsEntry.awayGoals}}` : `${{lsEntry.awayGoals}}-${{lsEntry.homeGoals}}`;
-          return `<td style="background:${{liveCol}}22;outline:1.5px solid ${{liveCol}};outline-offset:-1px;text-align:center" title="EN VIVO ${{liveScore}}${{minStr?' '+minStr:''}} \u00b7 vs ${{oppAtIdx}}"><span class="live-dot-indicator" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${{liveCol}};animation:livePulse 1.2s ease-in-out infinite"></span></td>`;
+          const dot     = isFT ? '' : `<span class="live-dot-indicator" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${{liveCol}};animation:livePulse 1.2s ease-in-out infinite"></span>`;
+          const titleLbl = isFT ? 'FIN' : 'EN VIVO';
+          return `<td style="background:${{liveCol}}22;outline:1.5px solid ${{liveCol}};outline-offset:-1px;text-align:center" title="${{titleLbl}} ${{liveScore}}${{minStr?' '+minStr:''}} \u00b7 vs ${{oppAtIdx}}">${{dot}}</td>`;
         }}
         // Partido ya completado (marcador en SCORES_DATA)
         const extScore = teamScores[String(i)];
@@ -3573,11 +3580,14 @@ function renderHistoryTable(sortBy) {{
         // Comprobar partido en vivo
         const lsN = liveState[name];
         if (lsN && lsN.opponent === oppN) {{
-          const liveColN = lsN.diff > 0 ? '#4ade80' : lsN.diff < 0 ? '#f87171' : '#fbbf24';
+          const isFTN    = lsN.minute === 'FT';
+          const liveColN = isFTN ? '#94a3b8' : (lsN.diff > 0 ? '#4ade80' : lsN.diff < 0 ? '#f87171' : '#fbbf24');
           const minRawN  = lsN.minute || '';
-          const minStrN  = (minRawN === 'HT' || minRawN === 'Descanso') ? "D'" : minRawN;
+          const minStrN  = isFTN ? 'FIN' : (minRawN === 'HT' || minRawN === 'Descanso') ? "D'" : minRawN;
           const liveScoreN = lsN.isHome ? `${{lsN.homeGoals}}-${{lsN.awayGoals}}` : `${{lsN.awayGoals}}-${{lsN.homeGoals}}`;
-          return `<td style="background:${{liveColN}}22;outline:1.5px solid ${{liveColN}};outline-offset:-1px;text-align:center" title="EN VIVO ${{liveScoreN}}${{minStrN?' '+minStrN:''}} \u00b7 vs ${{oppN}}"><span class="live-dot-indicator" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${{liveColN}};animation:livePulse 1.2s ease-in-out infinite"></span></td>`;
+          const dotN     = isFTN ? '' : `<span class="live-dot-indicator" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${{liveColN}};animation:livePulse 1.2s ease-in-out infinite"></span>`;
+          const titleLblN = isFTN ? 'FIN' : 'EN VIVO';
+          return `<td style="background:${{liveColN}}22;outline:1.5px solid ${{liveColN}};outline-offset:-1px;text-align:center" title="${{titleLblN}} ${{liveScoreN}}${{minStrN?' '+minStrN:''}} \u00b7 vs ${{oppN}}">${{dotN}}</td>`;
         }}
         // Sin resultado pero con rival conocido → mostrar escudo como jornada futura
         if (oppN) {{
@@ -5576,18 +5586,25 @@ function updateLiveBar() {{
   // Si por algún motivo no hay ninguno marcado como local, mostrar todos
   const toShow = homeEntries.length > 0 ? homeEntries : entries;
   bar.classList.add('has-live');
-  bar.innerHTML = '<span class="live-bar-label">🔴 EN VIVO</span>' +
+  bar.innerHTML = (homeEntries.length > 0 ? '' : '') +
     toShow.map(([name, ls]) => {{
+      const isFT  = ls.minute === 'FT';
       const score = `${{ls.homeGoals}}-${{ls.awayGoals}}`;
-      const col = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
+      const col   = isFT ? '#94a3b8' : (ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24');
       const minRaw = ls.minute || '';
-      const minStr = (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
+      const minStr = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
+      const dot    = isFT ? '' : '<span class="live-dot-indicator"></span>';
+      const label  = isFT ? '⬜ FIN' : '🔴 EN VIVO';
       return `<div class="live-match-pill">
         ${{crestHTML(name,18)}} <span>${{name}}</span>
-        <span class="live-score-pill" style="background:${{col}}22;color:${{col}}">${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>
+        <span class="live-score-pill" style="background:${{col}}22;color:${{col}}">${{dot}}${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>
         ${{crestHTML(ls.opponent,18)}} <span>${{ls.opponent}}</span>
       </div>`;
     }}).join('');
+  // Etiqueta dinámica según estado
+  const anyLive = toShow.some(([,ls]) => ls.minute !== 'FT');
+  bar.querySelector('.live-bar-label') && (bar.querySelector('.live-bar-label').textContent = anyLive ? '🔴 EN VIVO' : '⬜ VERIFICANDO RESULTADO');
+  if (!bar.querySelector('.live-bar-label')) bar.insertAdjacentHTML('afterbegin', `<span class="live-bar-label">${{anyLive ? '🔴 EN VIVO' : '⬜ VERIFICANDO RESULTADO'}}</span>`);
 }}
 
 function parseLiveScores(html) {{

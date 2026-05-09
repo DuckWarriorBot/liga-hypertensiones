@@ -340,6 +340,16 @@ def main():
             if not pending:
                 # Todos los resultados ya están guardados
                 log(f'[FIN] Resultado(s) confirmados en scores_by_team. Volviendo a IDLE.')
+                # Limpiar live_scores ahora que el resultado está guardado
+                try:
+                    sc = load_json(SCORES_FILE)
+                    sc['live_scores'] = {}
+                    import json as _json
+                    (BASE_DIR / 'scores_data.json').write_text(
+                        _json.dumps(sc, ensure_ascii=False, indent=2), encoding='utf-8')
+                except Exception as _e:
+                    log(f'  WARN no se pudo limpiar live_scores: {_e}')
+                run_full_cycle()
                 was_live = False
                 closing_cycles = 0
                 last_closing_ts = time.time()

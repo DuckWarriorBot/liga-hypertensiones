@@ -371,22 +371,33 @@ def scrape_live_scores(page):
 def update_live_scores(scores, live_list):
     """
     Actualiza scores['live_scores'] con los partidos en curso.
-    Siempre limpia primero (estado volátil).
-    Estructura: {teamName: {opponent, score_h, score_a, minute, is_home}}
+    - Si live_list tiene partidos: reemplaza con datos frescos.
+    - Si live_list está vacío: marca como 'FT' los que estaban en curso
+      (último marcador conocido) para que la web lo muestre mientras esperamos
+      que el resultado aterrice en /resultados/. El caller (live_loop) los
+      borrará cuando scores_by_team tenga el resultado final.
     """
-    scores['live_scores'] = {}
-    for m in live_list:
-        home, away = m['home'], m['away']
-        hg, ag = m['score_h'], m['score_a']
-        minute = m['minute']
-        scores['live_scores'][home] = {
-            'opponent': away, 'score_h': hg, 'score_a': ag,
-            'minute': minute, 'is_home': True,
-        }
-        scores['live_scores'][away] = {
-            'opponent': home, 'score_h': hg, 'score_a': ag,
-            'minute': minute, 'is_home': False,
-        }
+    if live_list:
+        # Hay partidos en vivo: reemplazar completamente
+        scores['live_scores'] = {}
+        for m in live_list:
+            home, away = m['home'], m['away']
+            hg, ag = m['score_h'], m['score_a']
+            minute = m['minute']
+            scores['live_scores'][home] = {
+                'opponent': away, 'score_h': hg, 'score_a': ag,
+                'minute': minute, 'is_home': True,
+            }
+            scores['live_scores'][away] = {
+                'opponent': home, 'score_h': hg, 'score_a': ag,
+                'minute': minute, 'is_home': False,
+            }
+    else:
+        # Sin partidos en vivo: marcar los existentes como FT (último resultado conocido)
+        # Solo si tenían un minuto real (no ya FT), para no sobrescribir en bucle
+        for team, entry in scores.get('live_scores', {}).items():
+            if entry.get('minute', '') not in ('FT', ''):
+                entry['minute'] = 'FT'
     return len(live_list)
 
 
