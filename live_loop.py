@@ -88,7 +88,8 @@ def env_utf8():
     # .sftp_pass siempre tiene prioridad (sobreescribe cualquier valor del entorno)
     sftp_pass_file = BASE_DIR / '.sftp_pass'
     if sftp_pass_file.exists():
-        e['IONOS_SFTP_PASS'] = sftp_pass_file.read_text(encoding='utf-8').strip()
+        # utf-8-sig elimina el BOM si lo hay (VS Code y Notepad pueden añadirlo)
+        e['IONOS_SFTP_PASS'] = sftp_pass_file.read_text(encoding='utf-8-sig').strip()
     return e
 
 
