@@ -3249,7 +3249,10 @@ function renderRoundResults() {{
     }});
   }}
   grid.innerHTML = teamList.map(name => {{
-    if (!played) {{
+    // Si hay un score terminado en scores_by_team, mostrar resultado aunque la jornada no esté marcada como jugada
+    const _scMapQ = SCORES_DATA.scores_by_team || {{}};
+    const _hasFinishedScore = !!(_scMapQ[name] || {{}})[String(idx)];
+    if (!played && !_hasFinishedScore) {{
       // Buscar fixture directamente en LIGA_DATA.fixtures (más fiable que oppsMap)
       const fxRaw = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
       let fx = null;
@@ -3325,7 +3328,15 @@ function renderRoundResults() {{
       </div>`;
     }}
     const res = LIGA_DATA.results_by_team[name];
-    const r = res && res[idx];
+    let r = res && res[idx];
+    if (!r) {{
+      // Derivar resultado de scores_by_team cuando results_by_team no tiene el dato aún (jornada en curso)
+      const _scFb = (_scMapQ[name] || {{}})[String(idx)];
+      if (_scFb) {{
+        const _pt = _scFb.split('-'); const _gf = parseInt(_pt[0]), _ga = parseInt(_pt[1]);
+        r = _gf > _ga ? 'V' : _gf < _ga ? 'D' : 'E';
+      }}
+    }}
     if (!r) {{
       // Sin resultado aún: buscar fixture directamente en LIGA_DATA.fixtures (más fiable que oppsMap para jornadas futuras)
       const fx0raw = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
