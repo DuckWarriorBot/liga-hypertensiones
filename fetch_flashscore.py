@@ -441,14 +441,33 @@ def update_scores(liga, scores, result_list, rdb=None):
     """
     import results_db as _rdb_mod
     updated = 0
+    # Pre-indexar fixtures por pareja para poder sincronizar rondas desde resultados
+    fix_by_pair = {f'{f["home"]}|{f["away"]}': f for f in liga.get('fixtures', [])}
     for m in result_list:
         home, away = m['home'], m['away']
         hg, ag = m['score_h'], m['score_a']
         exp_res = 'V' if hg > ag else ('E' if hg == ag else 'D')
 
-        idx = find_idx(liga, home, away, exp_res)
-        if idx is None:
-            idx = find_idx(liga, home, away)
+        # Flashscore usa rondas 0-based en el DOM (Ronda 38 = J39 = índice 38).
+        # Usarlo directamente como idx cuando está disponible (más fiable que opponents_by_team
+        # para jornadas donde el calendario real difiere del original).
+        rn = m.get('round_num')
+        if rn is not None:
+            idx = rn  # 0-based: coincide directamente con nuestros arrays
+            # Actualizar la pareja del fixture con la ronda correcta (1-based para display)
+            fixture_round = rn + 1
+            key = f'{home}|{away}'
+            if key in fix_by_pair:
+                fix_by_pair[key]['round'] = fixture_round
+            else:
+                new_f = {'round': fixture_round, 'home': home, 'away': away,
+                         'date': m.get('date', ''), 'time': m.get('time', '')}
+                liga.setdefault('fixtures', []).append(new_f)
+                fix_by_pair[key] = new_f
+        else:
+            idx = find_idx(liga, home, away, exp_res)
+            if idx is None:
+                idx = find_idx(liga, home, away)
         if idx is None:
             continue
 
@@ -495,21 +514,23 @@ def update_fixtures(liga, fixture_list):
         home, away = m['home'], m['away']
         date_str, time_str = m['date'], m['time']
 
-        # Encontrar índice 0-based desde opponents_by_team
-        h_opps = liga['opponents_by_team'].get(home, [])
-        idx = next((i for i, o in enumerate(h_opps) if o == away), None)
-        # round en fixtures usa convención idx (no idx+1)
-        round_num = idx if idx is not None else 0
+        # La página /partidos/ de Flashscore no siempre expone headers de ronda.
+        # Si viene round_num (0-based), convertir a 1-based para fixtures.
+        # Si NO viene, NO cambiar la ronda existente (sólo actualizar fecha/hora).
+        round_num = m.get('round_num')
+        fixture_round = (round_num + 1) if round_num is not None else None
 
         key = f'{home}|{away}'
         if key in fix_by_pair:
             f = fix_by_pair[key]
+            if fixture_round is not None:
+                f['round'] = fixture_round  # Solo actualizar si hay dato autoritativo
             if date_str:
                 f['date'] = date_str
             if time_str:
                 f['time'] = time_str
         else:
-            new_f = {'round': round_num, 'home': home, 'away': away,
+            new_f = {'round': fixture_round or 0, 'home': home, 'away': away,
                      'date': date_str, 'time': time_str}
             liga.setdefault('fixtures', []).append(new_f)
             fix_by_pair[key] = new_f

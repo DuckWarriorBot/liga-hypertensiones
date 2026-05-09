@@ -3958,308 +3958,308 @@
   },
   "fixtures": [
     {
-      "round": 38,
+      "round": 39,
       "home": "Cádiz",
       "away": "Deportivo",
       "date": "08/05",
       "time": "20:30"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Ceuta",
       "away": "Castellón",
       "date": "09/05",
       "time": "14:00"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Albacete",
       "away": "Cultural Leonesa",
       "date": "09/05",
       "time": "16:15"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Burgos",
       "away": "Almería",
       "date": "09/05",
       "time": "16:15"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Valladolid",
       "away": "Real Zaragoza",
       "date": "09/05",
       "time": "18:30"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Málaga",
       "away": "Sporting",
       "date": "09/05",
       "time": "21:00"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Andorra",
       "away": "Las Palmas",
       "date": "10/05",
       "time": "14:00"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Leganés",
       "away": "Racing",
       "date": "10/05",
       "time": "16:15"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Córdoba",
       "away": "Granada",
       "date": "10/05",
       "time": "18:30"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Mirandés",
       "away": "Eibar",
       "date": "10/05",
       "time": "18:30"
     },
     {
-      "round": 38,
+      "round": 39,
       "home": "Huesca",
       "away": "Real Sociedad B",
       "date": "11/05",
       "time": "20:30"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Castellón",
       "away": "Cádiz",
       "date": "15/05",
       "time": "20:30"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Córdoba",
       "away": "Albacete",
       "date": "15/05",
       "time": "21:00"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Real Sociedad B",
       "away": "Mirandés",
       "date": "16/05",
       "time": "14:00"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Ceuta",
       "away": "Málaga",
       "date": "16/05",
       "time": "16:15"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Cultural Leonesa",
       "away": "Eibar",
       "date": "16/05",
       "time": "16:15"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Almería",
       "away": "Las Palmas",
       "date": "16/05",
       "time": "18:30"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Granada",
       "away": "Burgos",
       "date": "16/05",
       "time": "18:30"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Racing",
       "away": "Valladolid",
       "date": "16/05",
       "time": "18:30"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Deportivo",
       "away": "Andorra",
       "date": "17/05",
       "time": "14:00"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Real Zaragoza",
       "away": "Sporting",
       "date": "17/05",
       "time": "21:15"
     },
     {
-      "round": 39,
+      "round": 40,
       "home": "Leganés",
       "away": "Huesca",
       "date": "18/05",
       "time": "20:30"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Albacete",
       "away": "Real Sociedad B",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Cultural Leonesa",
       "away": "Burgos",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Cádiz",
       "away": "Leganés",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Eibar",
       "away": "Córdoba",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Andorra",
       "away": "Ceuta",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Huesca",
       "away": "Castellón",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Las Palmas",
       "away": "Real Zaragoza",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Mirandés",
       "away": "Granada",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Málaga",
       "away": "Racing",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Valladolid",
       "away": "Deportivo",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 40,
+      "round": 41,
       "home": "Sporting",
       "away": "Almería",
       "date": "24/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Almería",
       "away": "Valladolid",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Burgos",
       "away": "Andorra",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Castellón",
       "away": "Eibar",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Ceuta",
       "away": "Albacete",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Córdoba",
       "away": "Huesca",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Deportivo",
       "away": "Las Palmas",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Granada",
       "away": "Sporting",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Leganés",
       "away": "Mirandés",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Racing",
       "away": "Cádiz",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Real Sociedad B",
       "away": "Cultural Leonesa",
       "date": "31/05",
       "time": "18:00"
     },
     {
-      "round": 41,
+      "round": 42,
       "home": "Real Zaragoza",
       "away": "Málaga",
       "date": "31/05",

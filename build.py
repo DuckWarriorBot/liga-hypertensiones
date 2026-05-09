@@ -3359,9 +3359,10 @@ function renderRoundResults() {{
     const scMap2    = SCORES_DATA.scores_by_team || SCORES_DATA;
     const venueMap2 = SCORES_DATA.venue_by_team  || {{}};
     const rawScore  = (scMap2[name]||{{}})[String(idx)];
-    let venue2      = (venueMap2[name]||{{}})[String(idx)];
-    // Corregir venue usando AS_STATS (fuente más fiable que scores_data)
-    if (opp && AS_STATS.length) {{
+    // Prioridad: 1) fixture directo (más fiable que scores_data/AS_STATS para jornadas recientes)
+    let venue2 = _fxRes ? (_fxRes.home === name ? 'H' : 'A') : (venueMap2[name]||{{}})[String(idx)];
+    // Fallback: corregir venue usando AS_STATS si no hay fixture
+    if (!_fxRes && opp && AS_STATS.length) {{
       const _asFix = AS_STATS.find(s => s.jornada === currentRound &&
         ((s.home === name && s.away === opp) || (s.home === opp && s.away === name)));
       if (_asFix) venue2 = _asFix.home === name ? 'H' : 'A';
