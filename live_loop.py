@@ -61,7 +61,7 @@ INTERVAL        = 60    # segundos entre ciclos LIVE
 STANDBY_MINUTES = 10    # minutos antes del partido para pasar a STANDBY
 IDLE_SLEEP      = 300   # segundos en IDLE (5 min)
 STANDBY_SLEEP   = 60    # segundos en STANDBY
-CLOSING_EXTRA   = 1     # ciclos extra tras partido terminado (para capturar resultado)
+CLOSING_EXTRA   = 10    # max ciclos de cierre esperando resultado en /resultados/ Flashscore
 
 
 LOG_FILE = BASE_DIR / 'live_loop.log'
@@ -283,6 +283,8 @@ def main():
     was_live = False
     closing_cycles = 0
     last_closing_ts = None  # timestamp del último ciclo de cierre
+    # Equipos que estaban en vivo: {home_team: idx_str} para verificar resultado
+    last_live_teams = {}  # {home: idx_str}
 
     if force_now:
         log('--now: ciclo inmediato forzado')
@@ -311,20 +313,49 @@ def main():
             log(f'[LIVE] {n} partido{plural}: {partidos}')
             was_live = True
             closing_cycles = 0
+            # Guardar qué partidos estaban en vivo para verificar resultado después
+            liga_data = load_json(LIGA_FILE)
+            fix_by_pair = {f'{f["home"]}|{f["away"]}': f for f in liga_data.get('fixtures', [])}
+            last_live_teams = {}
+            for team, info in live.items():
+                if info.get('is_home'):
+                    opp = info.get('opponent', '')
+                    fix = fix_by_pair.get(f'{team}|{opp}')
+                    if fix and fix.get('round'):
+                        last_live_teams[team] = str(fix['round'] - 1)
             run_full_cycle()
             log(f'Proximo ciclo en {interval}s...')
             time.sleep(interval)
 
         elif was_live and closing_cycles < CLOSING_EXTRA:
-            # CLOSING: live_scores quedo vacio => todos los partidos terminaron
+            # CLOSING: live_scores vacio => partido(s) terminado(s) en Flashscore /partidos/
+            # Pero el resultado puede tardar en aparecer en /resultados/
+            # Seguir fetchando hasta que scores_by_team tenga el resultado, o máx CLOSING_EXTRA ciclos
             closing_cycles += 1
-            log(f'[FIN] Todos terminados. Ciclo de cierre {closing_cycles}/{CLOSING_EXTRA}...')
-            run_full_cycle()
-            if closing_cycles >= CLOSING_EXTRA:
-                log('[OK] Resultado registrado. Volviendo a IDLE.')
+
+            # Comprobar si el resultado ya está en scores_by_team
+            sb = load_json(SCORES_FILE).get('scores_by_team', {})
+            pending = {t: idx for t, idx in last_live_teams.items() if not sb.get(t, {}).get(idx)}
+
+            if not pending:
+                # Todos los resultados ya están guardados
+                log(f'[FIN] Resultado(s) confirmados en scores_by_team. Volviendo a IDLE.')
                 was_live = False
                 closing_cycles = 0
-                last_closing_ts = time.time()  # marcar momento del cierre
+                last_closing_ts = time.time()
+            elif closing_cycles >= CLOSING_EXTRA:
+                # Agotados los intentos — resultado no llegó, pasamos a IDLE de todas formas
+                pending_str = ', '.join(f'{t}[{i}]' for t, i in pending.items())
+                log(f'[WARN] {closing_cycles} ciclos de cierre agotados. Pendiente: {pending_str}. Volviendo a IDLE.')
+                was_live = False
+                closing_cycles = 0
+                last_closing_ts = time.time()
+            else:
+                pending_str = ', '.join(f'{t}[{i}]' for t, i in pending.items())
+                log(f'[FIN] Ciclo de cierre {closing_cycles}/{CLOSING_EXTRA} — esperando resultado: {pending_str}')
+                run_full_cycle()
+                log(f'Proximo ciclo en {STANDBY_SLEEP}s...')
+                time.sleep(STANDBY_SLEEP)
 
         else:
             # IDLE / STANDBY: comprobar si hay partidos que deberían estar en curso
