@@ -2620,7 +2620,10 @@ function computeStandingsForRound(round) {{
     const allRes = extraResArr.length > 0 ? [...res, ...extraResArr] : res;
     const racha = (() => {{ let c=0; for(let i=allRes.length-1;i>=0;i--){{ if(allRes[i]==='D')break; c++; }} return c; }})();
     const played = res.length + extraPlayed;
-    return {{ name, wins, draws, losses, played, pts, gf, gc, dif: gf - gc, racha,
+    const totalWins   = wins   + extraWins;
+    const totalDraws  = draws  + extraDraws;
+    const totalLosses = losses + extraLosses;
+    return {{ name, wins: totalWins, draws: totalDraws, losses: totalLosses, played, pts, gf, gc, dif: gf - gc, racha,
       allRes,  // resultados extendidos para forma/racha en drawStandingsTable
       ppg: played > 0 ? (pts / played).toFixed(2) : '0.00',
       quedan: (LIGA_DATA.total_season_rounds - played) * 3
