@@ -2850,7 +2850,7 @@ function liveScoreCell(name) {{
   const ls = liveState[name];
   if (!ls) return '';
   const isFT  = ls.minute === 'FT';
-  const col   = isFT ? '#94a3b8' : (ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24');
+  const col   = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
   const score = ls.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
   const minRaw = ls.minute || '';
   const minStr = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
@@ -3329,14 +3329,15 @@ function renderRoundResults() {{
           const isFT      = ls.minute === 'FT';
           const teamDiff  = ls.opponent === fx.opp ? ls.diff : -ls.diff;
           const liveClass = isFT ? '' : (teamDiff > 0 ? 'live-V' : teamDiff < 0 ? 'live-D' : 'live-E');
-          const liveCol   = isFT ? '#94a3b8' : (teamDiff > 0 ? '#22c55e' : teamDiff < 0 ? '#ef4444' : '#fbbf24');
+          const liveCol   = teamDiff > 0 ? '#22c55e' : teamDiff < 0 ? '#ef4444' : '#fbbf24';
+          const ftStyle   = isFT ? `border:2px solid ${{liveCol}};` : '';
           const scoreH    = ls.isHome ? ls.homeGoals : ls.awayGoals;
           const scoreA    = ls.isHome ? ls.awayGoals : ls.homeGoals;
           const scoreDisp = fx.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
           const minRaw    = ls.minute || '';
           const minStr    = isFT ? 'FIN' : (minRaw === 'HT' ? "D'" : minRaw);
           const dot       = isFT ? '' : '<span class="live-dot-indicator"></span>';
-          return `<div class="result-card ${{liveClass}}" style="">
+          return `<div class="result-card ${{liveClass}}" style="${{ftStyle}}">
             <div class="team-cell" style="gap:8px">
               <div style="flex-shrink:0">${{crestHTML(name)}}</div>
               <div>
@@ -3541,7 +3542,7 @@ function renderHistoryTable(sortBy) {{
         const lsEntry = liveState[name];
         if (lsEntry && lsEntry.opponent === oppAtIdx) {{
           const isFT    = lsEntry.minute === 'FT';
-          const liveCol = isFT ? '#94a3b8' : (lsEntry.diff > 0 ? '#4ade80' : lsEntry.diff < 0 ? '#f87171' : '#fbbf24');
+          const liveCol = lsEntry.diff > 0 ? '#4ade80' : lsEntry.diff < 0 ? '#f87171' : '#fbbf24';
           const minRaw  = lsEntry.minute || '';
           const minStr  = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
           const liveScore = lsEntry.isHome ? `${{lsEntry.homeGoals}}-${{lsEntry.awayGoals}}` : `${{lsEntry.awayGoals}}-${{lsEntry.homeGoals}}`;
@@ -3581,7 +3582,7 @@ function renderHistoryTable(sortBy) {{
         const lsN = liveState[name];
         if (lsN && lsN.opponent === oppN) {{
           const isFTN    = lsN.minute === 'FT';
-          const liveColN = isFTN ? '#94a3b8' : (lsN.diff > 0 ? '#4ade80' : lsN.diff < 0 ? '#f87171' : '#fbbf24');
+          const liveColN = lsN.diff > 0 ? '#4ade80' : lsN.diff < 0 ? '#f87171' : '#fbbf24';
           const minRawN  = lsN.minute || '';
           const minStrN  = isFTN ? 'FIN' : (minRawN === 'HT' || minRawN === 'Descanso') ? "D'" : minRawN;
           const liveScoreN = lsN.isHome ? `${{lsN.homeGoals}}-${{lsN.awayGoals}}` : `${{lsN.awayGoals}}-${{lsN.homeGoals}}`;
@@ -5590,7 +5591,7 @@ function updateLiveBar() {{
     toShow.map(([name, ls]) => {{
       const isFT  = ls.minute === 'FT';
       const score = `${{ls.homeGoals}}-${{ls.awayGoals}}`;
-      const col   = isFT ? '#94a3b8' : (ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24');
+      const col   = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
       const minRaw = ls.minute || '';
       const minStr = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
       const dot    = isFT ? '' : '<span class="live-dot-indicator"></span>';
