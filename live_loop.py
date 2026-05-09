@@ -22,6 +22,10 @@ from pathlib import Path
 
 # -- Configuracion
 BASE_DIR        = Path(__file__).parent
+
+# Usar siempre el Python del venv si existe (tiene todas las dependencias)
+_VENV_PY = BASE_DIR / '.venv' / 'Scripts' / 'python.exe'
+PYTHON   = str(_VENV_PY) if _VENV_PY.exists() else sys.executable
 SCORES_FILE     = BASE_DIR / 'scores_data.json'
 LIGA_FILE       = BASE_DIR / 'liga_data.json'
 INTERVAL        = 60    # segundos entre ciclos LIVE
@@ -63,7 +67,7 @@ def run_step(script_name):
     log(f'  > {script_name}...')
     t0 = time.time()
     r = subprocess.run(
-        [sys.executable, str(path)],
+        [PYTHON, str(path)],
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
         env=env_utf8()
@@ -97,11 +101,8 @@ def run_full_cycle():
         missing = [s for s in REQUIRED_STRINGS if s not in built]
         if missing:
             log(f'  WARN build incompleto (faltan: {missing}) -- rehaciendo con venv...')
-            venv_py = BASE_DIR / '.venv' / 'Scripts' / 'python.exe'
-            if not venv_py.exists():
-                venv_py = Path(sys.executable)
             r2 = subprocess.run(
-                [str(venv_py), str(BASE_DIR / 'build.py')],
+                [PYTHON, str(BASE_DIR / 'build.py')],
                 cwd=str(BASE_DIR),
                 capture_output=True, text=True, encoding='utf-8', errors='replace',
                 env=env_utf8()
@@ -117,8 +118,9 @@ def run_full_cycle():
     deploy_path = BASE_DIR / 'deploy.py'
     log('  > deploy.py --sftp --only-deploy...')
     t0 = time.time()
+    # Intentar primero WebDAV (F:) que es instantaneo y no requiere password
     r = subprocess.run(
-        [sys.executable, str(deploy_path), '--sftp', '--only-deploy'],
+        [PYTHON, str(deploy_path), '--only-deploy'],
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
         env=env_utf8()
@@ -127,8 +129,20 @@ def run_full_cycle():
     if r.returncode == 0:
         log(f'  OK   deploy ({elapsed:.0f}s)')
         return True
-    log(f'  FAIL deploy ({elapsed:.0f}s)')
-    for line in r.stderr.strip().splitlines()[-5:]:
+    # Fallback a SFTP si WebDAV no disponible
+    log(f'  WARN WebDAV falló ({elapsed:.0f}s), intentando SFTP...')
+    r2 = subprocess.run(
+        [PYTHON, str(deploy_path), '--sftp', '--only-deploy'],
+        cwd=str(BASE_DIR),
+        capture_output=True, text=True, encoding='utf-8', errors='replace',
+        env=env_utf8()
+    )
+    elapsed2 = time.time() - t0
+    if r2.returncode == 0:
+        log(f'  OK   deploy SFTP ({elapsed2:.0f}s)')
+        return True
+    log(f'  FAIL deploy ({elapsed2:.0f}s)')
+    for line in r2.stderr.strip().splitlines()[-5:]:
         print(f'       {line}', flush=True)
     return False
 
@@ -151,7 +165,10 @@ def get_next_fixture_dt():
         dd, mm = int(dp[0]), int(dp[1])
         hh, mi = int(tp[0]), int(tp[1])
         yr = 2025 if mm >= 8 else 2026
+        # Los tiempos en liga_data.json son hora local Madrid (CEST=+2 abr-oct, CET=+1 nov-mar)
+        # Convertir a UTC para comparar con now_utc
         offset = 2 if 4 <= mm <= 10 else 1
+        dt_madrid = datetime.datetime(yr, mm, dd, hh, mi)
         dt_utc = (datetime.datetime(yr, mm, dd, hh, mi, tzinfo=datetime.timezone.utc)
                   - datetime.timedelta(hours=offset))
         if dt_utc > now_utc and (best_dt is None or dt_utc < best_dt):
