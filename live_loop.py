@@ -76,6 +76,12 @@ def env_utf8():
     """Env con PYTHONIOENCODING=utf-8 para evitar errores de codificacion en Windows."""
     e = os.environ.copy()
     e['PYTHONIOENCODING'] = 'utf-8'
+    # Asegurar que la contraseña SFTP se propaga a los subprocesos
+    if 'IONOS_SFTP_PASS' not in e:
+        # Intentar leerla de un archivo local .sftp_pass si existe
+        sftp_pass_file = BASE_DIR / '.sftp_pass'
+        if sftp_pass_file.exists():
+            e['IONOS_SFTP_PASS'] = sftp_pass_file.read_text(encoding='utf-8').strip()
     return e
 
 
@@ -94,9 +100,10 @@ def run_step(script_name):
         log(f'Aviso: {script_name} no encontrado')
         return False
     # Scripts que necesitan playwright usan PYTHON_PLAYWRIGHT
+    # Scripts que necesitan paramiko (deploy SFTP) también usan PYTHON_PLAYWRIGHT (Python311)
     _PLAYWRIGHT_SCRIPTS = {'fetch_flashscore.py', 'fetch_all.py', 'fetch_as.py',
                            'fetch_besoccer.py', 'fetch_scores.py', 'fetch_history.py',
-                           'fetch_predictions.py', 'fetch_team_assets.py'}
+                           'fetch_predictions.py', 'fetch_team_assets.py', 'deploy.py'}
     py = PYTHON_PLAYWRIGHT if script_name in _PLAYWRIGHT_SCRIPTS else PYTHON
     log(f'  > {script_name}...')
     t0 = time.time()
@@ -152,21 +159,23 @@ def run_full_cycle():
     deploy_path = BASE_DIR / 'deploy.py'
     log('  > deploy.py --sftp --only-deploy...')
     t0 = time.time()
-    # Intentar primero WebDAV (F:) que es instantaneo y no requiere password
+    # Intentar primero SFTP con Python311 (tiene paramiko, es el canal real al servidor)
+    log('  > deploy.py --sftp --only-deploy...')
+    py_deploy = PYTHON_PLAYWRIGHT  # Python311 tiene paramiko
     r = subprocess.run(
-        [PYTHON, str(deploy_path), '--only-deploy'],
+        [py_deploy, str(deploy_path), '--sftp', '--only-deploy'],
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
         env=env_utf8()
     )
     elapsed = time.time() - t0
     if r.returncode == 0:
-        log(f'  OK   deploy ({elapsed:.0f}s)')
+        log(f'  OK   deploy SFTP ({elapsed:.0f}s)')
         return True
-    # Fallback a SFTP si WebDAV no disponible
-    log(f'  WARN WebDAV falló ({elapsed:.0f}s), intentando SFTP...')
+    # Fallback a WebDAV si SFTP falla
+    log(f'  WARN SFTP falló ({elapsed:.0f}s), intentando WebDAV...')
     r2 = subprocess.run(
-        [PYTHON, str(deploy_path), '--sftp', '--only-deploy'],
+        [PYTHON, str(deploy_path), '--only-deploy'],
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
         env=env_utf8()
