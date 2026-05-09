@@ -2579,6 +2579,14 @@ function pointsNeededForTargetPos(standings, teamName, targetPos, round, maxExtr
   return maxTry + 1;
 }}
 
+function remainingPointsForEntry(t) {{
+  return Math.max(0, (LIGA_DATA.total_season_rounds - (t?.played || 0)) * 3);
+}}
+
+function maxRemainingPoints(entries) {{
+  return entries.length ? Math.max(...entries.map(remainingPointsForEntry)) : 0;
+}}
+
 // ===== COMPUTED STANDINGS =====
 function computeStandingsForRound(round) {{
   const r = Math.min(round, LIGA_DATA.total_rounds);
@@ -2656,8 +2664,10 @@ function computeStandingsForRound(round) {{
   // cuando hay jornadas extra tipo J39) para evitar que quedanRnd quede inflado.
   const _maxPlayed = teams.length > 0 ? Math.max(...teams.map(t => t.played)) : r;
   const quedanRnd = (LIGA_DATA.total_season_rounds - _maxPlayed) * 3;
+  const maxDescRemain = maxRemainingPoints(teams.slice(18));
   teams.forEach((t, i) => {{
     const pos = i + 1;
+    const teamRemain = remainingPointsForEntry(t);
     t.secured = null;
     // Temporada terminada: posiciones definitivas, sin distancias imposibles
     if (quedanRnd === 0) {{
@@ -2678,9 +2688,9 @@ function computeStandingsForRound(round) {{
       }}
     }} else if (pos <= 6) {{
       const pts7        = teams[6]?.pts ?? 0;
-      const dAscDirecto = pointsNeededForTargetPos(teams, t.name, 2, r, quedanRnd);
+      const dAscDirecto = pointsNeededForTargetPos(teams, t.name, 2, r, teamRemain);
       const dOver7      = t.pts - pts7;             // margen sobre el 7º
-      const canReachDirecto = dAscDirecto <= quedanRnd;  // puede alcanzar el 2º
+      const canReachDirecto = dAscDirecto <= teamRemain;  // puede alcanzar el 2º
       const playoffSecured  = dOver7 > quedanRnd;        // el 7º no puede alcanzarle
       if (canReachDirecto) {{
         // Prioridad: mostrar distancia al ascenso directo mientras sea alcanzable
@@ -2694,10 +2704,10 @@ function computeStandingsForRound(round) {{
         t.situacion = 'EN PLAYOFF';
       }}
     }} else if (pos <= 18) {{
-      const dPlay = pointsNeededForTargetPos(teams, t.name, 6, r, quedanRnd);
+      const dPlay = pointsNeededForTargetPos(teams, t.name, 6, r, teamRemain);
       const dDesc = t.pts - pts19;            // margen sobre la zona de descenso
-      const canPlayoff = dPlay <= quedanRnd;  // puede alcanzar el playoff
-      const safe       = dDesc > quedanRnd;   // no puede descender
+      const canPlayoff = dPlay <= teamRemain;  // puede alcanzar el playoff
+      const safe       = dDesc > maxDescRemain;   // no puede descender si ni el mejor descendido con más margen puede alcanzarle
       if (safe && !canPlayoff) {{
         t.situacion = 'PERMANENCIA';
         t.secured   = 'permanence';
@@ -2709,8 +2719,8 @@ function computeStandingsForRound(round) {{
         t.situacion = `A ${{dDesc}} DEL DESCENSO`;
       }}
     }} else {{
-      const needed = pointsNeededForTargetPos(teams, t.name, 18, r, quedanRnd);
-      if (needed > quedanRnd) {{
+      const needed = pointsNeededForTargetPos(teams, t.name, 18, r, teamRemain);
+      if (needed > teamRemain) {{
         t.situacion = 'DESCENSO';
         t.secured   = 'relegation';
       }} else {{
@@ -2936,9 +2946,9 @@ function renderStandings() {{
         else t.situacion = `A ${{dAs}} DE ASEGURAR`;
       }} else if (pos <= 6) {{
         const lPts7 = standingsData[6]?.pts ?? 0;
-          const dAsc  = pointsNeededForTargetPos(standingsData, t.name, 2, standingsRound, qRef);
+        const dAsc  = pointsNeededForTargetPos(standingsData, t.name, 2, standingsRound, t.quedan);
         const dOv7  = t.pts - lPts7;
-        if (dAsc <= qRef) {{
+        if (dAsc <= t.quedan) {{
           t.situacion = dAsc === 0 ? 'IGUALA 2º EN PTS' : `A ${{dAsc}} DEL ASCENSO DIRECTO`;
           if (dOv7 > qRef) t.secured = 'playoff';
         }} else if (dOv7 > qRef) {{
@@ -2947,15 +2957,16 @@ function renderStandings() {{
           t.situacion = 'EN PLAYOFF';
         }}
       }} else if (pos <= 18) {{
-          const dPlay = pointsNeededForTargetPos(standingsData, t.name, 6, standingsRound, qRef);
+        const dPlay = pointsNeededForTargetPos(standingsData, t.name, 6, standingsRound, t.quedan);
         const dDesc = t.pts - lPts19;
-        const safe  = dDesc > qRef;
-        if (safe && dPlay > qRef) {{ t.situacion = 'PERMANENCIA'; t.secured = 'permanence'; }}
-        else if (dPlay <= qRef && (safe || dPlay <= dDesc)) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
+        const maxDescRemainLive = maxRemainingPoints(standingsData.slice(18));
+        const safe  = dDesc > maxDescRemainLive;
+        if (safe && dPlay > t.quedan) {{ t.situacion = 'PERMANENCIA'; t.secured = 'permanence'; }}
+        else if (dPlay <= t.quedan && (safe || dPlay <= dDesc)) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
         else t.situacion = `A ${{dDesc}} DEL DESCENSO`;
       }} else {{
-          const needed = pointsNeededForTargetPos(standingsData, t.name, 18, standingsRound, qRef);
-        if (needed > qRef) {{ t.situacion = 'DESCENSO'; t.secured = 'relegation'; }}
+        const needed = pointsNeededForTargetPos(standingsData, t.name, 18, standingsRound, t.quedan);
+        if (needed > t.quedan) {{ t.situacion = 'DESCENSO'; t.secured = 'relegation'; }}
         else t.situacion = `A ${{needed}} DE SALVACIÓN`;
       }}
     }});
