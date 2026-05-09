@@ -2563,9 +2563,20 @@ function applyTiebreakSort(arr, r) {{
   return arr;
 }}
 
-function pointsToOvertakeCutoff(teamPts, cutoffPts, teamPos, cutoffPos) {{
-  if (teamPts === cutoffPts && teamPos > cutoffPos) return 1;
-  return Math.max(0, cutoffPts - teamPts);
+function pointsNeededForTargetPos(standings, teamName, targetPos, round, maxExtraPts) {{
+  const baseIdx = standings.findIndex(t => t.name === teamName);
+  if (baseIdx === -1) return 0;
+  if (baseIdx + 1 <= targetPos) return 0;
+  const maxTry = Math.max(0, maxExtraPts ?? ((LIGA_DATA.total_season_rounds || 42) * 3));
+  for (let extra = 0; extra <= maxTry + 1; extra++) {{
+    const test = standings.map(t => ({{ ...t }}));
+    const team = test.find(t => t.name === teamName);
+    if (!team) return 0;
+    team.pts += extra;
+    applyTiebreakSort(test, round);
+    if (test.findIndex(t => t.name === teamName) + 1 <= targetPos) return extra;
+  }}
+  return maxTry + 1;
 }}
 
 // ===== COMPUTED STANDINGS =====
@@ -2667,7 +2678,7 @@ function computeStandingsForRound(round) {{
       }}
     }} else if (pos <= 6) {{
       const pts7        = teams[6]?.pts ?? 0;
-      const dAscDirecto = pointsToOvertakeCutoff(t.pts, pts2, pos, 2); // si empata a pts pero pierde el desempate, necesita 1 más
+      const dAscDirecto = pointsNeededForTargetPos(teams, t.name, 2, r, quedanRnd);
       const dOver7      = t.pts - pts7;             // margen sobre el 7º
       const canReachDirecto = dAscDirecto <= quedanRnd;  // puede alcanzar el 2º
       const playoffSecured  = dOver7 > quedanRnd;        // el 7º no puede alcanzarle
@@ -2683,7 +2694,7 @@ function computeStandingsForRound(round) {{
         t.situacion = 'EN PLAYOFF';
       }}
     }} else if (pos <= 18) {{
-      const dPlay = pointsToOvertakeCutoff(t.pts, pts6, pos, 6); // igualar a pts no basta si está por detrás del corte
+      const dPlay = pointsNeededForTargetPos(teams, t.name, 6, r, quedanRnd);
       const dDesc = t.pts - pts19;            // margen sobre la zona de descenso
       const canPlayoff = dPlay <= quedanRnd;  // puede alcanzar el playoff
       const safe       = dDesc > quedanRnd;   // no puede descender
@@ -2698,7 +2709,7 @@ function computeStandingsForRound(round) {{
         t.situacion = `A ${{dDesc}} DEL DESCENSO`;
       }}
     }} else {{
-      const needed = pointsToOvertakeCutoff(t.pts, pts18, pos, 18);
+      const needed = pointsNeededForTargetPos(teams, t.name, 18, r, quedanRnd);
       if (needed > quedanRnd) {{
         t.situacion = 'DESCENSO';
         t.secured   = 'relegation';
@@ -2925,7 +2936,7 @@ function renderStandings() {{
         else t.situacion = `A ${{dAs}} DE ASEGURAR`;
       }} else if (pos <= 6) {{
         const lPts7 = standingsData[6]?.pts ?? 0;
-          const dAsc  = pointsToOvertakeCutoff(t.pts, lPts2, pos, 2);
+          const dAsc  = pointsNeededForTargetPos(standingsData, t.name, 2, standingsRound, qRef);
         const dOv7  = t.pts - lPts7;
         if (dAsc <= qRef) {{
           t.situacion = dAsc === 0 ? 'IGUALA 2º EN PTS' : `A ${{dAsc}} DEL ASCENSO DIRECTO`;
@@ -2936,14 +2947,14 @@ function renderStandings() {{
           t.situacion = 'EN PLAYOFF';
         }}
       }} else if (pos <= 18) {{
-          const dPlay = pointsToOvertakeCutoff(t.pts, lPts6, pos, 6);
+          const dPlay = pointsNeededForTargetPos(standingsData, t.name, 6, standingsRound, qRef);
         const dDesc = t.pts - lPts19;
         const safe  = dDesc > qRef;
         if (safe && dPlay > qRef) {{ t.situacion = 'PERMANENCIA'; t.secured = 'permanence'; }}
         else if (dPlay <= qRef && (safe || dPlay <= dDesc)) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
         else t.situacion = `A ${{dDesc}} DEL DESCENSO`;
       }} else {{
-          const needed = pointsToOvertakeCutoff(t.pts, lPts18, pos, 18);
+          const needed = pointsNeededForTargetPos(standingsData, t.name, 18, standingsRound, qRef);
         if (needed > qRef) {{ t.situacion = 'DESCENSO'; t.secured = 'relegation'; }}
         else t.situacion = `A ${{needed}} DE SALVACIÓN`;
       }}
@@ -3999,6 +4010,9 @@ function renderPlayoff() {{
   const el = document.getElementById('playoffContent');
   if (!el) return;
   const po = LIGA_DATA.playoff;
+  const liveBracketStandings = (!_historicalMode && Array.isArray(standingsData) && standingsData.length >= 6)
+    ? standingsData
+    : null;
 
   // ── Helpers compartidos ────────────────────────────────────────────────────
   function crest(name, sz) {{
@@ -4141,11 +4155,10 @@ function renderPlayoff() {{
   // En temporada actual: aviso si las plazas todavia no estan decididas matematicamente
   var _provisional = false;
   if (!_historicalMode) {{
-    const _st   = LIGA_DATA.final_standings || [];
-    const _rem  = (LIGA_DATA.total_season_rounds||42) - (LIGA_DATA.total_rounds||0);
-    const _pts6 = _st[5] ? _st[5].pts : 0;
-    const _pts7 = _st[6] ? _st[6].pts : 0;
-    _provisional = _rem > 0 && (_pts7 + _rem * 3 >= _pts6);
+    const _st = liveBracketStandings || LIGA_DATA.final_standings || [];
+    const _maxPlayed = _st.length ? Math.max(..._st.map(t => t.played || 0)) : (LIGA_DATA.total_rounds || 0);
+    const _rem = (LIGA_DATA.total_season_rounds || 42) - _maxPlayed;
+    _provisional = !!(_st[6] && _rem > 0 && pointsNeededForTargetPos(_st, _st[6].name, 6, currentRound, _rem * 3) <= _rem * 3);
     if (_provisional) {{
       html += '<div style="margin-bottom:12px;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.3);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:8px;">';
       html += '<span style="font-size:16px">\u23f3</span>';
@@ -4153,9 +4166,22 @@ function renderPlayoff() {{
       html += '</div>';
     }}
   }}
-  var sf1 = po.semis[0];
-  var sf2 = po.semis[1];
-  var fin = po.final;
+  const playoffStarted = !!(((po.semis || []).some(sf => (sf.matches || []).some(m => m.played))) || ((po.final?.matches || []).some(m => m.played)));
+  var sf1 = JSON.parse(JSON.stringify(po.semis[0]));
+  var sf2 = JSON.parse(JSON.stringify(po.semis[1]));
+  var fin = JSON.parse(JSON.stringify(po.final));
+  if (!_historicalMode && !playoffStarted && liveBracketStandings && liveBracketStandings.length >= 6) {{
+    const p3 = liveBracketStandings[2].name;
+    const p4 = liveBracketStandings[3].name;
+    const p5 = liveBracketStandings[4].name;
+    const p6 = liveBracketStandings[5].name;
+    sf1.team_high = p3; sf1.team_low = p6;
+    sf2.team_high = p4; sf2.team_low = p5;
+    if (sf1.matches[0] && !sf1.matches[0].played) {{ sf1.matches[0].home = p3; sf1.matches[0].away = p6; }}
+    if (sf1.matches[1] && !sf1.matches[1].played) {{ sf1.matches[1].home = p6; sf1.matches[1].away = p3; }}
+    if (sf2.matches[0] && !sf2.matches[0].played) {{ sf2.matches[0].home = p4; sf2.matches[0].away = p5; }}
+    if (sf2.matches[1] && !sf2.matches[1].played) {{ sf2.matches[1].home = p5; sf2.matches[1].away = p4; }}
+  }}
 
   // Etiqueta dinámica de la semifinal
   function sfLabel(sf) {{
@@ -4483,8 +4509,9 @@ function initAnalysisTab() {{
         ['poss_recoveries', fmt(row.poss_recoveries, 1)],
         ['offsides',        fmt(row.offsides, 1)],
       ];
-      const tdCells = cells.map(([f, v]) => {{
-        const bg = heatColor(f, row[f]);
+      const tdCells = cells.map(([field, v]) => {{
+        const raw = row[field];
+        const bg = heatColor(field, raw);
         const style = bg ? ` style="background:${{bg}}"` : '';
         return `<td${{style}}>${{v}}</td>`;
       }}).join('');

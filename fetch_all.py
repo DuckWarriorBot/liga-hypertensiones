@@ -273,6 +273,54 @@ def parse_clasificacion(html):
     return rows
 
 
+def compute_h2h_stats(names, played_rounds, rounds):
+    name_set = set(names)
+    h2h = {n: {'pts': 0, 'gd': 0, 'gf': 0} for n in names}
+    for rnd in rounds[:played_rounds]:
+        for m in rnd:
+            if not m.get('played') or not m.get('score'):
+                continue
+            home, away = m['home'], m['away']
+            if home not in name_set or away not in name_set:
+                continue
+            hg, ag = map(int, m['score'].split('-'))
+            h2h[home]['gf'] += hg
+            h2h[home]['gd'] += hg - ag
+            h2h[away]['gf'] += ag
+            h2h[away]['gd'] += ag - hg
+            if hg > ag:
+                h2h[home]['pts'] += 3
+            elif ag > hg:
+                h2h[away]['pts'] += 3
+            else:
+                h2h[home]['pts'] += 1
+                h2h[away]['pts'] += 1
+    return h2h
+
+
+def apply_tiebreak_sort(table, played_rounds, rounds):
+    table.sort(key=lambda x: -x['pts'])
+    i = 0
+    while i < len(table):
+        j = i + 1
+        while j < len(table) and table[j]['pts'] == table[i]['pts']:
+            j += 1
+        if j - i > 1:
+            group = table[i:j]
+            h2h = compute_h2h_stats([t['name'] for t in group], played_rounds, rounds)
+            group.sort(key=lambda t: (
+                -h2h[t['name']]['pts'],
+                -h2h[t['name']]['gd'],
+                -h2h[t['name']]['gf'],
+                -t.get('dif', 0),
+                -t.get('gf', 0),
+                t['name']
+            ))
+            table[i:j] = group
+        i = j
+    return table
+
+
 # ── 4. Computar liga_data y scores_data ──────────────────────────────────────
 def compute_data(rounds, total_season_rounds=42, extra_stats=None):
     """
@@ -349,7 +397,7 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
                     gf += a; gc += b
             snap.append({'name': t, 'pts': pts, 'wins': wins, 'dif': gf - gc})
 
-        snap.sort(key=lambda x: (-x['pts'], -x['wins'], -x['dif']))
+        apply_tiebreak_sort(snap, r_idx + 1, rounds)
         for pos, t in enumerate(snap, 1):
             positions_by_team[t['name']].append(pos)
             points_by_team[t['name']].append(t['pts'])
@@ -371,7 +419,7 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
             'losses': losses, 'played': len(res), 'gf': gf, 'gc': gc,
             'dif': gf - gc,
         })
-    final_standing.sort(key=lambda x: (-x['pts'], -x['wins'], -x['dif']))
+    apply_tiebreak_sort(final_standing, rounds_played, rounds)
     for pos, t in enumerate(final_standing, 1):
         t['pos'] = pos
 
