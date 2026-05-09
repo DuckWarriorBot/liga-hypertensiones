@@ -1,10 +1,21 @@
 name: Actualizar Liga Hypertensiones
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Secreto requerido en GitHub → Settings → Secrets → Actions:
+#   IONOS_SFTP_PASS   (contraseña SFTP de IONOS)
+#
+# Configuración SFTP (no sensible, igual que deploy.py):
+#   Host:  home559128403.1and1-data.host : 22
+#   User:  acc147683744
+# ──────────────────────────────────────────────────────────────────────────────
+
 on:
   schedule:
-    - cron: '*/10 11-21 * * *'
-    - cron: '0 0-10,22-23 * * *'
-  workflow_dispatch:
+    # Cada 10 min de 11:00 a 22:59 UTC (13:00-00:59 Madrid en verano)
+    - cron: '*/10 11-22 * * *'
+    # Cada hora fuera de ese rango (mantenimiento y datos del día siguiente)
+    - cron: '0 0-10,23 * * *'
+  workflow_dispatch:  # Permite lanzar manualmente desde GitHub
 
 jobs:
   update-and-deploy:
@@ -12,9 +23,11 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      # ── 1. Checkout del código ────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
+      # ── 2. Python 3.11 ───────────────────────────────────────────────────
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -24,66 +37,73 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
-      - name: Instalar Chromium
+      - name: Instalar Chromium (para Playwright)
         run: python -m playwright install chromium --with-deps
 
+      # ── 3. Descargar datos persistentes del hosting ───────────────────────
+      # results_db.json: resultados bloqueados manualmente (no regenerable)
+      # predictions_history.json: historial acumulado de predicciones
       - name: Descargar datos persistentes desde hosting
         env:
-          SFTP_HOST: ${{ secrets.SFTP_SERVER }}
-          SFTP_PORT: ${{ secrets.SFTP_PORT }}
-          SFTP_USER: ${{ secrets.SFTP_USERNAME }}
-          SFTP_PASS: ${{ secrets.SFTP_PASSWORD }}
+          IONOS_SFTP_PASS: ${{ secrets.IONOS_SFTP_PASS }}
         run: |
           python - <<'EOF'
           import paramiko, os
+
+          HOST = 'home559128403.1and1-data.host'
+          PORT = 22
+          USER = 'acc147683744'
+          PASS = os.environ.get('IONOS_SFTP_PASS', '')
+
+          if not PASS:
+              print('IONOS_SFTP_PASS no configurado — se usarán archivos del repo')
+              raise SystemExit(0)
+
           try:
-              t = paramiko.Transport((os.environ['SFTP_HOST'], int(os.environ.get('SFTP_PORT', 22))))
-              t.connect(username=os.environ['SFTP_USER'], password=os.environ['SFTP_PASS'])
+              t = paramiko.Transport((HOST, PORT))
+              t.connect(username=USER, password=PASS)
               s = paramiko.SFTPClient.from_transport(t)
-              # Solo results_db.json se descarga del hosting (crece con partidos)
-              # predictions_history.json viene del repo + se actualiza con fetch_predictions.py
-              try:
-                  s.get('results_db.json', 'results_db.json')
-                  print('OK results_db.json descargado del hosting')
-              except FileNotFoundError:
-                  print('results_db.json no existe en hosting — iniciando BD vacía')
-              s.close(); t.close()
+
+              for fname in ['results_db.json', 'predictions_history.json', 'predictions.json']:
+                  try:
+                      s.get(fname, fname)
+                      print(f'OK  {fname} descargado del hosting')
+                  except FileNotFoundError:
+                      print(f'--  {fname} no existe en hosting (se generará)')
+
+              s.close()
+              t.close()
           except Exception as e:
-              print(f'No se pudo conectar al hosting: {e} — usando archivos del repo')
+              print(f'WARN: No se pudo conectar al hosting: {e}')
+              print('      Continuando con archivos del repo como fallback')
           EOF
 
-      - name: fetch_all
+      # ── 4. Fetch de datos ─────────────────────────────────────────────────
+      - name: fetch_all (Marca — calendario y resultados V/E/D)
         run: python fetch_all.py
 
-      - name: fetch_flashscore
+      - name: fetch_as (AS.com — clasificación oficial y racha)
+        run: python fetch_as.py || echo "WARN fetch_as falló (no crítico)"
+
+      - name: fetch_scores (football-data.co.uk — marcadores históricos)
+        run: python fetch_scores.py || echo "WARN fetch_scores falló (no crítico)"
+
+      - name: fetch_flashscore (Flashscore — en vivo y marcadores actuales)
         run: python fetch_flashscore.py
 
-      - name: fetch_playoff
-        run: python fetch_playoff.py || echo "fetch_playoff falló (no crítico)"
+      - name: fetch_playoff (Playoff — si existe)
+        run: python fetch_playoff.py || echo "WARN fetch_playoff falló (no crítico)"
 
-      - name: fetch_predictions
-        run: python fetch_predictions.py || echo "fetch_predictions falló (no crítico)"
+      - name: fetch_predictions (Predicciones)
+        run: python fetch_predictions.py || echo "WARN fetch_predictions falló (no crítico)"
 
-      - name: build
+      # ── 5. Build ──────────────────────────────────────────────────────────
+      - name: build (genera index.html)
         run: python build.py
 
+      # ── 6. Deploy SFTP al hosting ─────────────────────────────────────────
       - name: Deploy SFTP
         env:
-          SFTP_HOST: ${{ secrets.SFTP_SERVER }}
-          SFTP_PORT: ${{ secrets.SFTP_PORT }}
-          SFTP_USER: ${{ secrets.SFTP_USERNAME }}
-          SFTP_PASS: ${{ secrets.SFTP_PASSWORD }}
-        run: |
-          python - <<'EOF'
-          import paramiko, os
-          files = ['index.html','version.json','liga_data.json','scores_data.json','predictions.json','predictions_history.json','logo.png','results_db.json']
-          t = paramiko.Transport((os.environ['SFTP_HOST'], int(os.environ.get('SFTP_PORT', 22))))
-          t.connect(username=os.environ['SFTP_USER'], password=os.environ['SFTP_PASS'])
-          s = paramiko.SFTPClient.from_transport(t)
-          for f in files:
-              if os.path.exists(f):
-                  s.put(f, f)
-                  print(f'OK {f}')
-          s.close(); t.close()
-          EOF
+          IONOS_SFTP_PASS: ${{ secrets.IONOS_SFTP_PASS }}
+        run: python deploy.py --sftp --only-deploy
 

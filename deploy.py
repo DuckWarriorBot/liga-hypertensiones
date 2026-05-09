@@ -41,6 +41,7 @@ DEPLOY_FILES = [
     'scores_data.json',
     'predictions.json',
     'predictions_history.json',
+    'results_db.json',
     '.htaccess',
 ]
 
