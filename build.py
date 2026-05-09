@@ -2560,6 +2560,11 @@ function applyTiebreakSort(arr, r) {{
 // ===== COMPUTED STANDINGS =====
 function computeStandingsForRound(round) {{
   const r = Math.min(round, LIGA_DATA.total_rounds);
+  // Para la jornada actual (currentRound) incluir también resultados de scores_by_team
+  // que van más allá de total_rounds (partidos finalizados antes de que AS actualice results_by_team)
+  const extraIdx = (!_historicalMode && round >= LIGA_DATA.total_rounds)
+    ? Math.min(round - 1, currentRound - 1)  // 0-based último índice extra a incluir
+    : r - 1;
   const isCurrent = (r === LIGA_DATA.total_rounds);
   const scMap = SCORES_DATA.scores_by_team || {{}};
   const teams = LIGA_DATA.teams.map(name => {{
@@ -2567,7 +2572,7 @@ function computeStandingsForRound(round) {{
     const wins   = res.filter(x=>x==='V').length;
     const draws  = res.filter(x=>x==='E').length;
     const losses = res.filter(x=>x==='D').length;
-    const pts    = wins * 3 + draws;
+    let pts    = wins * 3 + draws;
     // Acumular GF/GC desde los marcadores reales (scores_data.json)
     const teamScores = scMap[name] || {{}};
     let gf = 0, gc = 0;
@@ -2578,14 +2583,27 @@ function computeStandingsForRound(round) {{
         gf += a; gc += b;
       }}
     }}
+    // Incluir resultados extra (scores_by_team) para jornadas finalizadas más allá de total_rounds
+    let extraPlayed = 0;
+    let extraWins = 0, extraDraws = 0, extraLosses = 0;
+    for (let i = r; i <= extraIdx; i++) {{
+      const sc = teamScores[String(i)];
+      if (!sc) continue;
+      const [a, b] = sc.split('-').map(Number);
+      if (isNaN(a) || isNaN(b)) continue;
+      gf += a; gc += b;
+      pts += a > b ? 3 : a === b ? 1 : 0;
+      if (a > b) extraWins++; else if (a === b) extraDraws++; else extraLosses++;
+      extraPlayed++;
+    }}
     // En la jornada actual siempre usamos los totales oficiales de TEAM_EXTRA_STATS
-    if (isCurrent && !_historicalMode) {{
+    if (isCurrent && !_historicalMode && extraPlayed === 0) {{
       const ex = TEAM_EXTRA_STATS[name] || {{}};
       if (ex.gf !== undefined) gf = ex.gf;
       if (ex.gc !== undefined) gc = ex.gc;
     }}
     const racha = (() => {{ let c=0; for(let i=res.length-1;i>=0;i--){{ if(res[i]==='D')break; c++; }} return c; }})();
-    const played = res.length;
+    const played = res.length + extraPlayed;
     return {{ name, wins, draws, losses, played, pts, gf, gc, dif: gf - gc, racha,
       ppg: played > 0 ? (pts / played).toFixed(2) : '0.00',
       quedan: (LIGA_DATA.total_season_rounds - played) * 3

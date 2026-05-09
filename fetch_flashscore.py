@@ -289,12 +289,19 @@ def scrape_live_scores(page):
     # Navegar a la página principal de la competición (no /partidos/) donde
     # aparecen los partidos en vivo con su minuto en el marcador.
     try:
-        page.goto(LIVE_URL, timeout=25000)
+        page.goto(LIVE_URL, timeout=35000)
         dismiss_cookies(page)
-        page.wait_for_selector('.event__match', timeout=20000)
+        # Intentar varios selectores; si no aparece .event__match en 25s, continuar sin live
+        try:
+            page.wait_for_selector('.event__match', timeout=25000)
+        except PWTimeout:
+            pass  # puede no haber partidos → continuar, el evaluate devolverá []
         page.wait_for_timeout(1500)  # breve espera para que cargue el estado live
     except PWTimeout:
         print('  ⚠  Timeout en página live, sin partidos en vivo', flush=True)
+        return []
+    except Exception as _e:
+        print(f'  ⚠  Error en página live ({_e}), sin partidos en vivo', flush=True)
         return []
 
     not_mapped = set()
@@ -448,13 +455,16 @@ def update_scores(liga, scores, result_list, rdb=None):
         hg, ag = m['score_h'], m['score_a']
         exp_res = 'V' if hg > ag else ('E' if hg == ag else 'D')
 
-        # Flashscore usa rondas 0-based en el DOM (Ronda 38 = J39 = índice 38).
-        # Usarlo directamente como idx cuando está disponible (más fiable que opponents_by_team
-        # para jornadas donde el calendario real difiere del original).
+        # Determinar el índice (0-based) correcto para este resultado.
+        # Flashscore /resultados/ NO muestra headers de ronda → round_num siempre None.
+        # Estrategia de resolución (por orden de fiabilidad):
+        #   1) Si round_num viene del DOM (alguna página futura lo incluya), usarlo directo.
+        #   2) Buscar la pareja home|away en fixtures → el campo 'round' (1-based) − 1.
+        #   3) Fallback: find_idx usando opponents_by_team (puede apuntar a primera vuelta).
         rn = m.get('round_num')
+        idx = None
         if rn is not None:
-            idx = rn  # 0-based: coincide directamente con nuestros arrays
-            # Actualizar la pareja del fixture con la ronda correcta (1-based para display)
+            idx = rn  # 0-based directo
             fixture_round = rn + 1
             key = f'{home}|{away}'
             if key in fix_by_pair:
@@ -465,7 +475,13 @@ def update_scores(liga, scores, result_list, rdb=None):
                 liga.setdefault('fixtures', []).append(new_f)
                 fix_by_pair[key] = new_f
         else:
-            idx = find_idx(liga, home, away, exp_res)
+            # Buscar en fixtures (más fiable: contiene la ronda real del calendario actual)
+            key = f'{home}|{away}'
+            fix = fix_by_pair.get(key)
+            if fix and fix.get('round'):
+                idx = fix['round'] - 1  # fixture round es 1-based → 0-based
+            if idx is None:
+                idx = find_idx(liga, home, away, exp_res)
             if idx is None:
                 idx = find_idx(liga, home, away)
         if idx is None:

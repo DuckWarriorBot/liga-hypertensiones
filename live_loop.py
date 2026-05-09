@@ -23,9 +23,38 @@ from pathlib import Path
 # -- Configuracion
 BASE_DIR        = Path(__file__).parent
 
-# Usar siempre el Python del venv si existe (tiene todas las dependencias)
+# Python para scripts de build (no necesitan playwright, el venv es suficiente)
 _VENV_PY = BASE_DIR / '.venv' / 'Scripts' / 'python.exe'
 PYTHON   = str(_VENV_PY) if _VENV_PY.exists() else sys.executable
+
+# Python para scripts que necesitan playwright (fetch_flashscore, fetch_all, etc.)
+# El venv puede no tener playwright instalado; detectar qué Python lo tiene.
+def _find_playwright_python():
+    """Devuelve el ejecutable Python que tiene playwright disponible."""
+    candidates = [
+        PYTHON,             # venv primero
+        sys.executable,     # Python que corre live_loop
+    ]
+    # Añadir Python311 y Python313 del sistema si existen
+    import shutil
+    for name in ('python', 'python3', 'python3.11', 'python3.13'):
+        p = shutil.which(name)
+        if p and p not in candidates:
+            candidates.append(p)
+    for py in candidates:
+        try:
+            r = subprocess.run(
+                [py, '-c', 'import playwright'],
+                capture_output=True, timeout=10
+            )
+            if r.returncode == 0:
+                return py
+        except Exception:
+            pass
+    return PYTHON  # fallback al venv aunque falle
+
+PYTHON_PLAYWRIGHT = _find_playwright_python()
+
 SCORES_FILE     = BASE_DIR / 'scores_data.json'
 LIGA_FILE       = BASE_DIR / 'liga_data.json'
 INTERVAL        = 60    # segundos entre ciclos LIVE
@@ -64,10 +93,15 @@ def run_step(script_name):
     if not path.exists():
         log(f'Aviso: {script_name} no encontrado')
         return False
+    # Scripts que necesitan playwright usan PYTHON_PLAYWRIGHT
+    _PLAYWRIGHT_SCRIPTS = {'fetch_flashscore.py', 'fetch_all.py', 'fetch_as.py',
+                           'fetch_besoccer.py', 'fetch_scores.py', 'fetch_history.py',
+                           'fetch_predictions.py', 'fetch_team_assets.py'}
+    py = PYTHON_PLAYWRIGHT if script_name in _PLAYWRIGHT_SCRIPTS else PYTHON
     log(f'  > {script_name}...')
     t0 = time.time()
     r = subprocess.run(
-        [PYTHON, str(path)],
+        [py, str(path)],
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
         env=env_utf8()
