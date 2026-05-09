@@ -186,7 +186,9 @@ def run_full_cycle():
 
 
 def get_live_scores():
-    return load_json(SCORES_FILE).get('live_scores', {})
+    all_live = load_json(SCORES_FILE).get('live_scores', {})
+    # Filtrar entradas FT: son estado visual de cierre, no partidos realmente en vivo
+    return {k: v for k, v in all_live.items() if v.get('minute', '') != 'FT'}
 
 
 def _parse_fixture_dt(f):
@@ -285,6 +287,8 @@ def main():
     last_closing_ts = None  # timestamp del último ciclo de cierre
     # Equipos que estaban en vivo: {home_team: idx_str} para verificar resultado
     last_live_teams = {}  # {home: idx_str}
+    # Snapshot del último live_scores conocido (para mostrar FT en cierre)
+    last_live_snapshot = {}  # {team: {opponent, score_h, score_a, minute, is_home}}
 
     if force_now:
         log('--now: ciclo inmediato forzado')
@@ -313,6 +317,8 @@ def main():
             log(f'[LIVE] {n} partido{plural}: {partidos}')
             was_live = True
             closing_cycles = 0
+            # Guardar snapshot en memoria del último estado live conocido
+            last_live_snapshot = {team: dict(info) for team, info in live.items()}
             # Guardar qué partidos estaban en vivo para verificar resultado después
             liga_data = load_json(LIGA_FILE)
             fix_by_pair = {f'{f["home"]}|{f["away"]}': f for f in liga_data.get('fixtures', [])}
@@ -363,6 +369,20 @@ def main():
             else:
                 pending_str = ', '.join(f'{t}[{i}]' for t, i in pending.items())
                 log(f'[FIN] Ciclo de cierre {closing_cycles}/{CLOSING_EXTRA} — esperando resultado: {pending_str}')
+                # Escribir snapshot FT ANTES del fetch para que la web muestre el marcador final
+                if last_live_snapshot:
+                    try:
+                        sc = load_json(SCORES_FILE)
+                        if not sc.get('live_scores'):  # solo si live_scores está vacío
+                            ft_scores = {team: {**info, 'minute': 'FT'}
+                                         for team, info in last_live_snapshot.items()}
+                            sc['live_scores'] = ft_scores
+                            import json as _json
+                            (BASE_DIR / 'scores_data.json').write_text(
+                                _json.dumps(sc, ensure_ascii=False, indent=2), encoding='utf-8')
+                            log(f'  Snapshot FT escrito: {list(ft_scores.keys())}')
+                    except Exception as _e:
+                        log(f'  WARN no se pudo escribir snapshot FT: {_e}')
                 run_full_cycle()
                 log(f'Proximo ciclo en {STANDBY_SLEEP}s...')
                 time.sleep(STANDBY_SLEEP)

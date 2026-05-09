@@ -2636,7 +2636,10 @@ function computeStandingsForRound(round) {{
   const pts6  = teams[5]?.pts  ?? 0;   // umbral playoff (6º)
   const pts18 = teams[17]?.pts ?? 0;   // 18º (último puesto seguro)
   const pts19 = teams[18]?.pts ?? 0;   // 19º (primer puesto en peligro)
-  const quedanRnd = (LIGA_DATA.total_season_rounds - r) * 3;
+  // Usar el máximo de partidos jugados entre todos los equipos (puede ser > total_rounds
+  // cuando hay jornadas extra tipo J39) para evitar que quedanRnd quede inflado.
+  const _maxPlayed = teams.length > 0 ? Math.max(...teams.map(t => t.played)) : r;
+  const quedanRnd = (LIGA_DATA.total_season_rounds - _maxPlayed) * 3;
   teams.forEach((t, i) => {{
     const pos = i + 1;
     t.secured = null;
