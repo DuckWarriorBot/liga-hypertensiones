@@ -185,6 +185,50 @@ def get_live_scores():
     return load_json(SCORES_FILE).get('live_scores', {})
 
 
+def _parse_fixture_dt(f):
+    """Devuelve (dt_utc, dt_madrid) para un fixture, o (None, None) si no tiene fecha/hora."""
+    d, t = f.get('date', ''), f.get('time', '')
+    if not d or not t:
+        return None, None
+    dp, tp = d.split('/'), t.split(':')
+    if len(dp) < 2 or len(tp) < 2:
+        return None, None
+    try:
+        dd, mm = int(dp[0]), int(dp[1])
+        hh, mi = int(tp[0]), int(tp[1])
+    except ValueError:
+        return None, None
+    yr = 2025 if mm >= 8 else 2026
+    offset = 2 if 4 <= mm <= 10 else 1
+    dt_utc = (datetime.datetime(yr, mm, dd, hh, mi, tzinfo=datetime.timezone.utc)
+              - datetime.timedelta(hours=offset))
+    return dt_utc, datetime.datetime(yr, mm, dd, hh, mi)
+
+
+def get_games_in_progress():
+    """Fixtures que deberían estar en juego ahora (arrancaron hace 0-150 min, sin resultado aún)."""
+    data = load_json(LIGA_FILE)
+    scores = load_json(SCORES_FILE)
+    sb = scores.get('scores_by_team', {})
+    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    in_progress = []
+    for f in data.get('fixtures', []):
+        dt_utc, _ = _parse_fixture_dt(f)
+        if dt_utc is None:
+            continue
+        mins_ago = (now_utc - dt_utc).total_seconds() / 60
+        if 0 <= mins_ago <= 150:
+            # Comprobar si ya tiene resultado en scores_by_team (idx = round-1)
+            rnd = f.get('round')
+            if rnd:
+                idx = str(rnd - 1)
+                home = f.get('home', '')
+                already_done = bool(sb.get(home, {}).get(idx))
+                if not already_done:
+                    in_progress.append(f)
+    return in_progress
+
+
 def get_next_fixture_dt():
     data = load_json(LIGA_FILE)
     now_utc = datetime.datetime.now(datetime.timezone.utc)
@@ -277,23 +321,37 @@ def main():
                 closing_cycles = 0
 
         else:
-            # IDLE / STANDBY
-            fixture, fix_dt = get_next_fixture_dt()
-            if fixture and fix_dt:
-                mins = minutes_until(fix_dt)
-                home = fixture.get('home', '?')
-                away = fixture.get('away', '?')
-                date = fixture.get('date', '')
-                time_s = fixture.get('time', '')
-                if mins <= STANDBY_MINUTES:
-                    log(f'[STANDBY] {home} vs {away} empieza en {mins:.0f}min -- check en {STANDBY_SLEEP}s')
-                    time.sleep(STANDBY_SLEEP)
-                else:
-                    log(f'[IDLE] proximo: {home} vs {away} el {date} {time_s} (en {mins:.0f}min) -- check en {IDLE_SLEEP}s')
-                    time.sleep(IDLE_SLEEP)
+            # IDLE / STANDBY: comprobar si hay partidos que deberían estar en curso
+            in_progress = get_games_in_progress()
+            if in_progress:
+                # Hay partido(s) que deberían estar en vivo según la hora, pero
+                # live_scores está vacío (el scraper no los ha captado todavía).
+                # Lanzar un ciclo para intentar captarlos.
+                names = ' | '.join(f'{f.get("home")} vs {f.get("away")}' for f in in_progress)
+                log(f'[STANDBY-LIVE] Partido(s) en curso según horario: {names} — forzando ciclo')
+                run_full_cycle()
+                was_live = True
+                log(f'Proximo ciclo en {STANDBY_SLEEP}s...')
+                time.sleep(STANDBY_SLEEP)
             else:
-                log('[IDLE] sin proximos partidos -- check en {IDLE_SLEEP}s'.format(IDLE_SLEEP=IDLE_SLEEP))
-                time.sleep(IDLE_SLEEP)
+                fixture, fix_dt = get_next_fixture_dt()
+                if fixture and fix_dt:
+                    mins = minutes_until(fix_dt)
+                    home = fixture.get('home', '?')
+                    away = fixture.get('away', '?')
+                    date = fixture.get('date', '')
+                    time_s = fixture.get('time', '')
+                    if mins <= STANDBY_MINUTES:
+                        log(f'[STANDBY] {home} vs {away} empieza en {mins:.0f}min — ciclo ahora')
+                        run_full_cycle()
+                        log(f'Proximo ciclo en {STANDBY_SLEEP}s...')
+                        time.sleep(STANDBY_SLEEP)
+                    else:
+                        log(f'[IDLE] proximo: {home} vs {away} el {date} {time_s} (en {mins:.0f}min) -- check en {IDLE_SLEEP}s')
+                        time.sleep(IDLE_SLEEP)
+                else:
+                    log('[IDLE] sin proximos partidos -- check en {IDLE_SLEEP}s'.format(IDLE_SLEEP=IDLE_SLEEP))
+                    time.sleep(IDLE_SLEEP)
 
 
 if __name__ == '__main__':

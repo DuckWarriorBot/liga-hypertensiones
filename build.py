@@ -2482,7 +2482,13 @@ let activeChart = 'pos';
 let evolutionChart = null;
 let selectedTeams = new Set();
 
-let currentRound = LIGA_DATA.total_rounds;
+// Auto-detectar si ya hay partidos de la jornada siguiente (scores_by_team tiene idx=total_rounds)
+let currentRound = (() => {{
+  const scMap = SCORES_DATA.scores_by_team || {{}};
+  const nextIdx = String(LIGA_DATA.total_rounds); // 0-based idx de la ronda total_rounds+1
+  const hasNextRound = (LIGA_DATA.teams || []).some(t => scMap[t] && scMap[t][nextIdx]);
+  return LIGA_DATA.total_rounds + (hasNextRound ? 1 : 0);
+}})();
 let standingsRound = currentRound; // which jornada to show in standings
 let formMode = 0; // 0 = general, N = last N jornadas
 let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome, minute}}
@@ -2602,9 +2608,20 @@ function computeStandingsForRound(round) {{
       if (ex.gf !== undefined) gf = ex.gf;
       if (ex.gc !== undefined) gc = ex.gc;
     }}
-    const racha = (() => {{ let c=0; for(let i=res.length-1;i>=0;i--){{ if(res[i]==='D')break; c++; }} return c; }})();
+    // Construir resultados extendidos incluyendo los de scores_by_team (para racha/forma de jornada actual)
+    const extraResArr = [];
+    for (let i = r; i <= extraIdx; i++) {{
+      const sc = teamScores[String(i)];
+      if (!sc) continue;
+      const [a, b] = sc.split('-').map(Number);
+      if (isNaN(a) || isNaN(b)) continue;
+      extraResArr.push(a > b ? 'V' : a === b ? 'E' : 'D');
+    }}
+    const allRes = extraResArr.length > 0 ? [...res, ...extraResArr] : res;
+    const racha = (() => {{ let c=0; for(let i=allRes.length-1;i>=0;i--){{ if(allRes[i]==='D')break; c++; }} return c; }})();
     const played = res.length + extraPlayed;
     return {{ name, wins, draws, losses, played, pts, gf, gc, dif: gf - gc, racha,
+      allRes,  // resultados extendidos para forma/racha en drawStandingsTable
       ppg: played > 0 ? (pts / played).toFixed(2) : '0.00',
       quedan: (LIGA_DATA.total_season_rounds - played) * 3
     }};
@@ -2942,9 +2959,10 @@ function drawStandingsTable() {{
   tbody.innerHTML = standingsData.map(t => {{
     const zone        = getZoneClass(t.pos);
     const securedCls  = t.secured ? 'secured-' + t.secured : '';
-    const results = LIGA_DATA.results_by_team[t.name] || [];
-    // Momentum: PPG últimas 5J vs PPG global
-    const recent5 = results.slice(Math.max(0, standingsRound-5), standingsRound);
+    // resultados extendidos: results_by_team + extras de scores_by_team (para racha/forma con J39+)
+    const results = t.allRes || LIGA_DATA.results_by_team[t.name] || [];
+    // Momentum: PPG últimas 5J vs PPG global (usar resultados extendidos)
+    const recent5 = results.slice(Math.max(0, results.length-5));
     const pts5 = recent5.filter(x=>x==='V').length*3 + recent5.filter(x=>x==='E').length;
     const ppg5 = recent5.length>0 ? pts5/recent5.length : 0;
     const ppgAll = parseFloat(t.ppg);
@@ -2996,8 +3014,8 @@ function drawStandingsTable() {{
       <td>${{t.gc}}</td>
       <td style="color:${{t.dif>0?'var(--win)':t.dif<0?'var(--loss)':'var(--muted)'}};font-weight:600">${{(t.dif>0?'+':'')+t.dif}}</td>
       <td style="color:${{parseFloat(t.ppg)>=2.0?'#4ade80':parseFloat(t.ppg)>=1.5?'#fbbf24':parseFloat(t.ppg)<1.0?'#f87171':'var(--text)'}};font-weight:600">${{t.ppg}}</td>
-      <td>${{formHTML(results.slice(0, standingsRound))}}</td>
-      <td>${{rachaHTML(results.slice(0, standingsRound))}}</td>
+      <td>${{formHTML(results)}}</td>
+      <td>${{rachaHTML(results)}}</td>
       <td>${{situacionHTML(t.situacion, t.pos)}}</td>
       <td>${{quedanCell}}</td>
     </tr>`;
