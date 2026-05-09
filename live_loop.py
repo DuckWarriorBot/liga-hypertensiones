@@ -282,6 +282,7 @@ def main():
     # CLOSING se dispare aunque el partido termine justo antes de arrancar
     was_live = False
     closing_cycles = 0
+    last_closing_ts = None  # timestamp del último ciclo de cierre
 
     if force_now:
         log('--now: ciclo inmediato forzado')
@@ -323,10 +324,14 @@ def main():
                 log('[OK] Resultado registrado. Volviendo a IDLE.')
                 was_live = False
                 closing_cycles = 0
+                last_closing_ts = time.time()  # marcar momento del cierre
 
         else:
             # IDLE / STANDBY: comprobar si hay partidos que deberían estar en curso
-            in_progress = get_games_in_progress()
+            # Respetar ventana de gracia de 10 min tras ciclo de cierre para evitar
+            # re-detectar el mismo partido que acaba de terminar.
+            secs_since_close = (time.time() - last_closing_ts) if last_closing_ts else 99999
+            in_progress = get_games_in_progress() if secs_since_close > 600 else []
             if in_progress:
                 # Hay partido(s) que deberían estar en vivo según la hora, pero
                 # live_scores está vacío (el scraper no los ha captado todavía).
