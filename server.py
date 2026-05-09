@@ -115,6 +115,9 @@ def run_refresh():
         else:
             print(f'  ✓  {script}', flush=True)
 
+    # NOTA: el deploy a IONOS lo gestiona live_loop.py para evitar conflictos.
+    # server.py es un servidor local de desarrollo; no despliega a producción.
+
     with _state_lock:
         _last_updated = datetime.datetime.now().isoformat(timespec='seconds')
     print(f'[{datetime.datetime.now():%H:%M:%S}] ✓ Listo', flush=True)

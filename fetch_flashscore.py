@@ -22,6 +22,7 @@ SCORES_F     = BASE_DIR / 'scores_data.json'
 
 RESULTS_URL  = 'https://www.flashscore.es/futbol/espana/laliga-hypermotion/resultados/'
 FIXTURES_URL = 'https://www.flashscore.es/futbol/espana/laliga-hypermotion/partidos/'
+LIVE_URL     = 'https://www.flashscore.es/futbol/espana/laliga-hypermotion/'
 
 # ── Mapeo nombres Flashscore → nombres internos ──────────────────────────────
 FS_MAP = {
@@ -109,9 +110,10 @@ def find_idx(liga, home_int, away_int, exp_res=None):
 
 def parse_fs_datetime(raw):
     """
-    Convierte texto de Flashscore → (date_str, time_str).
+    Convierte texto de Flashscore → (date_str, time_str) en hora de Madrid.
     Ej: "03.05. 20:30" → ("03/05", "20:30")
          "20:30"        → ("",      "20:30")
+    Flashscore ya muestra las horas en hora local (Madrid/CEST), no en UTC.
     """
     date_str = time_str = ''
     m = re.search(r'(\d{2})\.(\d{2})\.', raw)
@@ -138,6 +140,7 @@ def make_page(pw):
             'Chrome/124.0.0.0 Safari/537.36'
         ),
         locale='es-ES',
+        timezone_id='Europe/Madrid',
         viewport={'width': 1280, 'height': 900},
     )
     # Eliminar la firma de webdriver
@@ -278,19 +281,39 @@ def _parse_events(page, is_results):
 
 def scrape_live_scores(page):
     """
-    Detecta partidos en curso en /partidos/ (ya cargado por scrape_fixtures).
+    Detecta partidos en curso navegando a la URL principal de la competición.
     Un partido está en vivo si su .event__time muestra minutos (ej. "35'") o "HT".
     Devuelve lista de dicts: {home, away, score_h, score_a, minute}.
     """
+    print('  [live] Buscando partidos en vivo...', flush=True)
+    # Navegar a la página principal de la competición (no /partidos/) donde
+    # aparecen los partidos en vivo con su minuto en el marcador.
+    try:
+        page.goto(LIVE_URL, timeout=25000)
+        dismiss_cookies(page)
+        page.wait_for_selector('.event__match', timeout=20000)
+        page.wait_for_timeout(1500)  # breve espera para que cargue el estado live
+    except PWTimeout:
+        print('  ⚠  Timeout en página live, sin partidos en vivo', flush=True)
+        return []
+
     not_mapped = set()
     raw = page.evaluate(r"""
     () => {
       const results = [];
       document.querySelectorAll('.event__match').forEach(el => {
-        const tm = el.querySelector('.event__time');
-        const timeRaw = tm ? tm.innerText.trim() : '';
-        // En vivo: tiene minutos "35'" o "HT" o "45+2'"
-        if (!/\d+'|^HT$/i.test(timeRaw)) return;
+        // Partidos futuros: usan .event__time. Partidos en vivo: usan .event__stage
+        const tm    = el.querySelector('.event__time');
+        const stage = el.querySelector('.event__stage');
+        const timeRaw = tm ? tm.innerText.trim()
+                           : (stage ? stage.innerText.trim() : '');
+        const stageRaw = stage ? stage.innerText.trim() : '';
+        // En vivo: clase CSS event__match--live, o minutos "35'" / "45+2'" / "HT" / "Descanso"
+        const isLiveCls = el.classList.contains('event__match--live');
+        const isLiveTime = /\d+'|^HT$|^Descanso$/i.test(timeRaw) || /\d+'|^HT$|^Descanso$/i.test(stageRaw);
+        if (!isLiveCls && !isLiveTime) return;
+        // Usar el texto de stage si está disponible, si no el time
+        const minuteText = stageRaw || timeRaw;
 
         const home = el.querySelector('.event__homeParticipant, .event__participant--home');
         const away = el.querySelector('.event__awayParticipant, .event__participant--away');
@@ -307,7 +330,7 @@ def scrape_live_scores(page):
         if (!scoreH || !scoreA) return;
 
         results.push({ home: homeName, away: awayName,
-                       scoreH, scoreA, minute: timeRaw });
+                       scoreH, scoreA, minute: minuteText });
       });
       return results;
     }

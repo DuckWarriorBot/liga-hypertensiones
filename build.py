@@ -419,7 +419,7 @@ html = f"""<!DOCTYPE html>
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://hypertensiones.alejandrobeltran.es/logo.png">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 <style>
 /* ===== RESET & BASE ===== */
 *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -516,6 +516,20 @@ header h1 {{
   font-size: 12px;
   color: var(--muted);
   white-space: nowrap;
+  transition: border-color .3s, color .3s;
+}}
+.rounds-badge--active {{
+  border-color: rgba(34,197,94,.6);
+  color: #4ade80;
+}}
+.rounds-badge--live {{
+  border-color: rgba(34,197,94,.6);
+  color: #4ade80;
+  animation: roundsBadgePulse 1.4s ease-in-out infinite;
+}}
+@keyframes roundsBadgePulse {{
+  0%,100% {{ border-color: rgba(34,197,94,.25); box-shadow: none; }}
+  50%      {{ border-color: rgba(34,197,94,.85); box-shadow: 0 0 8px rgba(34,197,94,.4); }}
 }}
 /* ===== SEASON SELECTOR ===== */
 .season-select-wrap {{
@@ -743,8 +757,8 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
   #standingsTable th:nth-child(11) {{ min-width: 120px; }}
 
   /* ===== H2H MATRIX MOBILE ===== */
-  /* Full-bleed */
-  #h2hGrid > div:last-child {{ margin: 0 -20px; }}
+  /* Extender el scroll hasta los bordes de la card */
+  #h2hGrid {{ margin: 0 -20px; padding: 0 20px; }}
   /* Celdas más pequeñas */
   .h2h-matrix {{ font-size: 7px !important; }}
   .h2h-matrix td, .h2h-matrix th {{
@@ -753,21 +767,48 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     height: 16px !important;
   }}
   .h2h-matrix thead tr th:first-child {{
-    min-width: 70px !important;
-    font-size: 8px !important;
+    min-width: 26px !important;
+    width: 26px !important;
   }}
   .h2h-matrix tbody tr td:first-child {{
-    font-size: 8px !important;
-    padding-right: 4px !important;
-    min-width: 70px;
-    max-width: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    min-width: 26px !important;
+    max-width: 26px !important;
+    width: 26px !important;
+    text-align: center;
+    padding: 0 1px !important;
   }}
+  .h2h-matrix tbody tr td:first-child .h2h-row-name {{ display: none; }}
+  .h2h-matrix tbody tr td:first-child .h2h-row-badge {{ display: inline-block !important; }}
   .h2h-matrix thead tr th:not(:first-child) img {{
     width: 14px !important;
     height: 14px !important;
+  }}
+  @media (max-width: 600px) {{
+    .h2h-matrix thead tr th:first-child {{ min-width: 26px !important; width: 26px !important; }}
+    .h2h-matrix tbody tr td:first-child {{ min-width: 26px !important; max-width: 26px !important; text-align:center; padding-right:1px !important; }}
+    .h2h-matrix tbody tr td:first-child .h2h-row-name {{ display: none; }}
+    .h2h-matrix tbody tr td:first-child .h2h-row-badge {{ display: inline-block !important; }}
+  }}
+
+  /* ===== FILTRAR EQUIPOS (ANÁLISIS) MOBILE ===== */
+  #analisisTeamSelector {{
+    display: grid !important;
+    grid-template-columns: repeat(11, 1fr) !important;
+    overflow: hidden !important;
+    gap: 2px !important;
+    padding: 6px !important;
+  }}
+  #analisisTeamSelector .team-check-badge {{
+    padding: 1px !important;
+    justify-content: center;
+    width: 100%;
+  }}
+  #analisisTeamSelector .team-check-badge img {{
+    width: 100% !important;
+    height: auto !important;
+    max-width: 26px !important;
+    max-height: 26px !important;
+    display: block;
   }}
 }}
 
@@ -793,6 +834,39 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   display: flex;
   align-items: center;
   gap: 8px;
+}}
+/* Tarjetas colapsables en pestaña Análisis */
+.card-title.collapsible {{
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}}
+.card-title.collapsible::after {{
+  content: '▲';
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform .25s;
+  flex-shrink: 0;
+}}
+.card-title.collapsible.collapsed {{
+  margin-bottom: 0;
+}}
+.card-title.collapsible.collapsed::after {{
+  transform: rotate(180deg);
+}}
+.card-body {{
+  overflow: hidden;
+  transition: max-height .3s ease, opacity .25s ease, margin-top .25s ease;
+  max-height: 3000px;
+  opacity: 1;
+  margin-top: 14px;
+}}
+.card-body.collapsed {{
+  max-height: 0 !important;
+  opacity: 0;
+  margin-top: 0;
 }}
 .card-legend {{
   margin-top: 14px;
@@ -833,34 +907,28 @@ main {{ padding: 24px; max-width: 1400px; margin: 0 auto; }}
   .analisis-bottom-grid {{ grid-template-columns: 1fr; }}
 }}
 
-/* Layout interno del radar: lista equipo izquierda + chart derecha */
+/* Layout interno del radar: selector arriba, chart abajo */
 .radar-layout {{
   display: flex;
-  gap: 14px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
 }}
 .radar-team-list {{
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
   gap: 3px;
-  min-width: 120px;
-  max-width: 140px;
-  max-height: 360px;
-  overflow-y: auto;
-  flex-shrink: 0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  width: 100%;
+  justify-items: center;
 }}
 .radar-team-list .radar-team-btn {{
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
-  border-radius: 6px;
-  padding: 4px 8px;
+  border-radius: 5px;
+  padding: 2px;
+  gap: 0;
 }}
-@media (max-width: 889px) {{
-  .radar-layout {{ flex-direction: column; }}
-  .radar-team-list {{ flex-direction: row; flex-wrap: wrap; max-width: 100%; max-height: none; min-width: 0; }}
-}}
+.radar-team-list .radar-team-btn span {{ display: none; }}
+.radar-team-list .radar-team-btn img {{ width: 100% !important; height: auto !important; max-width: 28px !important; max-height: 28px !important; aspect-ratio: 1; object-fit: contain; display: block; }}
 
 /* ===== RADAR TEAM SELECTOR ===== */
 .radar-team-btn {{
@@ -1192,6 +1260,12 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
 .live-V {{ border: 2px solid #22c55e !important; animation: neon-pulse-V 1.2s ease-in-out infinite; }}
 .live-E {{ border: 2px solid #fbbf24 !important; animation: neon-pulse-E 1.2s ease-in-out infinite; }}
 .live-D {{ border: 2px solid #ef4444 !important; animation: neon-pulse-D 1.2s ease-in-out infinite; }}
+@keyframes liveRowGlow-V {{ 0%,100% {{ outline-color: rgba(34,197,94,.25); }} 50% {{ outline-color: rgba(34,197,94,.65); }} }}
+@keyframes liveRowGlow-E {{ 0%,100% {{ outline-color: rgba(251,191,36,.25); }} 50% {{ outline-color: rgba(251,191,36,.65); }} }}
+@keyframes liveRowGlow-D {{ 0%,100% {{ outline-color: rgba(239,68,68,.25); }} 50% {{ outline-color: rgba(239,68,68,.65); }} }}
+.live-row-V {{ outline: 2px solid rgba(34,197,94,.4); outline-offset:-1px; animation: liveRowGlow-V 1.4s ease-in-out infinite; }}
+.live-row-E {{ outline: 2px solid rgba(251,191,36,.4); outline-offset:-1px; animation: liveRowGlow-E 1.4s ease-in-out infinite; }}
+.live-row-D {{ outline: 2px solid rgba(239,68,68,.4);  outline-offset:-1px; animation: liveRowGlow-D 1.4s ease-in-out infinite; }}
 .result-letter {{
   width: 28px;
   height: 28px;
@@ -1270,8 +1344,8 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
 
 /* ===== LIVE MATCH BAR ===== */
 .live-bar {{
-  background: var(--card2);
-  border-bottom: 1px solid var(--border);
+  background: transparent;
+  border-top: 1px solid var(--border);
   padding: 5px 16px;
   display: none;
   flex-wrap: wrap;
@@ -1280,6 +1354,12 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   font-size: 12px;
 }}
 .live-bar.has-live {{ display: flex; }}
+.live-bar-label {{
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-right: 4px;
+}}
 /* H2H cross-highlight */
 .h2h-matrix td, .h2h-matrix th {{ transition: opacity 0.1s; }}
 .h2h-matrix.h2h-hov td:not(.h2h-cross),
@@ -1303,8 +1383,13 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   padding: 1px 5px;
   font-weight: 700;
   font-size: 12px;
-  min-width: 32px;
+  min-width: 52px;
   text-align: center;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
 }}
 
 /* ===== STANDINGS ROUND NAV ===== */
@@ -2012,18 +2097,16 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   </div>
   <nav id="mainNav">
     <button class="active" data-tab="clasificacion" onclick="switchTab('clasificacion')">🏆 Clasificación</button>
-    <button data-tab="evolucion" onclick="switchTab('evolucion')">📈 Evolución</button>
     <button data-tab="resultados" onclick="switchTab('resultados')">📋 Resultados</button>
-    <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
-    <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
     <button data-tab="playoff" onclick="switchTab('playoff')">🏆 Playoff</button>
+    <button data-tab="equipos" onclick="switchTab('equipos')">👕 Equipos</button>
+    <button data-tab="evolucion" onclick="switchTab('evolucion')">📈 Evolución</button>
+    <button data-tab="predicciones" onclick="switchTab('predicciones')">🔮 Predicciones</button>
     <button data-tab="analisis" onclick="switchTab('analisis')">📊 Análisis</button>
   </nav>
+  <div class="live-bar" id="liveBar"></div>
   </div>
 </header>
-
-<!-- LIVE MATCH BAR -->
-<div class="live-bar" id="liveBar"></div>
 
 <main>
 
@@ -2054,6 +2137,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
           <tr>
             <th onclick="sortTable('pos')" title="Posición">#</th>
             <th onclick="sortTable('name')" title="Equipo">Equipo</th>
+            <th onclick="sortTable('pts')" style="min-width:160px">Puntos</th>
             <th onclick="sortTable('played')">PJ</th>
             <th onclick="sortTable('wins')">PG</th>
             <th onclick="sortTable('draws')">PE</th>
@@ -2062,7 +2146,6 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
             <th onclick="sortTable('gc')" title="Goles en contra">GC</th>
             <th onclick="sortTable('dif')" title="Diferencia de goles">DIF</th>
             <th onclick="sortTable('ppg')" title="Puntos por partido">PPG</th>
-            <th onclick="sortTable('pts')" style="min-width:160px">Puntos</th>
             <th title="Últimas 5">Forma</th>
             <th onclick="sortTable('racha')" title="Partidos consecutivos sin perder">Racha</th>
             <th onclick="sortTable('situacion')" title="Situación en la liga" style="min-width:140px">Situación</th>
@@ -2192,7 +2275,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
           <button class="hist-sort-btn" onclick="analisisSelectNone()">Ninguno</button>
         </div>
       </div>
-      <div class="team-selector" id="analisisTeamSelector" style="max-height:100px;margin-bottom:0"></div>
+      <div class="team-selector" id="analisisTeamSelector" style="max-height:80px;margin-bottom:0"></div>
     </div>
     <div class="analisis-top-grid">
       <div class="card">
@@ -2234,20 +2317,52 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
             <th title="Puntos si empata todo lo que queda" style="color:#fbbf24">Con E</th>
             <th title="¿Puede alcanzar el ascenso directo?">Ascenso</th>
             <th title="¿Puede alcanzar el playoff?">Playoff</th>
-            <th title="¿Puede salvarse matemáticamente? (sus puntos máximos ≥ puntos del 18º)">Salvación</th>
+            <th title="¿Puede asegurar la permanencia matemáticamente? (sus puntos máximos ≥ puntos del 18º)">Permanencia</th>
             <th title="¿Puede aún descender matemáticamente? (el 18º puede alcanzarle con sus puntos máximos)">Descenso</th>
           </tr></thead>
           <tbody id="scenariosBody"></tbody>
         </table>
       </div>
-      <div class="card-legend"><b>Máx.</b> puntos actuales + (jornadas restantes × 3) &nbsp;·&nbsp; <b>Con E</b> puntos si empata todos los partidos que quedan &nbsp;·&nbsp; <b>Ascenso ✓</b> Máx. ≥ puntos del 2º &nbsp;·&nbsp; <b>Playoff ✓</b> Máx. ≥ puntos del 6º &nbsp;·&nbsp; <b>Salvación ✓</b> Máx. ≥ puntos actuales del 18º (aún puede salvarse) &nbsp;·&nbsp; <b>Descenso ✓ rojo</b> el 18º puede alcanzarle ganando todo (aún en peligro matemático) · ✗ gris = ya imposible</div>
+      <div class="card-legend"><b>Máx.</b> puntos actuales + (jornadas restantes × 3) &nbsp;·&nbsp; <b>Con E</b> puntos si empata todos los partidos que quedan &nbsp;·&nbsp; <b>Ascenso ✓</b> Máx. ≥ puntos del 2º &nbsp;·&nbsp; <b>Playoff ✓</b> Máx. ≥ puntos del 6º &nbsp;·&nbsp; <b>Permanencia ✓</b> Máx. ≥ puntos actuales del 18º (permanencia aún posible) &nbsp;·&nbsp; <b>Descenso ✓ rojo</b> el 18º puede alcanzarle ganando todo (aún en peligro matemático) · ✗ gris = ya imposible</div>
     </div>
-    <!-- Local vs Visitante -->
-    <div class="card">
-      <div class="card-title">🏠✈️ Rendimiento Local vs Visitante</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Puntos obtenidos como local y como visitante · ordenados por total de puntos</div>
-      <div class="chart-container" style="height:480px"><canvas id="localVisitanteChart"></canvas></div>
-      <div class="card-legend"><b>Pts Local/Visitante</b> suma de puntos obtenidos jugando en casa / a domicilio &nbsp;·&nbsp; <b>GF Local/Visitante</b> goles marcados en casa / fuera &nbsp;·&nbsp; Calculado sobre todos los partidos jugados de la temporada · Los equipos aparecen ordenados por puntos totales (mayor arriba)</div>
+    <!-- Fila: Local vs Visitante + ¿Qué diferencia ganar de perder? -->
+    <div class="analisis-top-grid">
+      <div class="card">
+        <div class="card-title">🏠✈️ Rendimiento Local vs Visitante</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Puntos y goles obtenidos jugando en casa vs a domicilio · ordenados por puntos totales</div>
+        <div class="chart-container" style="height:480px"><canvas id="localVisitanteChart"></canvas></div>
+        <div class="card-legend"><b>Pts Local/Visitante</b> suma de puntos obtenidos jugando en casa / a domicilio &nbsp;·&nbsp; <b>GF Local/Visitante</b> goles marcados en casa / fuera &nbsp;·&nbsp; Los equipos aparecen ordenados por puntos totales (mayor arriba)</div>
+      </div>
+
+      <!-- Gana Quien: % diferencia V vs D por métrica -->
+      <div class="card" id="ganaQuienCard">
+        <div class="card-title">🏆 ¿Qué separa al ganador del perdedor?</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Diferencia porcentual de cada estadística en los partidos ganados vs los perdidos &nbsp;·&nbsp; <span style="color:#39FF14;font-weight:600">verde</span> = el que gana tiene más &nbsp;·&nbsp; <span style="color:#ef4444;font-weight:600">rojo</span> = el que gana tiene menos</div>
+        <div class="chart-container" style="height:300px"><canvas id="ganaQuienChart"></canvas></div>
+        <div class="card-legend">Calculado sobre todos los partidos con estadísticas disponibles (excluye empates) &nbsp;·&nbsp; <b>Posesión en rojo:</b> los ganadores tienen <i>menos</i> posesión → Segunda División es una liga de contragolpe &nbsp;·&nbsp; <b>Disparos fuera:</b> disparan más al arco, aunque sea por fuera &nbsp;·&nbsp; <b>Pérdidas:</b> el que menos pierde el balón gana más &nbsp;·&nbsp; Las barras más largas son los mejores predictores de resultado</div>
+      </div>
+    </div>
+
+    <!-- Fila: Eficiencia ofensiva + ADN táctico -->
+    <div class="analisis-bottom-grid">
+      <!-- Eficiencia ofensiva: scatter precisión vs GF/PJ -->
+      <div class="card" id="eficienciaCard">
+        <div class="card-title">🎯 Eficiencia ofensiva — precisión vs efectividad</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px"><b>Eje X:</b> % de disparos que van a puerta · <b>Eje Y:</b> goles por partido · Las líneas marcan las medianas de la liga</div>
+        <div class="chart-container" style="height:400px"><canvas id="eficienciaChart"></canvas></div>
+        <div class="card-legend"><span style="color:#a78bfa">⚡ Sniper</span> (dcha-arriba): disparan con precisión <i>y</i> convierten muchos goles &nbsp;·&nbsp; <span style="color:#94a3b8">Eficaz sin brillar</span> (izq-arriba): muchos goles aunque con poca precisión bruta (contraataques, penaltis…) &nbsp;·&nbsp; <span style="color:#94a3b8">Manguera</span> (dcha-abajo): disparan bien dirigido pero no convierten &nbsp;·&nbsp; <span style="color:#94a3b8">Estéril</span> (izq-abajo): poca precisión y poco gol &nbsp;·&nbsp; Precisión = disparos a puerta ÷ total disparos</div>
+      </div>
+
+      <!-- Radar ADN táctico: ganando vs perdiendo -->
+      <div class="card" id="vdRadarCard">
+        <div class="card-title">🔬 Modo Ganador — ¿cómo juega un equipo cuando gana?</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Selecciona un equipo · <span style="color:#39FF14;font-weight:600">verde</span> = estadísticas medias en sus victorias · <span style="color:#ef4444;font-weight:600">rojo</span> = en sus derrotas · cuanto mayor la diferencia entre los dos polígonos, más cambia su estilo de juego según el resultado</div>
+        <div style="margin-bottom:12px">
+          <select id="vdRadarTeamSelect" onchange="onVDRadarTeamChange(this.value)" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer"></select>
+        </div>
+        <div class="chart-container" style="height:340px"><canvas id="vdRadarChart"></canvas></div>
+        <div class="card-legend"><b>Escala global</b>: cada eje va de 0 (peor valor de toda la liga en esa métrica) a 100 (mejor valor) &nbsp;·&nbsp; Si los dos polígonos se superponen, el equipo juega igual gane o pierda &nbsp;·&nbsp; Si el <span style="color:#39FF14">verde</span> supera al <span style="color:#ef4444">rojo</span> en Disparos o Recuperaciones, tiene un <b>modo ganador claro</b> &nbsp;·&nbsp; <b>Pérdidas y Fueras de juego</b> están invertidos (menos = mejor = barra más alta)</div>
+      </div>
     </div>
 
     <!-- Estadísticas Avanzadas AS.com -->
@@ -2284,7 +2399,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
     <div class="card">
       <div class="card-title">⚔️ Resultados directos (todos vs todos)</div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Fila = equipo local · Columna = equipo visitante · marcador del partido de ida (local → visitante)</div>
-      <div id="h2hGrid" style="overflow-x:auto"></div>
+      <div id="h2hGrid" style="overflow-x:auto;-webkit-overflow-scrolling:touch"></div>
       <div class="card-legend"><b>Fila</b> equipo local &nbsp;·&nbsp; <b>Columna</b> equipo visitante &nbsp;·&nbsp; Cada celda muestra el marcador del partido (goles local – goles visitante) &nbsp;·&nbsp; <span style="color:#39ff14">■</span> Victoria del equipo de la fila &nbsp;·&nbsp; <span style="color:#f59e0b">■</span> Empate &nbsp;·&nbsp; <span style="color:#ef4444">■</span> Derrota del equipo de la fila &nbsp;·&nbsp; <b>Cruz de Selección</b> activa una capa de oscurecimiento fuera de la fila y columna del cursor para facilitar la lectura</div>
     </div>
 
@@ -2368,7 +2483,7 @@ let evolutionChart = null;
 let selectedTeams = new Set();
 
 let currentRound = LIGA_DATA.total_rounds;
-let standingsRound = LIGA_DATA.total_rounds; // which jornada to show in standings
+let standingsRound = currentRound; // which jornada to show in standings
 let formMode = 0; // 0 = general, N = last N jornadas
 let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome, minute}}
 
@@ -2473,7 +2588,7 @@ function computeStandingsForRound(round) {{
     const played = res.length;
     return {{ name, wins, draws, losses, played, pts, gf, gc, dif: gf - gc, racha,
       ppg: played > 0 ? (pts / played).toFixed(2) : '0.00',
-      quedan: (LIGA_DATA.total_season_rounds - r) * 3
+      quedan: (LIGA_DATA.total_season_rounds - played) * 3
     }};
   }});
   applyTiebreakSort(teams, r);
@@ -2569,7 +2684,7 @@ function computeFormStandings(n) {{
     const played = res.length;
     return {{ name, wins, draws, losses, played, pts, gf, gc, dif: gf-gc, racha,
       ppg: played > 0 ? (pts/played).toFixed(2) : '0.00',
-      quedan: (LIGA_DATA.total_season_rounds - r) * 3,
+      quedan: (LIGA_DATA.total_season_rounds - played) * 3,
       situacion: ''
     }};
   }}).sort((a,b) => b.pts - a.pts || b.wins - a.wins || b.dif - a.dif)
@@ -2593,10 +2708,12 @@ function switchTab(name) {{
   const btn = document.getElementById('hamburgerBtn');
   if (nav) nav.classList.remove('nav-open');
   if (btn) btn.classList.remove('open');
+  if (name === 'clasificacion') renderStandings();
   if (name === 'evolucion' && !evolutionChart) initEvolutionChart();
   if (name === 'resultados') renderRoundResults();
   if (name === 'predicciones') renderPredictions();
   if (name === 'analisis') initAnalysisTab();
+  if (name === 'equipos') renderTeams();
   if (name === 'playoff') renderPlayoff();
 }}
 
@@ -2696,26 +2813,107 @@ function liveScoreCell(name) {{
   if (!ls) return '';
   const col = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
   const score = ls.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
-  return `<span class="live-score-pill" style="background:${{col}}22;color:${{col}};margin-left:4px"><span class="live-dot-indicator"></span>${{score}}</span>`;
+  const minRaw = ls.minute || '';
+  const minStr = (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
+  return `<span class="live-score-pill" style="background:${{col}}22;color:${{col}}"><span class="live-dot-indicator"></span>${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>`;
 }}
 
 function changeStandingsRound(delta) {{
-  if (delta === 999) standingsRound = LIGA_DATA.total_rounds;
-  else standingsRound = Math.max(1, Math.min(LIGA_DATA.total_rounds, standingsRound + delta));
+  const maxR = currentRound;
+  if (delta === 999) standingsRound = maxR;
+  else standingsRound = Math.max(1, Math.min(maxR, standingsRound + delta));
   sortCol = 'pos'; sortAsc = true;
   renderStandings();
 }}
 
 function renderStandings() {{
   standingsData = computeStandings().map((t,i)=>({{...t, pos:i+1}}));
+  // Inyectar resultados en vivo (provisional) cuando estamos en la jornada actual
+  const liveEntries = Object.entries(liveState);
+  if (!_historicalMode && liveEntries.length > 0 && standingsRound >= LIGA_DATA.total_rounds) {{
+    liveEntries.forEach(([name, ls]) => {{
+      const t = standingsData.find(x => x.name === name);
+      if (!t) return;
+      t.pts     += ls.diff > 0 ? 3 : ls.diff === 0 ? 1 : 0;
+      t.gf      += ls.isHome ? ls.homeGoals : ls.awayGoals;
+      t.gc      += ls.isHome ? ls.awayGoals : ls.homeGoals;
+      t.dif      = t.gf - t.gc;
+      t.played  += 1;
+      t.ppg      = t.played > 0 ? (t.pts / t.played).toFixed(2) : '0.00';
+      if (ls.diff > 0) t.wins += 1;
+      else if (ls.diff === 0) t.draws += 1;
+      else t.losses += 1;
+    }});
+    // Re-sort con datos live: pts → dif → gf → nombre
+    standingsData.sort((a,b) => b.pts-a.pts || b.dif-a.dif || b.gf-a.gf || a.name.localeCompare(b.name));
+    standingsData.forEach((t,i) => t.pos = i+1);
+
+    // Recalcular situacion y quedan con las nuevas posiciones y puntos
+    const liveRnd   = currentRound;
+    const quedanLive = (LIGA_DATA.total_season_rounds - liveRnd) * 3;
+    const lPts2  = standingsData[1]?.pts  ?? 0;
+    const lPts3  = standingsData[2]?.pts  ?? 0;
+    const lPts6  = standingsData[5]?.pts  ?? 0;
+    const lPts18 = standingsData[17]?.pts ?? 0;
+    const lPts19 = standingsData[18]?.pts ?? 0;
+    standingsData.forEach((t, i) => {{
+      const pos = i + 1;
+      // quedan: basado en partidos reales jugados por cada equipo
+      // Si está en vivo ahora mismo, ese partido ya cuenta como jugado
+      const enVivo = !!liveState[t.name];
+      t.quedan = (LIGA_DATA.total_season_rounds - t.played) * 3;
+      t.secured = null;
+      if (quedanLive === 0) {{
+        if      (pos <= 2)  {{ t.situacion = 'ASCENSO';    t.secured = 'promotion'; }}
+        else if (pos <= 6)  {{ t.situacion = 'PLAYOFF';    t.secured = 'playoff'; }}
+        else if (pos <= 18) {{ t.situacion = 'PERMANENCIA'; t.secured = 'permanence'; }}
+        else                {{ t.situacion = 'DESCENSO';   t.secured = 'relegation'; }}
+        return;
+      }}
+      const qRef = quedanLive; // referencia de pts pendientes desde jornada live
+      if (pos <= 2) {{
+        const dAs = qRef - (t.pts - lPts3);
+        if (dAs <= 0) {{ t.situacion = 'ASCENSO ASEGURADO'; t.secured = 'promotion'; }}
+        else t.situacion = `A ${{dAs}} DE ASEGURAR`;
+      }} else if (pos <= 6) {{
+        const lPts7 = standingsData[6]?.pts ?? 0;
+        const dAsc  = lPts2 - t.pts;
+        const dOv7  = t.pts - lPts7;
+        if (dAsc <= qRef) {{
+          t.situacion = dAsc === 0 ? 'IGUALA 2º EN PTS' : `A ${{dAsc}} DEL ASCENSO DIRECTO`;
+          if (dOv7 > qRef) t.secured = 'playoff';
+        }} else if (dOv7 > qRef) {{
+          t.situacion = 'PLAYOFF ASEGURADO'; t.secured = 'playoff';
+        }} else {{
+          t.situacion = 'EN PLAYOFF';
+        }}
+      }} else if (pos <= 18) {{
+        const dPlay = lPts6 - t.pts;
+        const dDesc = t.pts - lPts19;
+        const safe  = dDesc > qRef;
+        if (safe && dPlay > qRef) {{ t.situacion = 'PERMANENCIA'; t.secured = 'permanence'; }}
+        else if (dPlay <= qRef && (safe || dPlay <= dDesc)) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
+        else t.situacion = `A ${{dDesc}} DEL DESCENSO`;
+      }} else {{
+        const needed = lPts18 - t.pts;
+        if (needed > qRef) {{ t.situacion = 'DESCENSO'; t.secured = 'relegation'; }}
+        else t.situacion = `A ${{needed}} DE SALVACIÓN`;
+      }}
+    }});
+  }}
   const lbl = document.getElementById('standingsRoundLabel');
-  if (lbl) lbl.textContent = `J${{standingsRound}} / ${{LIGA_DATA.total_rounds}}`;
+  const maxR = currentRound;
+  if (lbl) {{
+    const liveTag = (!_historicalMode && standingsRound >= currentRound && currentRound > LIGA_DATA.total_rounds)
+      ? ' <span style="color:#4ade80;font-size:10px">🔴</span>' : '';
+    lbl.innerHTML = `J${{standingsRound}} / ${{maxR}}${{liveTag}}`;
+  }}
   const note = document.getElementById('standingsRoundNote');
   if (note) note.textContent = '';
   const prev = document.getElementById('btnStandPrev');
   const next = document.getElementById('btnStandNext');
   if (prev) prev.disabled = standingsRound <= 1;
-  if (next) next.disabled = standingsRound >= LIGA_DATA.total_rounds;
+  if (next) next.disabled = standingsRound >= maxR;
   drawStandingsTable();
 }}
 function drawStandingsTable() {{
@@ -2744,23 +2942,35 @@ function drawStandingsTable() {{
     const kPrimary   = kf.primary   || color;
     const kSecondary = kf.secondary || '#1a2236';
     const liveSc = liveScoreCell(t.name);
+    const liveRowCls = liveState[t.name]
+      ? (liveState[t.name].diff > 0 ? ' live-row-V' : liveState[t.name].diff < 0 ? ' live-row-D' : ' live-row-E')
+      : '';
 
     // Columna "Quedan": puntos por disputar para todos los equipos
     const quedanCell = `<span class="quedan-badge">${{t.quedan}} pts</span>`;
 
     return `
-    <tr class="${{zone}} ${{securedCls}}" style="background:linear-gradient(90deg,${{kit}}18 0%,transparent 120px)">
+    <tr class="${{zone}} ${{securedCls}}${{liveRowCls}}" style="background:linear-gradient(90deg,${{kit}}18 0%,transparent 120px)">
       <td>${{posBadge(t.pos)}}</td>
       <td>
         <div class="team-cell">
           ${{crestHTML(t.name)}}
-          <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
-            <span class="team-name-text">${{t.name}}</span>${{mArrow}}
+          <div style="display:flex;flex-direction:column;gap:1px;min-width:0;flex:1">
+            <div style="display:flex;align-items:center;gap:0;flex-wrap:nowrap">
+              <span class="team-name-text">${{t.name}}</span>${{mArrow}}
+            </div>
             ${{isCurrent ? predMiniBar(t.name) : ''}}
           </div>
+          ${{liveSc}}
         </div>
       </td>
-      <td>${{t.played}}${{liveSc}}</td>
+      <td>
+        <div class="pts-bar-cell">
+          <span class="pts-value">${{t.pts}}</span>
+          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:linear-gradient(180deg,${{kPrimary}} 50%,${{kSecondary}} 50%);box-shadow:0 0 0 1.5px ${{kPrimary}};box-sizing:border-box"></div></div>
+        </div>
+      </td>
+      <td>${{t.played}}</td>
       <td style="color:var(--win)">${{t.wins}}</td>
       <td style="color:var(--draw)">${{t.draws}}</td>
       <td style="color:var(--loss)">${{t.losses}}</td>
@@ -2768,12 +2978,6 @@ function drawStandingsTable() {{
       <td>${{t.gc}}</td>
       <td style="color:${{t.dif>0?'var(--win)':t.dif<0?'var(--loss)':'var(--muted)'}};font-weight:600">${{(t.dif>0?'+':'')+t.dif}}</td>
       <td style="color:${{parseFloat(t.ppg)>=2.0?'#4ade80':parseFloat(t.ppg)>=1.5?'#fbbf24':parseFloat(t.ppg)<1.0?'#f87171':'var(--text)'}};font-weight:600">${{t.ppg}}</td>
-      <td>
-        <div class="pts-bar-cell">
-          <span class="pts-value">${{t.pts}}</span>
-          <div class="pts-bar"><div class="pts-fill" style="width:${{pct}}%;background:linear-gradient(180deg,${{kPrimary}} 50%,${{kSecondary}} 50%);box-shadow:0 0 0 1.5px ${{kPrimary}};box-sizing:border-box"></div></div>
-        </div>
-      </td>
       <td>${{formHTML(results.slice(0, standingsRound))}}</td>
       <td>${{rachaHTML(results.slice(0, standingsRound))}}</td>
       <td>${{situacionHTML(t.situacion, t.pos)}}</td>
@@ -3046,26 +3250,61 @@ function renderRoundResults() {{
   }}
   grid.innerHTML = teamList.map(name => {{
     if (!played) {{
-      // Rival correcto desde opponents_by_team; fecha/hora desde allFix
-      const opp2 = oppsMap[name]?.[idx];
+      // Buscar fixture directamente en LIGA_DATA.fixtures (más fiable que oppsMap)
+      const fxRaw = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
       let fx = null;
-      if (opp2) {{
-        // ¿juega en casa o fuera?
-        const keyHome = name + '|' + opp2;
-        const keyAway = opp2 + '|' + name;
-        if (allFix[keyHome]) {{
-          fx = {{ opp: opp2, isHome: true,  ...allFix[keyHome] }};
-        }} else if (allFix[keyAway]) {{
-          fx = {{ opp: opp2, isHome: false, ...allFix[keyAway] }};
-        }} else {{
-          // rival conocido pero sin fecha aún
-          fx = {{ opp: opp2, isHome: null, date: '', time: '' }};
+      if (fxRaw) {{
+        const isHome2 = fxRaw.home === name;
+        fx = {{ opp: isHome2 ? fxRaw.away : fxRaw.home, isHome: isHome2, date: fxRaw.date, time: fxRaw.time }};
+      }} else {{
+        // Fallback a oppsMap si no hay fixture
+        const opp2 = oppsMap[name]?.[idx];
+        if (opp2) {{
+          const keyHome = name + '|' + opp2;
+          const keyAway = opp2 + '|' + name;
+          if (allFix[keyHome]) {{
+            fx = {{ opp: opp2, isHome: true,  ...allFix[keyHome] }};
+          }} else if (allFix[keyAway]) {{
+            fx = {{ opp: opp2, isHome: false, ...allFix[keyAway] }};
+          }} else {{
+            fx = {{ opp: opp2, isHome: null, date: '', time: '' }};
+          }}
         }}
       }}
       if (fx) {{
         const oppCrestF = crestHTML(fx.opp, 22);
         const venueLabel = fx.isHome === true ? 'Casa' : fx.isHome === false ? 'Fuera' : '';
         const venueFCol  = 'var(--muted)';
+        // Detectar si el partido está en curso ahora mismo
+        const lsName = liveState[name];
+        const lsOpp  = liveState[fx.opp];
+        const ls = (lsName && lsName.opponent === fx.opp) ? lsName
+                 : (lsOpp  && lsOpp.opponent  === name)   ? lsOpp : null;
+        if (ls) {{
+          // Partido en VIVO
+          const teamDiff = ls.opponent === fx.opp ? ls.diff : -ls.diff;
+          const liveClass = teamDiff > 0 ? 'live-V' : teamDiff < 0 ? 'live-D' : 'live-E';
+          const liveCol   = teamDiff > 0 ? '#22c55e' : teamDiff < 0 ? '#ef4444' : '#fbbf24';
+          const scoreH    = ls.isHome ? ls.homeGoals : ls.awayGoals;
+          const scoreA    = ls.isHome ? ls.awayGoals : ls.homeGoals;
+          const scoreDisp = fx.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
+          const minRaw    = ls.minute || '';
+          const minStr    = minRaw === 'HT' ? "D'" : minRaw;
+          return `<div class="result-card ${{liveClass}}" style="">
+            <div class="team-cell" style="gap:8px">
+              <div style="flex-shrink:0">${{crestHTML(name)}}</div>
+              <div>
+                <div class="result-team">${{name}}</div>
+                <div class="result-detail" style="display:flex;align-items:center;gap:4px">${{oppCrestF}}<span>${{fx.opp}}</span></div>
+                <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
+                  <span style="font-size:13px;font-weight:800;letter-spacing:1px;color:${{liveCol}};background:${{liveCol}}22;border-radius:6px;padding:1px 7px;white-space:nowrap">${{scoreDisp}}</span>
+                  <span class="live-score-pill" style="background:${{liveCol}}22;color:${{liveCol}};font-size:9px;padding:1px 5px"><span class="live-dot-indicator"></span>${{minStr || '🔴'}}</span>
+                  ${{venueLabel ? `<span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueLabel}}</span>` : ''}}
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }}
         return `<div class="result-card" style="opacity:.8;border-style:dashed">
           <div class="team-cell" style="gap:8px">
             <div style="flex-shrink:0">${{crestHTML(name)}}</div>
@@ -3087,9 +3326,35 @@ function renderRoundResults() {{
     }}
     const res = LIGA_DATA.results_by_team[name];
     const r = res && res[idx];
-    if (!r) return `<div class="result-card" style="opacity:.4"><div><div class="result-team">${{name}}</div><div class="result-detail">Sin resultado</div></div></div>`;
+    if (!r) {{
+      // Sin resultado aún: buscar fixture directamente en LIGA_DATA.fixtures (más fiable que oppsMap para jornadas futuras)
+      const fx0raw = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
+      if (fx0raw) {{
+        const opp0 = fx0raw.home === name ? fx0raw.away : fx0raw.home;
+        const isHome0 = fx0raw.home === name;
+        const oppCrest0 = crestHTML(opp0, 22);
+        const venueLabel0 = isHome0 ? 'Casa' : 'Fuera';
+        const dateTime0 = [fx0raw.date, fx0raw.time].filter(Boolean).join(' ');
+        return `<div class="result-card" style="opacity:.5;border-style:dashed">
+          <div class="team-cell" style="gap:8px">
+            <div style="flex-shrink:0">${{crestHTML(name)}}</div>
+            <div>
+              <div class="result-team">${{name}}</div>
+              <div class="result-detail" style="display:flex;align-items:center;gap:4px">${{oppCrest0}}<span>${{opp0}}</span></div>
+              <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
+                ${{dateTime0 ? `<span style="font-size:10px;font-weight:700;color:var(--text)">${{dateTime0}}</span>` : ''}}
+                <span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueLabel0}}</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }}
+      return `<div class="result-card" style="opacity:.4"><div><div class="result-team">${{name}}</div><div class="result-detail">Sin resultado</div></div></div>`;
+    }}
     const lbl = r==='V'?'Victoria':r==='E'?'Empate':'Derrota';
-    const opp = oppsMap[name]?.[idx];
+    // Prefer fixtures over oppsMap (oppsMap can be misaligned after round updates)
+    const _fxRes = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
+    const opp = _fxRes ? (_fxRes.home === name ? _fxRes.away : _fxRes.home) : oppsMap[name]?.[idx];
     const oppCrest = opp ? crestHTML(opp, 22) : '';
     const scMap2    = SCORES_DATA.scores_by_team || SCORES_DATA;
     const venueMap2 = SCORES_DATA.venue_by_team  || {{}};
@@ -3108,7 +3373,7 @@ function renderRoundResults() {{
     }}
     const venueTxt = venue2==='H' ? 'Casa' : venue2==='A' ? 'Fuera' : '';
     const scoreBadge = displayScore
-      ? `<span style="font-size:13px;font-weight:800;letter-spacing:1px;color:var(--text);background:rgba(255,255,255,.07);border-radius:6px;padding:1px 7px;">${{displayScore}}</span>`
+      ? `<span style="font-size:13px;font-weight:800;letter-spacing:1px;color:var(--text);background:rgba(255,255,255,.07);border-radius:6px;padding:1px 7px;white-space:nowrap">${{displayScore}}</span>`
       : '';
     const venueTag = venueTxt
       ? `<span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueTxt}}</span>`
@@ -3128,7 +3393,7 @@ function renderRoundResults() {{
         <div>
           <div class="result-team">${{name}}</div>
           <div class="result-detail" style="display:flex;align-items:center;gap:4px">${{lbl}}${{opp?` · ${{oppCrest}}<span>${{opp}}</span>`:''}} </div>
-          <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">${{scoreBadge}}${{venueTag}}</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:nowrap">${{scoreBadge}}${{venueTag}}</div>
         </div>
       </div>
     </div>`;
@@ -3158,7 +3423,7 @@ function renderHistoryTable(sortBy) {{
   }}
   const tbl = document.getElementById('historyTable');
   const totalSeason = 42;
-  const playedRounds = LIGA_DATA.total_rounds;
+  const playedRounds = currentRound;  // avanza automáticamente con cada jornada
   const rounds = totalSeason;
   // Soporte para ambos formatos de scores_data.json
   const scMap    = SCORES_DATA.scores_by_team  || SCORES_DATA;
@@ -3166,7 +3431,16 @@ function renderHistoryTable(sortBy) {{
   const hdrs = '<tr><th style="position:sticky;left:0;z-index:2;background:var(--card)">Equipo</th>' +
     Array.from({{length:rounds}},(_,i) => {{
       const isFut = i >= playedRounds;
-      return `<th style="${{isFut ? 'opacity:.4;' : ''}}">${{isFut ? '<span style="font-size:9px;opacity:.7">J'+(i+1)+'</span>' : 'J'+(i+1)}}</th>`;
+      const isExtra = !isFut && i >= LIGA_DATA.total_rounds;
+      const isCurrent = !isFut && !isExtra && i === playedRounds - 1;
+      const lbl = isFut
+        ? `<span style="font-size:9px;opacity:.7">J${{i+1}}</span>`
+        : isExtra
+          ? `<span style="color:#4ade80;font-size:9px">J${{i+1}}</span>`
+          : isCurrent
+            ? `<span style="color:#4ade80;font-size:9px">J${{i+1}}</span>`
+            : `J${{i+1}}`;
+      return `<th style="${{isFut ? 'opacity:.4;' : isExtra ? 'border-bottom:2px solid rgba(34,197,94,.4);' : isCurrent ? 'border-bottom:2px solid rgba(34,197,94,.4);' : ''}}">${{lbl}}</th>`;
     }}).join('') + '</tr>';
   const oppsMap = LIGA_DATA.opponents_by_team || {{}};
   // Ordenar equipos según criterio
@@ -3194,6 +3468,7 @@ function renderHistoryTable(sortBy) {{
     const teamVenues = venueMap[name] || {{}};
     const cells = Array.from({{length:rounds}},(_,i)=>{{
       if (i >= playedRounds) {{
+        // Futuro real (más allá de la jornada actual)
         const oppF  = opps[i];
         if (oppF) {{
           const badgeF = TEAM_BADGES[oppF];
@@ -3204,8 +3479,65 @@ function renderHistoryTable(sortBy) {{
         }}
         return `<td class="cell-future" title="J${{i+1}} \u00b7 Sin jugar"><span style="font-size:9px;color:var(--muted)">\u2013</span></td>`;
       }}
+      // Jornadas extra (J39+) donde LIGA_DATA.results_by_team no tiene datos
+      if (i >= LIGA_DATA.total_rounds) {{
+        const oppAtIdx = opps[i];
+        // Partido en vivo
+        const lsEntry = liveState[name];
+        if (lsEntry && lsEntry.opponent === oppAtIdx) {{
+          const liveCol = lsEntry.diff > 0 ? '#4ade80' : lsEntry.diff < 0 ? '#f87171' : '#fbbf24';
+          const minRaw  = lsEntry.minute || '';
+          const minStr  = (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
+          const liveScore = lsEntry.isHome ? `${{lsEntry.homeGoals}}-${{lsEntry.awayGoals}}` : `${{lsEntry.awayGoals}}-${{lsEntry.homeGoals}}`;
+          return `<td style="background:${{liveCol}}22;outline:1.5px solid ${{liveCol}};outline-offset:-1px;text-align:center" title="EN VIVO ${{liveScore}}${{minStr?' '+minStr:''}} \u00b7 vs ${{oppAtIdx}}"><span class="live-dot-indicator" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${{liveCol}};animation:livePulse 1.2s ease-in-out infinite"></span></td>`;
+        }}
+        // Partido ya completado (marcador en SCORES_DATA)
+        const extScore = teamScores[String(i)];
+        if (extScore) {{
+          const [gfStr, gcStr] = extScore.split('-');
+          const gf = parseInt(gfStr), gc = parseInt(gcStr);
+          const r_ext = gf > gc ? 'V' : gf < gc ? 'D' : 'E';
+          const opp_ext = opps[i];
+          const badge_ext = opp_ext ? TEAM_BADGES[opp_ext] : null;
+          const inner_ext = badge_ext
+            ? `<img src="${{badge_ext}}" alt="${{opp_ext}}" width="18" height="18" onerror="this.style.display='none'">`
+            : `<span style="font-size:10px;font-weight:700">${{r_ext}}</span>`;
+          const lbl_ext = r_ext==='V'?'Victoria':r_ext==='E'?'Empate':'Derrota';
+          return `<td class="cell-${{r_ext}}" title="${{lbl_ext}} ${{extScore}} \u00b7 vs ${{opp_ext||''}}">${{inner_ext}}</td>`;
+        }}
+        // Aún sin datos
+        if (oppAtIdx) {{
+          const badgeF2 = TEAM_BADGES[oppAtIdx];
+          const innerF2 = badgeF2
+            ? `<img src="${{badgeF2}}" alt="${{oppAtIdx}}" width="14" height="14" style="opacity:.4;filter:grayscale(.3)" onerror="this.style.display='none'">`
+            : `<span style="font-size:8px;color:var(--muted);opacity:.6">${{oppAtIdx.substring(0,3).toUpperCase()}}</span>`;
+          return `<td class="cell-future" title="J${{i+1}} \u00b7 vs ${{oppAtIdx}}">${{innerF2}}</td>`;
+        }}
+        return `<td class="cell-future"><span style="font-size:9px;color:var(--muted)">\u2013</span></td>`;
+      }}
+      // Jornada normal (dentro de LIGA_DATA.results_by_team)
       const r = res[i];
-      if (!r) return '<td class="cell-empty">\u00b7</td>';
+      if (!r) {{
+        const oppN = opps[i];
+        // Comprobar partido en vivo
+        const lsN = liveState[name];
+        if (lsN && lsN.opponent === oppN) {{
+          const liveColN = lsN.diff > 0 ? '#4ade80' : lsN.diff < 0 ? '#f87171' : '#fbbf24';
+          const minRawN  = lsN.minute || '';
+          const minStrN  = (minRawN === 'HT' || minRawN === 'Descanso') ? "D'" : minRawN;
+          const liveScoreN = lsN.isHome ? `${{lsN.homeGoals}}-${{lsN.awayGoals}}` : `${{lsN.awayGoals}}-${{lsN.homeGoals}}`;
+          return `<td style="background:${{liveColN}}22;outline:1.5px solid ${{liveColN}};outline-offset:-1px;text-align:center" title="EN VIVO ${{liveScoreN}}${{minStrN?' '+minStrN:''}} \u00b7 vs ${{oppN}}"><span class="live-dot-indicator" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${{liveColN}};animation:livePulse 1.2s ease-in-out infinite"></span></td>`;
+        }}
+        // Sin resultado pero con rival conocido → mostrar escudo como jornada futura
+        if (oppN) {{
+          const badgeN = TEAM_BADGES[oppN];
+          const innerN = badgeN
+            ? `<img src="${{badgeN}}" alt="${{oppN}}" width="14" height="14" style="opacity:.4;filter:grayscale(.3)" onerror="this.style.display='none'">`
+            : `<span style="font-size:8px;color:var(--muted);opacity:.6">${{oppN.substring(0,3).toUpperCase()}}</span>`;
+          return `<td class="cell-future" title="J${{i+1}} \u00b7 vs ${{oppN}}">${{innerN}}</td>`;
+        }}
+        return '<td class="cell-empty">\u00b7</td>';
+      }}
       const opp    = opps[i];
       const score  = teamScores[String(i)];
       const venue  = teamVenues[String(i)];
@@ -3426,6 +3758,10 @@ let localVisitanteChart = null;
 let radarChart = null;
 let consistenciaChart = null;
 let bumpChart = null;
+let ganaQuienChart = null;
+let eficienciaChart = null;
+let vdRadarChart = null;
+let _vdRadarTeam = null;
 let _radarSelected = [];
 let _scatterBadgeImgs = {{}};
 let rankingMode = 'off';
@@ -3932,7 +4268,11 @@ function initAnalysisTab() {{
   renderRanking(rankingMode);
   renderScenarios();
   buildLocalVisitanteChart();
-  if (!document.getElementById('h2hGrid').hasChildNodes()) renderH2H();
+  buildGanaQuienChart();
+  buildEficienciaChart();
+  buildVDRadarSelector();
+  buildVDRadarChart();
+  renderH2H();
   buildAdvStatsTable();
   buildRadarSelector();
   buildRadarChart();
@@ -4299,9 +4639,364 @@ function buildConsistenciaChart() {{
   }});
 }}
 
+// ===== GANA QUIEN CHART =====
+function buildGanaQuienChart() {{
+  const ctx = document.getElementById('ganaQuienChart');
+  if (!ctx) return;
+  if (ganaQuienChart) {{ ganaQuienChart.destroy(); ganaQuienChart = null; }}
+  if (_historicalMode) {{
+    const el = document.getElementById('ganaQuienCard');
+    if (el) el.style.display = 'none';
+    return;
+  }}
+  const el = document.getElementById('ganaQuienCard');
+  if (el) el.style.display = '';
+  const resMap = LIGA_DATA.results_by_team || {{}};
+  const METRICS = ['possession','shots_inside','shots_outside','shots_blocked','poss_recoveries','poss_losses','offsides','fouls_committed'];
+  const LABELS  = ['Posesión %','D.Puerta','D.Fuera','D.Bloqueados','Recuperac.','Pérdidas balón','Fueras juego','Faltas com.'];
+  const acc = {{}};
+  for (const r of ['V','D']) {{
+    acc[r] = {{}};
+    for (const k of METRICS) acc[r][k] = {{sum:0, n:0}};
+  }}
+  for (const m of AS_STATS) {{
+    if (!m.home || !m.away || m.jornada == null) continue;
+    const jIdx = m.jornada - 1;
+    const hRes = (resMap[m.home] || [])[jIdx];
+    if (!hRes || hRes === 'E') continue;
+    const aRes = hRes === 'V' ? 'D' : 'V';
+    for (const k of METRICS) {{
+      const hv = m[k + '_home'];
+      if (hv != null) {{ acc[hRes][k].sum += hv; acc[hRes][k].n++; }}
+      const av = m[k + '_away'];
+      if (av != null) {{ acc[aRes][k].sum += av; acc[aRes][k].n++; }}
+    }}
+  }}
+  const meansV = METRICS.map(k => acc.V[k].n > 0 ? acc.V[k].sum / acc.V[k].n : 0);
+  const meansD = METRICS.map(k => acc.D[k].n > 0 ? acc.D[k].sum / acc.D[k].n : 0);
+  const diffPct = METRICS.map((_, i) => meansD[i] !== 0 ? (meansV[i] - meansD[i]) / meansD[i] * 100 : 0);
+  const order = diffPct.map((_, i) => i).sort((a, b) => Math.abs(diffPct[b]) - Math.abs(diffPct[a]));
+  const sLabels = order.map(i => LABELS[i]);
+  const sDiff   = order.map(i => diffPct[i]);
+  const sMeansV = order.map(i => meansV[i]);
+  const sMeansD = order.map(i => meansD[i]);
+  ganaQuienChart = new Chart(ctx.getContext('2d'), {{
+    type: 'bar',
+    data: {{
+      labels: sLabels,
+      datasets: [{{
+        label: '% dif. Victoria vs Derrota',
+        data: sDiff,
+        backgroundColor: sDiff.map(v => v >= 0 ? '#39FF1455' : '#ef444455'),
+        borderColor:     sDiff.map(v => v >= 0 ? '#39FF14'   : '#ef4444'),
+        borderWidth: 2,
+        borderRadius: 4,
+      }}]
+    }},
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {{
+        legend: {{ display: false }},
+        tooltip: {{
+          callbacks: {{
+            label: (c) => {{
+              const i = c.dataIndex;
+              const sign = sDiff[i] >= 0 ? '+' : '';
+              return ` Ganando: ${{sMeansV[i].toFixed(1)}} · Perdiendo: ${{sMeansD[i].toFixed(1)}} · Dif: ${{sign}}${{sDiff[i].toFixed(1)}}%`;
+            }}
+          }}
+        }}
+      }},
+      scales: {{
+        x: {{
+          grid: {{ color: '#2d3f5f44' }},
+          ticks: {{ color: '#94a3b8', callback: v => (v>=0?'+':'')+v.toFixed(0)+'%' }},
+          title: {{ display: true, text: '% diferencia (ganando vs perdiendo)', color: '#94a3b8', font: {{size:10}} }}
+        }},
+        y: {{ grid: {{ display: false }}, ticks: {{ color: '#e2e8f0', font: {{size:11}} }} }}
+      }}
+    }}
+  }});
+}}
+
+// ===== EFICIENCIA OFENSIVA CHART =====
+function buildEficienciaChart() {{
+  const ctx = document.getElementById('eficienciaChart');
+  if (!ctx) return;
+  if (eficienciaChart) {{ eficienciaChart.destroy(); eficienciaChart = null; }}
+  if (_historicalMode) {{
+    const el = document.getElementById('eficienciaCard');
+    if (el) el.style.display = 'none';
+    return;
+  }}
+  const el = document.getElementById('eficienciaCard');
+  if (el) el.style.display = '';
+  const raw = {{}};
+  for (const m of AS_STATS) {{
+    for (const side of ['home','away']) {{
+      const team = m[side];
+      if (!team) continue;
+      if (!raw[team]) raw[team] = {{inside:0, outside:0, blocked:0}};
+      raw[team].inside  += (m['shots_inside_'+side]  ?? 0);
+      raw[team].outside += (m['shots_outside_'+side] ?? 0);
+      raw[team].blocked += (m['shots_blocked_'+side] ?? 0);
+    }}
+  }}
+  const standings = computeStandings();
+  const gfMap = {{}};
+  for (const t of standings) gfMap[t.name] = t.played > 0 ? t.gf / t.played : 0;
+  const pts = [];
+  for (const [name, s] of Object.entries(raw)) {{
+    const total = s.inside + s.outside + s.blocked;
+    if (total < 1 || gfMap[name] == null) continue;
+    pts.push({{ x: s.inside / total * 100, y: gfMap[name], name }});
+  }}
+  const xs = [...pts.map(p => p.x)].sort((a,b)=>a-b);
+  const ys = [...pts.map(p => p.y)].sort((a,b)=>a-b);
+  const medX = xs[Math.floor(xs.length/2)];
+  const medY = ys[Math.floor(ys.length/2)];
+  // Precargar escudos (reusar cache del scatter chart)
+  pts.forEach(p => {{
+    if (TEAM_BADGES[p.name] && !_scatterBadgeImgs[p.name]) {{
+      const img = new Image(28, 28);
+      img.src = TEAM_BADGES[p.name];
+      _scatterBadgeImgs[p.name] = img;
+    }}
+  }});
+  const quadPlugin = {{
+    id: 'eficienciaQuad',
+    afterDraw(chart) {{
+      const {{ ctx: c, chartArea, scales: {{ x, y }} }} = chart;
+      if (!chartArea) return;
+      const xPx = x.getPixelForValue(medX);
+      const yPx = y.getPixelForValue(medY);
+      c.save();
+      c.setLineDash([5,4]);
+      c.strokeStyle = 'rgba(148,163,184,.25)';
+      c.lineWidth = 1;
+      c.beginPath(); c.moveTo(xPx, chartArea.top);    c.lineTo(xPx, chartArea.bottom); c.stroke();
+      c.beginPath(); c.moveTo(chartArea.left, yPx);   c.lineTo(chartArea.right, yPx);  c.stroke();
+      c.setLineDash([]);
+      c.font = 'bold 9px Segoe UI,system-ui,sans-serif';
+      c.fillStyle = 'rgba(148,163,184,.4)';
+      c.textAlign = 'left';  c.fillText('Eficaz sin brillar', chartArea.left+4, chartArea.top+12);
+      c.textAlign = 'right'; c.fillText('Sniper \u26a1', chartArea.right-4, chartArea.top+12);
+      c.textAlign = 'left';  c.fillText('Est\u00e9ril', chartArea.left+4, chartArea.bottom-4);
+      c.textAlign = 'right'; c.fillText('Manguera', chartArea.right-4, chartArea.bottom-4);
+      c.restore();
+    }}
+  }};
+  eficienciaChart = new Chart(ctx.getContext('2d'), {{
+    type: 'scatter',
+    data: {{
+      datasets: pts.map(p => {{
+        const img = _scatterBadgeImgs[p.name];
+        const col = getColor(p.name);
+        return {{
+          label: p.name,
+          data: [{{ x: p.x, y: p.y, name: p.name }}],
+          backgroundColor: 'transparent',
+          borderColor: 'transparent',
+          borderWidth: 0,
+          pointStyle: img || 'circle',
+          pointRadius: img ? 16 : 8,
+          pointHoverRadius: img ? 20 : 11,
+        }};
+      }})
+    }},
+    plugins: [quadPlugin],
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {{
+        legend: {{ display: false }},
+        tooltip: {{
+          callbacks: {{
+            label: (c) => {{
+              const p = c.raw;
+              return ` ${{c.dataset.label}}: precisión ${{p.x.toFixed(1)}}% · ${{p.y.toFixed(2)}} GF/PJ`;
+            }}
+          }}
+        }}
+      }},
+      scales: {{
+        x: {{
+          title: {{ display:true, text:'% disparos a puerta (precisión)', color:'#94a3b8', font:{{size:11}} }},
+          grid: {{ color:'#2d3f5f44' }},
+          ticks: {{ color:'#94a3b8', callback: v => v.toFixed(0)+'%' }}
+        }},
+        y: {{
+          title: {{ display:true, text:'Goles por partido', color:'#94a3b8', font:{{size:11}} }},
+          grid: {{ color:'#2d3f5f44' }},
+          ticks: {{ color:'#94a3b8' }}
+        }}
+      }}
+    }}
+  }});
+}}
+
+// ===== VD RADAR CHART (ADN Táctico: Ganando vs Perdiendo) =====
+function buildVDRadarSelector() {{
+  const sel = document.getElementById('vdRadarTeamSelect');
+  if (!sel || _historicalMode) return;
+  const teams = computeStandings().map(t => t.name);
+  if (!_vdRadarTeam || !teams.includes(_vdRadarTeam)) _vdRadarTeam = teams[0];
+  sel.innerHTML = teams.map(t => `<option value="${{t}}"${{t===_vdRadarTeam?' selected':''}}>${{t}}</option>`).join('');
+}}
+
+window.onVDRadarTeamChange = function(val) {{
+  _vdRadarTeam = val;
+  buildVDRadarChart();
+}};
+
+function buildVDRadarChart() {{
+  const ctx = document.getElementById('vdRadarChart');
+  if (!ctx) return;
+  if (vdRadarChart) {{ vdRadarChart.destroy(); vdRadarChart = null; }}
+  if (_historicalMode) {{
+    const el = document.getElementById('vdRadarCard');
+    if (el) el.style.display = 'none';
+    return;
+  }}
+  const el = document.getElementById('vdRadarCard');
+  if (el) el.style.display = '';
+  if (!_vdRadarTeam) buildVDRadarSelector();
+  const resMap = LIGA_DATA.results_by_team || {{}};
+  const METRICS = ['possession','shots_inside','shots_outside','poss_recoveries','poss_losses','offsides'];
+  const LABELS  = ['Posesión','D.Puerta','D.Fuera','Recuperac.','Pérdidas','Fuera Juego'];
+  const INVERT  = [false, false, false, false, true, true];
+  const sums = {{}};
+  const cnts = {{}};
+  for (const r of ['V','E','D']) {{
+    sums[r] = Array(METRICS.length).fill(0);
+    cnts[r] = Array(METRICS.length).fill(0);
+  }}
+  const team = _vdRadarTeam;
+  for (const m of AS_STATS) {{
+    let side = null;
+    if (m.home === team) side = 'home';
+    else if (m.away === team) side = 'away';
+    if (!side || m.jornada == null) continue;
+    const jIdx = m.jornada - 1;
+    const hRes = (resMap[m.home] || [])[jIdx];
+    if (!hRes) continue;
+    const teamRes = side === 'home' ? hRes : (hRes === 'V' ? 'D' : hRes === 'D' ? 'V' : 'E');
+    for (let i = 0; i < METRICS.length; i++) {{
+      const v = m[METRICS[i] + '_' + side];
+      if (v != null) {{ sums[teamRes][i] += v; cnts[teamRes][i]++; }}
+    }}
+  }}
+  const means = {{}};
+  for (const r of ['V','E','D']) {{
+    means[r] = METRICS.map((_, i) => cnts[r][i] > 0 ? sums[r][i] / cnts[r][i] : null);
+  }}
+  // Calcular rango global de todos los equipos (para normalizar correctamente)
+  // Así la distancia entre polígonos refleja cuánto cambia el estilo, no solo quién es mayor
+  const globalSums = {{}};
+  const globalCnts = {{}};
+  const allTeams = Object.keys(resMap);
+  for (let i = 0; i < METRICS.length; i++) {{ globalSums[i] = {{V:0,D:0}}; globalCnts[i] = {{V:0,D:0}}; }}
+  for (const m of AS_STATS) {{
+    for (const side of ['home','away']) {{
+      const t = side === 'home' ? m.home : m.away;
+      if (!t || m.jornada == null) continue;
+      const jIdx = m.jornada - 1;
+      const hRes = (resMap[m.home] || [])[jIdx];
+      if (!hRes) continue;
+      const tRes = side === 'home' ? hRes : (hRes==='V'?'D':hRes==='D'?'V':'E');
+      if (tRes !== 'V' && tRes !== 'D') continue;
+      for (let i = 0; i < METRICS.length; i++) {{
+        const v = m[METRICS[i] + '_' + side];
+        if (v != null) {{ globalSums[i][tRes] += v; globalCnts[i][tRes]++; }}
+      }}
+    }}
+  }}
+  // Rango por métrica: min y max de las medias de todos los equipos (victorias y derrotas juntos)
+  const RANGE_MIN = [];
+  const RANGE_MAX = [];
+  for (let i = 0; i < METRICS.length; i++) {{
+    const allVals = [];
+    for (const m2 of AS_STATS) {{
+      for (const side of ['home','away']) {{
+        const v = m2[METRICS[i] + '_' + side];
+        if (v != null) allVals.push(v);
+      }}
+    }}
+    RANGE_MIN.push(allVals.length ? Math.min(...allVals) : 0);
+    RANGE_MAX.push(allVals.length ? Math.max(...allVals) : 1);
+  }}
+  const norm = {{}};
+  for (const r of ['V','E','D']) norm[r] = [];
+  for (let i = 0; i < METRICS.length; i++) {{
+    const mn = RANGE_MIN[i];
+    const mx = RANGE_MAX[i];
+    for (const r of ['V','E','D']) {{
+      const v = means[r][i];
+      if (v == null) {{ norm[r].push(null); continue; }}
+      if (mx === mn) {{ norm[r].push(50); continue; }}
+      const n = (v - mn) / (mx - mn) * 100;
+      norm[r].push(Math.max(0, Math.min(100, INVERT[i] ? 100 - n : n)));
+    }}
+  }}
+  const nV = cnts.V[0], nD = cnts.D[0];
+  vdRadarChart = new Chart(ctx.getContext('2d'), {{
+    type: 'radar',
+    data: {{
+      labels: LABELS,
+      datasets: [
+        {{
+          label: `\u2705 Victorias (${{nV}})`,
+          data: norm.V,
+          borderColor: '#39FF14',
+          backgroundColor: '#39FF1422',
+          pointBackgroundColor: '#39FF14',
+          pointRadius: 4,
+          borderWidth: 2,
+        }},
+        {{
+          label: `\u274c Derrotas (${{nD}})`,
+          data: norm.D,
+          borderColor: '#ef4444',
+          backgroundColor: '#ef444422',
+          pointBackgroundColor: '#ef4444',
+          pointRadius: 4,
+          borderWidth: 2,
+        }},
+      ]
+    }},
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {{
+        legend: {{ position: 'top', labels: {{ color: '#94a3b8', boxWidth: 12 }} }},
+        tooltip: {{
+          callbacks: {{
+            label: (c) => {{
+              const i = c.dataIndex;
+              const r = c.datasetIndex === 0 ? 'V' : 'D';
+              const raw = means[r][i];
+              return ` ${{c.dataset.label}}: ${{raw != null ? raw.toFixed(1) : '\u2014'}}`;
+            }}
+          }}
+        }}
+      }},
+      scales: {{
+        r: {{
+          min: 0, max: 100,
+          grid: {{ color: '#2d3f5f55' }},
+          angleLines: {{ color: '#2d3f5f88' }},
+          pointLabels: {{ color: '#94a3b8', font: {{size: 11}} }},
+          ticks: {{ display: false }}
+        }}
+      }}
+    }}
+  }});
+}}
+
 // ===== BUMP CHART =====
 function buildBumpChart() {{
-  const ctx = document.getElementById('bumpChart');
   if (!ctx) return;
   if (bumpChart) bumpChart.destroy();
   const totalRounds = LIGA_DATA.total_rounds;
@@ -4577,28 +5272,34 @@ function renderRanking(mode) {{
 function renderScenarios() {{
   const standings = computeStandings();
   const rndLeft = LIGA_DATA.total_season_rounds - standingsRound;
-  const quedanPts = rndLeft * 3;
   const pts2  = standings[1]?.pts  ?? 0;
   const pts6  = standings[5]?.pts  ?? 0;
   const pts18 = standings[17]?.pts ?? 0;
+  const t19   = standings[18];
   const tbody = document.getElementById('scenariosBody');
   if (!tbody) return;
   tbody.innerHTML = standings.map(t => {{
+    // quedan y jornadas restantes por equipo (pueden diferir si no todos han jugado lo mismo)
+    const quedanPts = t.quedan;
+    const rndLeftT  = Math.round(quedanPts / 3);
+    // Puntos máximos del 19º (referencia real de peligro de descenso)
+    const max19 = t19 ? t19.pts + t19.quedan : 0;
     let maxPts, empPts, canAscend, canPlayoff, canSave, canDescend;
     if (rndLeft === 0) {{
-      // Temporada finalizada: usar posición definitiva, no cálculo
+      // Temporada finalizada: cada equipo está en exactamente una zona
       maxPts = empPts = t.pts;
       canAscend  = t.pos <= 2;
-      canPlayoff = t.pos <= 6;
-      canSave    = t.pos <= 18;
+      canPlayoff = t.pos >= 3 && t.pos <= 6;
+      canSave    = t.pos >= 7 && t.pos <= 18;
       canDescend = t.pos > 18;
     }} else {{
       maxPts     = t.pts + quedanPts;
-      empPts     = t.pts + rndLeft;
-      canAscend  = maxPts >= pts2;
-      canPlayoff = maxPts >= pts6;
-      canSave    = maxPts >= pts18;
-      canDescend = pts18 + quedanPts >= t.pts;
+      empPts     = t.pts + rndLeftT;
+      // Respetar situacion ya calculada en standings (t.secured)
+      canAscend  = t.secured === 'promotion' || (!t.secured && maxPts >= pts2);
+      canPlayoff = t.secured === 'promotion' || t.secured === 'playoff' || (!t.secured && maxPts >= pts6);
+      canSave    = t.secured !== 'relegation' && (t.secured === 'promotion' || t.secured === 'playoff' || t.secured === 'permanence' || maxPts >= pts18);
+      canDescend = t.secured === 'relegation' || (!t.secured && max19 >= t.pts);
     }}
     const zone  = getZoneClass(t.pos);
     const color = getColor(t.name);
@@ -4606,7 +5307,7 @@ function renderScenarios() {{
       <td>${{posBadge(t.pos)}}</td>
       <td><div class="team-cell">${{crestHTML(t.name,22)}}<span class="team-name-text">${{t.name}}</span></div></td>
       <td style="font-weight:700;color:var(--accent)">${{t.pts}}</td>
-      <td style="color:var(--muted)">${{rndLeft > 0 ? rndLeft + 'J' : '—'}}</td>
+      <td style="color:var(--muted)">${{rndLeftT > 0 ? rndLeftT + 'J' : '—'}}</td>
       <td style="color:#4ade80;font-weight:700">${{maxPts}}</td>
       <td style="color:#fbbf24;font-weight:600">${{empPts}}</td>
       <td style="font-size:11px">${{canAscend?'<span style="color:#4ade80;font-weight:700">✓</span>':'<span style="color:#475569">✗</span>'}}</td>
@@ -4731,8 +5432,8 @@ function renderH2H() {{
   html += '<div style="font-size:10px;color:var(--muted)">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
   html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:10px;color:var(--muted);user-select:none"><input type="checkbox" id="h2hCrossToggle" style="accent-color:#39ff14;width:13px;height:13px;cursor:pointer"> Cruz de Selecci\u00f3n</label>';
   html += '</div>';
-  html += '<div style="overflow-x:auto;display:flex;justify-content:center"><table class="h2h-matrix" style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
-  html += '<th style="min-width:95px;text-align:right;padding-right:6px;font-size:9px;color:var(--muted);white-space:nowrap">Local \\ Visitante</th>';
+  html += '<table class="h2h-matrix" style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
+  html += '<th style="min-width:26px;width:26px"></th>';
   teams.forEach((t, ci) => {{
     const badgeUrl = TEAM_BADGES[t];
     const inner = badgeUrl ? `<img src="${{badgeUrl}}" alt="${{t}}" style="width:18px;height:18px;object-fit:contain" onerror="this.outerHTML='${{abbr(t)}}'">` : abbr(t);
@@ -4740,7 +5441,9 @@ function renderH2H() {{
   }});
   html += '</tr></thead><tbody>';
   teams.forEach((home, ri) => {{
-    html += `<tr><td data-r="${{ri}}" style="font-size:9px;color:var(--muted);padding-right:8px;white-space:nowrap;text-align:right;padding-top:2px;padding-bottom:2px">${{home}}</td>`;
+    const rowBadge = TEAM_BADGES[home];
+    const rowBadgeHtml = rowBadge ? `<img class="h2h-row-badge" src="${{rowBadge}}" alt="${{home}}" style="width:18px;height:18px;object-fit:contain;display:none" onerror="this.style.display='none'">` : '';
+    html += `<tr><td data-r="${{ri}}" style="font-size:9px;color:var(--muted);padding-right:8px;white-space:nowrap;text-align:right;padding-top:2px;padding-bottom:2px"><span class="h2h-row-name">${{home}}</span>${{rowBadgeHtml}}</td>`;
     teams.forEach((away, ci) => {{
       if (home === away) {{
         html += `<td data-r="${{ri}}" data-c="${{ci}}" style="background:var(--border);width:24px;min-width:24px;height:20px"></td>`;
@@ -4754,7 +5457,7 @@ function renderH2H() {{
     }});
     html += '</tr>';
   }});
-  html += '</tbody></table></div>';
+  html += '</tbody></table>';
   el.innerHTML = html;
   // Inicializar checkbox con el estado guardado
   const chk = el.querySelector('#h2hCrossToggle');
@@ -4817,16 +5520,21 @@ function updateLiveBar() {{
   if (!bar) return;
   const entries = Object.entries(liveState);
   if (!entries.length) {{ bar.classList.remove('has-live'); bar.innerHTML = ''; return; }}
+  // Mostrar solo los equipos locales para evitar duplicados
+  const homeEntries = entries.filter(([, ls]) => ls.isHome);
+  // Si por algún motivo no hay ninguno marcado como local, mostrar todos
+  const toShow = homeEntries.length > 0 ? homeEntries : entries;
   bar.classList.add('has-live');
-  bar.innerHTML = '<span style="font-size:11px;font-weight:700;color:var(--muted);margin-right:4px">🔴 EN VIVO</span>' +
-    entries.map(([name, ls]) => {{
-      const score = ls.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
-      const vs = ls.isHome ? ls.opponent : ls.opponent;
+  bar.innerHTML = '<span class="live-bar-label">🔴 EN VIVO</span>' +
+    toShow.map(([name, ls]) => {{
+      const score = `${{ls.homeGoals}}-${{ls.awayGoals}}`;
       const col = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
+      const minRaw = ls.minute || '';
+      const minStr = (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
       return `<div class="live-match-pill">
         ${{crestHTML(name,18)}} <span>${{name}}</span>
-        <span class="live-score-pill" style="background:${{col}}22;color:${{col}}">${{score}}</span>
-        ${{crestHTML(vs,18)}} <span>${{vs}}</span>
+        <span class="live-score-pill" style="background:${{col}}22;color:${{col}}">${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>
+        ${{crestHTML(ls.opponent,18)}} <span>${{ls.opponent}}</span>
       </div>`;
     }}).join('');
 }}
@@ -4938,7 +5646,10 @@ async function fetchAndUpdate() {{
   }} finally {{
     updateLiveBar();
     updateNextMatchBanner();
+    autoDetectRound();
+    updateRoundsBadge();
     renderStandings();
+    renderRoundResults();
     renderTeams();
     renderPredictions();
     lastUpdateTime = new Date();
@@ -5443,6 +6154,7 @@ function getNextFixture() {{
     const mi = parseInt(tparts[1], 10);
     // Temporada 25/26: meses ≥ 8 → 2025, meses ≤ 7 → 2026
     const yr = mm >= 8 ? 2025 : 2026;
+    // Usar Date local para que el countdown sea correcto independientemente del timezone del dispositivo
     const dt = new Date(yr, mm - 1, dd, hh, mi, 0);
     if (dt > now && (!bestDt || dt < bestDt)) {{
       best = f;
@@ -5587,10 +6299,9 @@ function switchSeason(label) {{
     else renderStandings();
   }}
   // Actualizar roundsBadge y roundInput max
-  const rb = document.getElementById('roundsBadge');
-  if (rb) rb.textContent = 'Jornada ' + LIGA_DATA.total_rounds + ' / ' + LIGA_DATA.total_season_rounds;
+  updateRoundsBadge();
   const ri = document.getElementById('roundInput');
-  if (ri) {{ ri.max = LIGA_DATA.total_season_rounds; ri.value = LIGA_DATA.total_rounds; }}
+  if (ri) {{ ri.max = LIGA_DATA.total_season_rounds; ri.value = currentRound; }}
 
   // Ocultar elementos irrelevantes en modo histórico
   const liveBar = document.getElementById('liveBar');
@@ -5601,8 +6312,93 @@ function switchSeason(label) {{
   if (statusBar) statusBar.style.display = _historicalMode ? 'none' : '';
 }}
 
+// ===== ROUNDS BADGE =====
+function updateRoundsBadge() {{
+  const rb = document.getElementById('roundsBadge');
+  if (!rb) return;
+  const displayRound = _historicalMode ? standingsRound : currentRound;
+  rb.textContent = 'Jornada ' + displayRound + ' / ' + LIGA_DATA.total_season_rounds;
+  rb.classList.remove('rounds-badge--live', 'rounds-badge--active');
+  if (!_historicalMode && currentRound > LIGA_DATA.total_rounds) {{
+    if (Object.keys(liveState).length > 0) {{
+      rb.classList.add('rounds-badge--live');
+    }} else {{
+      rb.classList.add('rounds-badge--active');
+    }}
+  }}
+}}
+
+// ===== AUTO-DETECT ACTIVE ROUND =====
+// Si hay partidos de una jornada futura (> total_rounds) que ya empezaron hoy o antes,
+// avanza currentRound a esa jornada para mostrarlos en la pestaña Resultados.
+function autoDetectRound() {{
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const oppsMap = LIGA_DATA.opponents_by_team || {{}};
+  const allFix = {{}};
+  (LIGA_DATA.fixtures || []).forEach(f => {{
+    allFix[f.home + '|' + f.away] = f;
+  }});
+  for (let r = LIGA_DATA.total_rounds + 1; r <= 42; r++) {{
+    const idx = r - 1;
+    let hasStarted = false;
+    for (const name of (LIGA_DATA.teams || [])) {{
+      const opp = (oppsMap[name] || [])[idx];
+      if (!opp) continue;
+      const fx = allFix[name + '|' + opp] || allFix[opp + '|' + name];
+      if (!fx || !fx.date) continue;
+      const [dd, mm] = fx.date.split('/').map(Number);
+      if (new Date(now.getFullYear(), mm - 1, dd) <= today) {{ hasStarted = true; break; }}
+    }}
+    if (hasStarted) {{
+      currentRound = r;
+      standingsRound = r;
+      const inp = document.getElementById('roundInput');
+      if (inp) inp.value = r;
+      break;
+    }}
+  }}
+  updateRoundsBadge();
+}}
+
 // ===== INIT =====
+function initCollapsibleCards() {{
+  // Títulos que deben empezar EXPANDIDOS por defecto (el resto se colapsa)
+  const EXPANDED_BY_DEFAULT = [
+    'Ataque vs Defensa',
+    'Rankings',
+    'Resultados directos',
+    'Radar por Equipo',
+  ];
+  const panel = document.getElementById('tab-analisis');
+  if (!panel) return;
+  panel.querySelectorAll('.card').forEach(card => {{
+    const title = card.querySelector(':scope > .card-title');
+    if (!title) return;
+    // Envolver todo lo que viene después del título en .card-body
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    const children = Array.from(card.children);
+    const titleIdx = children.indexOf(title);
+    children.slice(titleIdx + 1).forEach(el => body.appendChild(el));
+    card.appendChild(body);
+    title.classList.add('collapsible');
+    // Colapsar por defecto todo lo que NO esté en la lista de expandidos
+    const titleText = title.textContent || '';
+    const startCollapsed = !EXPANDED_BY_DEFAULT.some(t => titleText.includes(t));
+    if (startCollapsed) {{
+      body.classList.add('collapsed');
+      title.classList.add('collapsed');
+    }}
+    title.addEventListener('click', () => {{
+      const collapsed = body.classList.toggle('collapsed');
+      title.classList.toggle('collapsed', collapsed);
+    }});
+  }});
+}}
 function init() {{
+  autoDetectRound();
+  updateLiveBar();
   renderStandings();
   renderRoundResults();
   renderTeams();
@@ -5610,6 +6406,7 @@ function init() {{
   updateStatusBar();
   updateNextMatchBanner();
   setInterval(updateNextMatchBanner, 1000);
+  initCollapsibleCards();
   scheduleUpdate();
   // Fetch inmediato solo en servidor local; en GitHub Pages/file:// los datos ya
   // van embebidos en el HTML y el fetch remoto solo genera warnings innecesarios
@@ -5617,9 +6414,8 @@ function init() {{
     fetchAndUpdate();
   }}
 }}
-init();
+document.addEventListener('DOMContentLoaded', init);
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </body>
 </html>"""
 
@@ -5634,7 +6430,10 @@ auto_reload_js = f"""
       .then(function(d){{
         if (d.ts && d.ts !== BUILD_TS) {{
           console.log('[auto-reload] nueva version:', d.ts);
-          location.reload(true);
+          // location.reload(true) está deprecated y los móviles lo ignoran.
+          // Navegar con ?v= fuerza al navegador a pedir una URL distinta.
+          var base = window.location.pathname;
+          window.location.replace(base + '?v=' + d.ts);
         }}
       }})
       .catch(function(){{}});

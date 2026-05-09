@@ -41,6 +41,7 @@ DEPLOY_FILES = [
     'scores_data.json',
     'predictions.json',
     'predictions_history.json',
+    '.htaccess',
 ]
 
 # Pipeline de scripts a ejecutar (en orden)
