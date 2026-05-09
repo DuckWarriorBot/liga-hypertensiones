@@ -2563,6 +2563,11 @@ function applyTiebreakSort(arr, r) {{
   return arr;
 }}
 
+function pointsToOvertakeCutoff(teamPts, cutoffPts, teamPos, cutoffPos) {{
+  if (teamPts === cutoffPts && teamPos > cutoffPos) return 1;
+  return Math.max(0, cutoffPts - teamPts);
+}}
+
 // ===== COMPUTED STANDINGS =====
 function computeStandingsForRound(round) {{
   const r = Math.min(round, LIGA_DATA.total_rounds);
@@ -2662,7 +2667,7 @@ function computeStandingsForRound(round) {{
       }}
     }} else if (pos <= 6) {{
       const pts7        = teams[6]?.pts ?? 0;
-      const dAscDirecto = pts2 - t.pts;            // puntos hasta el ascenso directo (2º)
+      const dAscDirecto = pointsToOvertakeCutoff(t.pts, pts2, pos, 2); // si empata a pts pero pierde el desempate, necesita 1 más
       const dOver7      = t.pts - pts7;             // margen sobre el 7º
       const canReachDirecto = dAscDirecto <= quedanRnd;  // puede alcanzar el 2º
       const playoffSecured  = dOver7 > quedanRnd;        // el 7º no puede alcanzarle
@@ -2678,7 +2683,7 @@ function computeStandingsForRound(round) {{
         t.situacion = 'EN PLAYOFF';
       }}
     }} else if (pos <= 18) {{
-      const dPlay = pts6 - t.pts;             // puntos que le faltan al playoff
+      const dPlay = pointsToOvertakeCutoff(t.pts, pts6, pos, 6); // igualar a pts no basta si está por detrás del corte
       const dDesc = t.pts - pts19;            // margen sobre la zona de descenso
       const canPlayoff = dPlay <= quedanRnd;  // puede alcanzar el playoff
       const safe       = dDesc > quedanRnd;   // no puede descender
@@ -2693,7 +2698,7 @@ function computeStandingsForRound(round) {{
         t.situacion = `A ${{dDesc}} DEL DESCENSO`;
       }}
     }} else {{
-      const needed = pts18 - t.pts;
+      const needed = pointsToOvertakeCutoff(t.pts, pts18, pos, 18);
       if (needed > quedanRnd) {{
         t.situacion = 'DESCENSO';
         t.secured   = 'relegation';
@@ -2887,8 +2892,8 @@ function renderStandings() {{
       else if (ls.diff === 0) t.draws += 1;
       else t.losses += 1;
     }});
-    // Re-sort con datos live: pts → dif → gf → nombre
-    standingsData.sort((a,b) => b.pts-a.pts || b.dif-a.dif || b.gf-a.gf || a.name.localeCompare(b.name));
+    // Reaplicar el desempate oficial también en live para no romper empates H2H ya resueltos.
+    applyTiebreakSort(standingsData, standingsRound);
     standingsData.forEach((t,i) => t.pos = i+1);
 
     // Recalcular situacion y quedan con las nuevas posiciones y puntos
@@ -2920,7 +2925,7 @@ function renderStandings() {{
         else t.situacion = `A ${{dAs}} DE ASEGURAR`;
       }} else if (pos <= 6) {{
         const lPts7 = standingsData[6]?.pts ?? 0;
-        const dAsc  = lPts2 - t.pts;
+          const dAsc  = pointsToOvertakeCutoff(t.pts, lPts2, pos, 2);
         const dOv7  = t.pts - lPts7;
         if (dAsc <= qRef) {{
           t.situacion = dAsc === 0 ? 'IGUALA 2º EN PTS' : `A ${{dAsc}} DEL ASCENSO DIRECTO`;
@@ -2931,14 +2936,14 @@ function renderStandings() {{
           t.situacion = 'EN PLAYOFF';
         }}
       }} else if (pos <= 18) {{
-        const dPlay = lPts6 - t.pts;
+          const dPlay = pointsToOvertakeCutoff(t.pts, lPts6, pos, 6);
         const dDesc = t.pts - lPts19;
         const safe  = dDesc > qRef;
         if (safe && dPlay > qRef) {{ t.situacion = 'PERMANENCIA'; t.secured = 'permanence'; }}
         else if (dPlay <= qRef && (safe || dPlay <= dDesc)) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
         else t.situacion = `A ${{dDesc}} DEL DESCENSO`;
       }} else {{
-        const needed = lPts18 - t.pts;
+          const needed = pointsToOvertakeCutoff(t.pts, lPts18, pos, 18);
         if (needed > qRef) {{ t.situacion = 'DESCENSO'; t.secured = 'relegation'; }}
         else t.situacion = `A ${{needed}} DE SALVACIÓN`;
       }}
