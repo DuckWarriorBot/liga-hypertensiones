@@ -64,24 +64,31 @@ STANDBY_SLEEP   = 60    # segundos en STANDBY
 CLOSING_EXTRA   = 1     # ciclos extra tras partido terminado (para capturar resultado)
 
 
+LOG_FILE = BASE_DIR / 'live_loop.log'
+
+
 def ts():
     return datetime.datetime.now().strftime('%H:%M:%S')
 
 
 def log(msg):
-    print(f'[{ts()}] {msg}', flush=True)
+    line = f'[{ts()}] {msg}'
+    print(line, flush=True)
+    try:
+        with open(LOG_FILE, 'a', encoding='utf-8') as _lf:
+            _lf.write(line + '\n')
+    except Exception:
+        pass
 
 
 def env_utf8():
     """Env con PYTHONIOENCODING=utf-8 para evitar errores de codificacion en Windows."""
     e = os.environ.copy()
     e['PYTHONIOENCODING'] = 'utf-8'
-    # Asegurar que la contraseña SFTP se propaga a los subprocesos
-    if 'IONOS_SFTP_PASS' not in e:
-        # Intentar leerla de un archivo local .sftp_pass si existe
-        sftp_pass_file = BASE_DIR / '.sftp_pass'
-        if sftp_pass_file.exists():
-            e['IONOS_SFTP_PASS'] = sftp_pass_file.read_text(encoding='utf-8').strip()
+    # .sftp_pass siempre tiene prioridad (sobreescribe cualquier valor del entorno)
+    sftp_pass_file = BASE_DIR / '.sftp_pass'
+    if sftp_pass_file.exists():
+        e['IONOS_SFTP_PASS'] = sftp_pass_file.read_text(encoding='utf-8').strip()
     return e
 
 
@@ -159,8 +166,6 @@ def run_full_cycle():
     deploy_path = BASE_DIR / 'deploy.py'
     log('  > deploy.py --sftp --only-deploy...')
     t0 = time.time()
-    # Intentar primero SFTP con Python311 (tiene paramiko, es el canal real al servidor)
-    log('  > deploy.py --sftp --only-deploy...')
     py_deploy = PYTHON_PLAYWRIGHT  # Python311 tiene paramiko
     r = subprocess.run(
         [py_deploy, str(deploy_path), '--sftp', '--only-deploy'],
@@ -172,21 +177,10 @@ def run_full_cycle():
     if r.returncode == 0:
         log(f'  OK   deploy SFTP ({elapsed:.0f}s)')
         return True
-    # Fallback a WebDAV si SFTP falla
-    log(f'  WARN SFTP falló ({elapsed:.0f}s), intentando WebDAV...')
-    r2 = subprocess.run(
-        [PYTHON, str(deploy_path), '--only-deploy'],
-        cwd=str(BASE_DIR),
-        capture_output=True, text=True, encoding='utf-8', errors='replace',
-        env=env_utf8()
-    )
-    elapsed2 = time.time() - t0
-    if r2.returncode == 0:
-        log(f'  OK   deploy SFTP ({elapsed2:.0f}s)')
-        return True
-    log(f'  FAIL deploy ({elapsed2:.0f}s)')
-    for line in r2.stderr.strip().splitlines()[-5:]:
-        print(f'       {line}', flush=True)
+    log(f'  FAIL deploy SFTP ({elapsed:.0f}s) — rc={r.returncode}')
+    # Loggear salida completa para diagnóstico
+    for line in (r.stdout + r.stderr).strip().splitlines()[-10:]:
+        log(f'       {line}')
     return False
 
 
