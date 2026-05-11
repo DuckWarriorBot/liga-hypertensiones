@@ -9,7 +9,7 @@ Scrapes:
 Requiere: pip install playwright && python -m playwright install chromium
 """
 
-import json, re, sys, unicodedata, time as _time
+import json, re, sys, unicodedata, time as _time, ast as _ast
 from pathlib import Path
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
@@ -19,6 +19,25 @@ if hasattr(sys.stdout, 'reconfigure'):
 BASE_DIR     = Path(__file__).parent
 LIGA_F       = BASE_DIR / 'liga_data.json'
 SCORES_F     = BASE_DIR / 'scores_data.json'
+
+# ── Calendario canónico H/A extraído de generate_data.py (fuente de verdad) ──
+# _CANONICAL_HOME[(home, away, idx)] = True  → home ES el local real en esa jornada
+_CANONICAL_HOME: dict = {}
+try:
+    _gd_src = (BASE_DIR / 'generate_data.py').read_text(encoding='utf-8')
+    _m = re.search(r'FIXTURES\s*=\s*(\[.+?\])\s*\n[a-zA-Z#]', _gd_src, re.DOTALL)
+    if _m:
+        _FIXTURES_RAW = _ast.literal_eval(_m.group(1))
+        for _jidx, _matches in enumerate(_FIXTURES_RAW):
+            for _h, _a in _matches:
+                _CANONICAL_HOME[(_h, _a, _jidx)] = True   # home es local
+                _CANONICAL_HOME[(_a, _h, _jidx)] = False  # away es visitante (home invertido)
+except Exception as _e:
+    print(f'[flashscore] AVISO: no se pudo cargar CANONICAL_HOME: {_e}', flush=True)
+
+# Índice 0-based por pareja directional: (home, away) -> jidx
+# Fuente de verdad para el round de cada partido, sin depender de Flashscore.
+_CANONICAL_IDX: dict = {(_h, _a): _jidx for (_h, _a, _jidx) in _CANONICAL_HOME.keys()}
 
 RESULTS_URL  = 'https://www.flashscore.es/futbol/espana/laliga-hypermotion/resultados/'
 FIXTURES_URL = 'https://www.flashscore.es/futbol/espana/laliga-hypermotion/partidos/'
@@ -498,6 +517,25 @@ def update_scores(liga, scores, result_list, rdb=None):
         if idx is None:
             continue
 
+        idx_str = str(idx)
+
+        # ── Guardia estricta: nunca sobreescribir J1-J38 con datos de flashscore ─
+        # Los datos de J1-J38 provienen EXCLUSIVAMENTE de football-data.co.uk
+        # (fetch_scores.py). Flashscore solo gestiona J39+ (jornadas actuales).
+        total_rounds_val = liga.get('total_rounds', 38)
+        if idx < total_rounds_val:
+            continue  # J1-J38: siempre saltar, usar sólo football-data.co.uk
+
+        # ── Validar home/away con calendario canónico ─────────────────────
+        # Flashscore a veces invierte home y away para jornadas actuales (J39+).
+        # Para J1-J38 ya están protegidas por la guardia histórica de arriba.
+        if _CANONICAL_HOME:
+            is_home = _CANONICAL_HOME.get((home, away, idx))
+            if is_home is False:
+                # home de flashscore es en realidad el visitante → invertir
+                home, away = away, home
+                hg, ag = ag, hg
+
         # ── BD persistente ────────────────────────────────────────────────
         if rdb is not None:
             locked = _rdb_mod.get_locked(rdb, home, away, idx)
@@ -524,15 +562,25 @@ def update_scores(liga, scores, result_list, rdb=None):
 def update_fixtures(liga, fixture_list):
     """
     Actualiza liga_data.json:
-      - fixtures[]: fechas y horas de partidos futuros
+      - fixtures[]: solo DATE y TIME de partidos futuros
       - match_days: {DD/MM: [HH:MM, ...]} para el scheduler de server.py
 
-    Retorna número de partidos actualizados/añadidos.
+    IMPORTANTE: round, home y away de fixtures EXISTENTES son INMUTABLES aquí.
+    Su fuente de verdad es generate_data.py. Flashscore solo aporta fecha/hora.
+
+    Retorna número de partidos actualizados.
     """
-    # Índice fixtures existentes por home|away
+    # Índice fixtures existentes por home|away (y también away|home para matchear invertidos)
     fix_by_pair = {}
     for f in liga.get('fixtures', []):
         fix_by_pair[f'{f["home"]}|{f["away"]}'] = f
+
+    # Índice alternativo para encontrar fixture aunque Flashscore invierta home/away
+    fix_by_canonical = {}
+    for f in liga.get('fixtures', []):
+        h, a = f['home'], f['away']
+        fix_by_canonical[f'{h}|{a}'] = f
+        fix_by_canonical[f'{a}|{h}'] = f  # alias invertido apunta al mismo objeto
 
     match_days = liga.setdefault('match_days', {})
     updated = 0
@@ -541,26 +589,31 @@ def update_fixtures(liga, fixture_list):
         home, away = m['home'], m['away']
         date_str, time_str = m['date'], m['time']
 
-        # La página /partidos/ de Flashscore no siempre expone headers de ronda.
-        # Si viene round_num (0-based), convertir a 1-based para fixtures.
-        # Si NO viene, NO cambiar la ronda existente (sólo actualizar fecha/hora).
-        round_num = m.get('round_num')
-        fixture_round = (round_num + 1) if round_num is not None else None
-
+        # Buscar fixture existente (por orden directo o invertido de Flashscore)
         key = f'{home}|{away}'
-        if key in fix_by_pair:
-            f = fix_by_pair[key]
-            if fixture_round is not None:
-                f['round'] = fixture_round  # Solo actualizar si hay dato autoritativo
+        f = fix_by_canonical.get(key)
+
+        if f is not None:
+            # Fixture existente: SOLO actualizar fecha/hora. NUNCA round/home/away.
             if date_str:
                 f['date'] = date_str
             if time_str:
                 f['time'] = time_str
         else:
-            new_f = {'round': fixture_round or 0, 'home': home, 'away': away,
+            # Fixture nuevo (no estaba en el calendario canónico):
+            # Usar _CANONICAL_IDX para asignar round correcto si lo conocemos.
+            canonical_idx = _CANONICAL_IDX.get((home, away)) or _CANONICAL_IDX.get((away, home))
+            round_num = m.get('round_num')
+            if canonical_idx is not None:
+                fixture_round = canonical_idx + 1
+            elif round_num is not None:
+                fixture_round = round_num + 1
+            else:
+                fixture_round = 0
+            new_f = {'round': fixture_round, 'home': home, 'away': away,
                      'date': date_str, 'time': time_str}
             liga.setdefault('fixtures', []).append(new_f)
-            fix_by_pair[key] = new_f
+            fix_by_canonical[key] = new_f
 
         # Actualizar match_days
         if date_str and time_str:
@@ -601,6 +654,12 @@ def main():
             live_list    = scrape_live_scores(page)   # página ya en /partidos/
         finally:
             browser.close()
+
+    # ── Recargar scores tras el scraping (~60s) para no sobreescribir datos
+    # frescos escritos por fetch_scores.py durante la ventana de scraping.
+    scores = json.loads(SCORES_F.read_text(encoding='utf-8')) if SCORES_F.exists() else {}
+    scores.setdefault('scores_by_team', {})
+    scores.setdefault('venue_by_team', {})
 
     n_scores = update_scores(liga, scores, result_list, rdb)
     n_fix    = update_fixtures(liga, fixture_list)

@@ -401,6 +401,26 @@ else:
     as_stats_js = '[]'
     print('[build] INFO: as_stats.json no encontrado — ejecuta fetch_as.py')
 
+# Venue canónico extraído de FIXTURES (fuente de verdad del calendario H/A)
+# Evita depender de venue_by_team de scores_data.json que puede tener errores
+import re as _re, ast as _ast
+_gd_path = os.path.join(os.path.dirname(__file__), 'generate_data.py')
+try:
+    with open(_gd_path, 'r', encoding='utf-8') as _gf:
+        _gd_src = _gf.read()
+    _m = _re.search(r'FIXTURES\s*=\s*(\[.+?\])\s*\n[a-zA-Z#]', _gd_src, _re.DOTALL)
+    _FIXTURES_RAW = _ast.literal_eval(_m.group(1)) if _m else []
+    _canonical_venue = {}
+    for _jidx, _matches in enumerate(_FIXTURES_RAW):
+        for _home, _away in _matches:
+            _canonical_venue.setdefault(_home, {})[str(_jidx)] = 'H'
+            _canonical_venue.setdefault(_away, {})[str(_jidx)] = 'A'
+    canonical_venue_js = json.dumps(_canonical_venue, ensure_ascii=False)
+    print(f"[build] CANONICAL_VENUE generado: {len(_FIXTURES_RAW)} jornadas, {len(_canonical_venue)} equipos")
+except Exception as _e:
+    canonical_venue_js = '{}'
+    print(f"[build] AVISO: no se pudo generar CANONICAL_VENUE: {_e}")
+
 html = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1391,6 +1411,11 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   gap: 3px;
   flex-shrink: 0;
 }}
+.live-bar .live-score-pill {{
+  background: rgba(255,255,255,.08);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,.14);
+}}
 
 /* ===== STANDINGS ROUND NAV ===== */
 .standings-round-nav {{
@@ -2282,7 +2307,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
         <div class="card-title">⚡ Ataque vs Defensa</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:8px">GF (eje X) · GC (eje Y) · líneas = media liga</div>
         <div class="chart-container" style="height:320px"><canvas id="scatterChart"></canvas></div>
-        <div class="card-legend"><b>Eje X</b> Goles a favor (GF) · <b>Eje Y</b> Goles en contra (GC, mayor = peor) · Líneas = media de la liga · <b>🔥 Coladero</b> (arriba-izq) mucho gol a favor pero también encajan muchos · <b>Sólidos 📊</b> (arriba-dcha) buen ataque y buena defensa · <b>🛡 Robustos</b> (abajo-izq) poco gol pero también encajan poco · <b>Killers ⚡</b> (abajo-dcha) marcan mucho y no encajan: el ideal</div>
+        <div class="card-legend"><b>Eje X</b> Goles a favor (GF) · <b>Eje Y</b> Goles en contra (GC, mayor = peor) · Líneas = media de la liga · <b>🔥 Sin sangre</b> (arriba-izq) mucho gol a favor pero también encajan muchos · <b>All-In 📊</b> (arriba-dcha) buen ataque y buena defensa · <b>🛡 Autobus</b> (abajo-izq) poco gol pero también encajan poco · <b>Apisonadora ⚡</b> (abajo-dcha) marcan mucho y no encajan: el ideal</div>
       </div>
       <div class="card">
         <div class="card-title">🏅 Rankings</div>
@@ -2350,7 +2375,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
         <div class="card-title">🎯 Eficiencia ofensiva — precisión vs efectividad</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:12px"><b>Eje X:</b> % de disparos que van a puerta · <b>Eje Y:</b> goles por partido · Las líneas marcan las medianas de la liga</div>
         <div class="chart-container" style="height:400px"><canvas id="eficienciaChart"></canvas></div>
-        <div class="card-legend"><span style="color:#a78bfa">⚡ Sniper</span> (dcha-arriba): disparan con precisión <i>y</i> convierten muchos goles &nbsp;·&nbsp; <span style="color:#94a3b8">Eficaz sin brillar</span> (izq-arriba): muchos goles aunque con poca precisión bruta (contraataques, penaltis…) &nbsp;·&nbsp; <span style="color:#94a3b8">Manguera</span> (dcha-abajo): disparan bien dirigido pero no convierten &nbsp;·&nbsp; <span style="color:#94a3b8">Estéril</span> (izq-abajo): poca precisión y poco gol &nbsp;·&nbsp; Precisión = disparos a puerta ÷ total disparos</div>
+        <div class="card-legend"><span style="color:#a78bfa">⚡ Killer</span> (dcha-arriba): disparan con precisión <i>y</i> convierten muchos goles &nbsp;·&nbsp; <span style="color:#94a3b8">Bombardero</span> (izq-arriba): muchos goles aunque con poca precisión bruta (contraataques, penaltis…) &nbsp;·&nbsp; <span style="color:#94a3b8">Minimalistas</span> (dcha-abajo): disparan bien dirigido pero no convierten &nbsp;·&nbsp; <span style="color:#94a3b8">Sin pólvora</span> (izq-abajo): poca precisión y poco gol &nbsp;·&nbsp; Precisión = disparos a puerta ÷ total disparos</div>
       </div>
 
       <!-- Radar ADN táctico: ganando vs perdiendo -->
@@ -2465,6 +2490,7 @@ let SCORES_DATA = {scores_js};
 const PRED_HISTORY = {pred_hist_js};
 const HISTORY_DATA = {history_js};
 const AS_STATS = {as_stats_js};
+const CANONICAL_VENUE = {canonical_venue_js}; // fuente de verdad H/A del calendario
 // Ganadores del playoff de ascenso por temporada histórica
 const HIST_PLAYOFF_WINNERS = {{
   '2019/20': 'Elche',
@@ -2492,6 +2518,7 @@ let currentRound = (() => {{
 let standingsRound = currentRound; // which jornada to show in standings
 let formMode = 0; // 0 = general, N = last N jornadas
 let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome, minute}}
+const UI_STATE_KEY = 'hypertensiones_ui_state_v1';
 
 // Poblar liveState desde datos embebidos (partidos en curso)
 (function() {{
@@ -2507,6 +2534,41 @@ let liveState = {{}}; // name -> {{opponent, diff, homeGoals, awayGoals, isHome,
     }};
   }});
 }})();
+
+function clampRoundValue(value) {{
+  const n = parseInt(value, 10);
+  if (!Number.isFinite(n)) return currentRound;
+  return Math.max(1, Math.min(42, n));
+}}
+
+function getActiveTabName() {{
+  const activePanel = document.querySelector('.tab-panel.active');
+  return activePanel ? activePanel.id.replace('tab-', '') : 'clasificacion';
+}}
+
+function captureUiState() {{
+  const roundInput = document.getElementById('roundInput');
+  return {{
+    activeTab: getActiveTabName(),
+    round: clampRoundValue(roundInput ? roundInput.value : currentRound),
+    scrollY: window.scrollY || 0,
+  }};
+}}
+
+function persistUiState(extra = {{}}) {{
+  try {{
+    sessionStorage.setItem(UI_STATE_KEY, JSON.stringify({{ ...captureUiState(), ...extra }}));
+  }} catch (e) {{}}
+}}
+
+function readUiState() {{
+  try {{
+    const raw = sessionStorage.getItem(UI_STATE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }} catch (e) {{
+    return null;
+  }}
+}}
 
 // ===== DESEMPATE CARA A CARA (Reglamento 2ª División) =====
 // Criterios (en orden): pts · H2H pts · H2H GD · H2H GF · GD general · GF general · nombre
@@ -2782,6 +2844,7 @@ function switchTab(name) {{
   if (name === 'analisis') initAnalysisTab();
   if (name === 'equipos') renderTeams();
   if (name === 'playoff') renderPlayoff();
+  persistUiState();
 }}
 
 function toggleNav() {{
@@ -2880,7 +2943,7 @@ function liveScoreCell(name) {{
   if (!ls) return '';
   const isFT  = ls.minute === 'FT';
   const col   = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
-  const score = ls.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
+  const score = `${{ls.homeGoals}}-${{ls.awayGoals}}`;
   const minRaw = ls.minute || '';
   const minStr = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
   const dot    = isFT ? '' : '<span class="live-dot-indicator"></span>';
@@ -3307,7 +3370,7 @@ function renderRoundResults() {{
   let teamList = [...LIGA_DATA.teams]; // por defecto alfabético
   if (resultsSortMode === 'clas') {{
     const standingsMap = {{}};
-    computeStandingsForRound(Math.min(currentRound, LIGA_DATA.total_rounds)).forEach((t,i) => {{ standingsMap[t.name] = i; }});
+    computeStandingsForRound(currentRound).forEach((t,i) => {{ standingsMap[t.name] = i; }});
     teamList.sort((a,b) => (standingsMap[a]??99) - (standingsMap[b]??99));
   }}
   // Índice global de fixtures por "home|away" → {{date, time}}
@@ -3320,19 +3383,22 @@ function renderRoundResults() {{
     }});
   }}
   grid.innerHTML = teamList.map(name => {{
+    const oppAtIdx = oppsMap[name]?.[idx] || null;
     // Si hay un score terminado en scores_by_team, mostrar resultado aunque la jornada no esté marcada como jugada
     const _scMapQ = SCORES_DATA.scores_by_team || {{}};
     const _hasFinishedScore = !!(_scMapQ[name] || {{}})[String(idx)];
     if (!played && !_hasFinishedScore) {{
       // Buscar fixture directamente en LIGA_DATA.fixtures (más fiable que oppsMap)
       const fxRaw = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
+      const fxOpp = fxRaw ? (fxRaw.home === name ? fxRaw.away : fxRaw.home) : null;
+      const fxAligned = !!fxRaw && (!oppAtIdx || fxOpp === oppAtIdx);
       let fx = null;
-      if (fxRaw) {{
+      if (fxRaw && fxAligned) {{
         const isHome2 = fxRaw.home === name;
-        fx = {{ opp: isHome2 ? fxRaw.away : fxRaw.home, isHome: isHome2, date: fxRaw.date, time: fxRaw.time }};
+        fx = {{ opp: fxOpp, isHome: isHome2, date: fxRaw.date, time: fxRaw.time }};
       }} else {{
-        // Fallback a oppsMap si no hay fixture
-        const opp2 = oppsMap[name]?.[idx];
+        // Fallback a oppsMap si el fixture no existe o ya apunta a la jornada siguiente
+        const opp2 = oppAtIdx;
         if (opp2) {{
           const keyHome = name + '|' + opp2;
           const keyAway = opp2 + '|' + name;
@@ -3363,7 +3429,7 @@ function renderRoundResults() {{
           const ftStyle   = isFT ? `border:2px solid ${{liveCol}};` : '';
           const scoreH    = ls.isHome ? ls.homeGoals : ls.awayGoals;
           const scoreA    = ls.isHome ? ls.awayGoals : ls.homeGoals;
-          const scoreDisp = fx.isHome ? `${{ls.homeGoals}}-${{ls.awayGoals}}` : `${{ls.awayGoals}}-${{ls.homeGoals}}`;
+          const scoreDisp = `${{ls.homeGoals}}-${{ls.awayGoals}}`;
           const minRaw    = ls.minute || '';
           const minStr    = isFT ? 'FIN' : (minRaw === 'HT' ? "D'" : minRaw);
           const dot       = isFT ? '' : '<span class="live-dot-indicator"></span>';
@@ -3412,14 +3478,47 @@ function renderRoundResults() {{
       }}
     }}
     if (!r) {{
-      // Sin resultado aún: buscar fixture directamente en LIGA_DATA.fixtures (más fiable que oppsMap para jornadas futuras)
-      const fx0raw = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
-      if (fx0raw) {{
-        const opp0 = fx0raw.home === name ? fx0raw.away : fx0raw.home;
-        const isHome0 = fx0raw.home === name;
+      // Sin resultado aún. Usar oppAtIdx (opponents_by_team) como fuente de verdad del rival.
+      // LIGA_DATA.fixtures puede tener round desfasado (el fetch trae la siguiente jornada con el mismo número)
+      const opp0 = oppAtIdx;
+      // Buscar fixture por nombres de equipos (no por round, que puede estar mal) para obtener fecha/hora/sede
+      const fx0raw = opp0 ? (LIGA_DATA.fixtures || []).find(f =>
+        (f.home === name && f.away === opp0) || (f.home === opp0 && f.away === name)
+      ) : null;
+      if (opp0) {{
+        const isHome0 = fx0raw ? fx0raw.home === name : null;
         const oppCrest0 = crestHTML(opp0, 22);
-        const venueLabel0 = isHome0 ? 'Casa' : 'Fuera';
-        const dateTime0 = [fx0raw.date, fx0raw.time].filter(Boolean).join(' ');
+        const venueLabel0 = isHome0 === true ? 'Casa' : isHome0 === false ? 'Fuera' : '';
+        const dateTime0 = fx0raw ? [fx0raw.date, fx0raw.time].filter(Boolean).join(' ') : '';
+        // Detectar si este partido está en vivo ahora mismo
+        const lsN0 = typeof liveState !== 'undefined' && liveState[name];
+        const lsO0 = typeof liveState !== 'undefined' && liveState[opp0];
+        const ls0 = (lsN0 && lsN0.opponent === opp0) ? lsN0
+                  : (lsO0 && lsO0.opponent === name)  ? lsO0 : null;
+        if (ls0) {{
+          const isFT0     = ls0.minute === 'FT';
+          const teamDiff0 = ls0.opponent === opp0 ? ls0.diff : -ls0.diff;
+          const liveClass0 = isFT0 ? '' : (teamDiff0 > 0 ? 'live-V' : teamDiff0 < 0 ? 'live-D' : 'live-E');
+          const liveCol0   = teamDiff0 > 0 ? '#22c55e' : teamDiff0 < 0 ? '#ef4444' : '#fbbf24';
+          const ftStyle0   = isFT0 ? `border:2px solid ${{liveCol0}};` : '';
+          const scoreDisp0 = `${{ls0.homeGoals}}-${{ls0.awayGoals}}`;
+          const minStr0    = isFT0 ? 'FIN' : (ls0.minute === 'HT' ? "D'" : ls0.minute);
+          const dot0       = isFT0 ? '' : '<span class="live-dot-indicator"></span>';
+          return `<div class="result-card ${{liveClass0}}" style="${{ftStyle0}}">
+            <div class="team-cell" style="gap:8px">
+              <div style="flex-shrink:0">${{crestHTML(name)}}</div>
+              <div>
+                <div class="result-team">${{name}}</div>
+                <div class="result-detail" style="display:flex;align-items:center;gap:4px">${{oppCrest0}}<span>${{opp0}}</span></div>
+                <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
+                  <span style="font-size:13px;font-weight:800;letter-spacing:1px;color:${{liveCol0}};background:${{liveCol0}}22;border-radius:6px;padding:1px 7px;white-space:nowrap">${{scoreDisp0}}</span>
+                  <span class="live-score-pill" style="background:${{liveCol0}}22;color:${{liveCol0}};font-size:9px;padding:1px 5px">${{dot0}}${{minStr0 || (isFT0 ? 'FIN' : '🔴')}}</span>
+                  ${{venueLabel0 ? `<span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueLabel0}}</span>` : ''}}
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }}
         return `<div class="result-card" style="opacity:.5;border-style:dashed">
           <div class="team-cell" style="gap:8px">
             <div style="flex-shrink:0">${{crestHTML(name)}}</div>
@@ -3428,7 +3527,7 @@ function renderRoundResults() {{
               <div class="result-detail" style="display:flex;align-items:center;gap:4px">${{oppCrest0}}<span>${{opp0}}</span></div>
               <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
                 ${{dateTime0 ? `<span style="font-size:10px;font-weight:700;color:var(--text)">${{dateTime0}}</span>` : ''}}
-                <span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueLabel0}}</span>
+                ${{venueLabel0 ? `<span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueLabel0}}</span>` : ''}}
               </div>
             </div>
           </div>
@@ -3437,21 +3536,21 @@ function renderRoundResults() {{
       return `<div class="result-card" style="opacity:.4"><div><div class="result-team">${{name}}</div><div class="result-detail">Sin resultado</div></div></div>`;
     }}
     const lbl = r==='V'?'Victoria':r==='E'?'Empate':'Derrota';
-    // Prefer fixtures over oppsMap (oppsMap can be misaligned after round updates)
     const _fxRes = (LIGA_DATA.fixtures || []).find(f => f.round === currentRound && (f.home === name || f.away === name));
-    const opp = _fxRes ? (_fxRes.home === name ? _fxRes.away : _fxRes.home) : oppsMap[name]?.[idx];
+    const _fxResOpp = _fxRes ? (_fxRes.home === name ? _fxRes.away : _fxRes.home) : null;
+    const _fxResAligned = !!_fxRes && (!oppAtIdx || _fxResOpp === oppAtIdx);
+    const opp = oppAtIdx || _fxResOpp;
     const oppCrest = opp ? crestHTML(opp, 22) : '';
     const scMap2    = SCORES_DATA.scores_by_team || SCORES_DATA;
     const venueMap2 = SCORES_DATA.venue_by_team  || {{}};
     const rawScore  = (scMap2[name]||{{}})[String(idx)];
-    // Prioridad: 1) fixture directo (más fiable que scores_data/AS_STATS para jornadas recientes)
-    let venue2 = _fxRes ? (_fxRes.home === name ? 'H' : 'A') : (venueMap2[name]||{{}})[String(idx)];
-    // Fallback: corregir venue usando AS_STATS si no hay fixture
-    if (!_fxRes && opp && AS_STATS.length) {{
+    let venue2 = (venueMap2[name]||{{}})[String(idx)];
+    if (!venue2 && opp && AS_STATS.length) {{
       const _asFix = AS_STATS.find(s => s.jornada === currentRound &&
         ((s.home === name && s.away === opp) || (s.home === opp && s.away === name)));
       if (_asFix) venue2 = _asFix.home === name ? 'H' : 'A';
     }}
+    if (!venue2 && _fxResAligned) venue2 = _fxRes.home === name ? 'H' : 'A';
     let displayScore = rawScore;
     if (rawScore && venue2==='A') {{
       const p = rawScore.split('-');
@@ -3465,8 +3564,9 @@ function renderRoundResults() {{
       ? `<span style="font-size:9px;color:var(--muted);background:rgba(255,255,255,.05);border-radius:4px;padding:1px 5px;">${{venueTxt}}</span>`
       : '';
     const dotColor = r==='V'?'#22c55e':r==='E'?'#fbbf24':'#ef4444';
+    // Aplicar liveClass solo si el rival del partido en vivo coincide con opp en esta jornada
     const liveEntry = typeof liveState !== 'undefined' && liveState[name];
-    const liveClass = liveEntry ? ` live-${{r}}` : '';
+    const liveClass = (liveEntry && liveEntry.opponent === opp) ? ` live-${{r}}` : '';
     const _mh = venue2==='H' ? name : (opp||'');
     const _ma = venue2==='A' ? name : (opp||'');
     const _ca = (opp&&venue2) ? ` data-home="${{_mh}}" data-away="${{_ma}}" data-jornada="${{currentRound}}" onclick="openMatchStatsModal(this.dataset.home,this.dataset.away,+this.dataset.jornada)" title="Ver estadísticas del partido" style="cursor:pointer"` : '';
@@ -3484,6 +3584,7 @@ function renderRoundResults() {{
       </div>
     </div>`;
   }}).join('');
+  if (getActiveTabName() === 'resultados') persistUiState();
   renderHistoryTable();
 }}
 let resultsSortMode = 'clas'; // 'clas' | 'alfa'
@@ -3575,7 +3676,7 @@ function renderHistoryTable(sortBy) {{
           const liveCol = lsEntry.diff > 0 ? '#4ade80' : lsEntry.diff < 0 ? '#f87171' : '#fbbf24';
           const minRaw  = lsEntry.minute || '';
           const minStr  = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
-          const liveScore = lsEntry.isHome ? `${{lsEntry.homeGoals}}-${{lsEntry.awayGoals}}` : `${{lsEntry.awayGoals}}-${{lsEntry.homeGoals}}`;
+          const liveScore = `${{lsEntry.homeGoals}}-${{lsEntry.awayGoals}}`;
           const dot     = isFT ? '' : `<span class="live-dot-indicator" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${{liveCol}};animation:livePulse 1.2s ease-in-out infinite"></span>`;
           const titleLbl = isFT ? 'FIN' : 'EN VIVO';
           return `<td style="background:${{liveCol}}22;outline:1.5px solid ${{liveCol}};outline-offset:-1px;text-align:center" title="${{titleLbl}} ${{liveScore}}${{minStr?' '+minStr:''}} \u00b7 vs ${{oppAtIdx}}">${{dot}}</td>`;
@@ -4889,10 +4990,10 @@ function buildEficienciaChart() {{
       c.setLineDash([]);
       c.font = 'bold 9px Segoe UI,system-ui,sans-serif';
       c.fillStyle = 'rgba(148,163,184,.4)';
-      c.textAlign = 'left';  c.fillText('Eficaz sin brillar', chartArea.left+4, chartArea.top+12);
-      c.textAlign = 'right'; c.fillText('Sniper \u26a1', chartArea.right-4, chartArea.top+12);
-      c.textAlign = 'left';  c.fillText('Est\u00e9ril', chartArea.left+4, chartArea.bottom-4);
-      c.textAlign = 'right'; c.fillText('Manguera', chartArea.right-4, chartArea.bottom-4);
+      c.textAlign = 'left';  c.fillText('Bombardero', chartArea.left+4, chartArea.top+12);
+      c.textAlign = 'right'; c.fillText('Killer \u26a1', chartArea.right-4, chartArea.top+12);
+      c.textAlign = 'left';  c.fillText('Sin pólvora', chartArea.left+4, chartArea.bottom-4);
+      c.textAlign = 'right'; c.fillText('Minimalistas', chartArea.right-4, chartArea.bottom-4);
       c.restore();
     }}
   }};
@@ -5210,10 +5311,10 @@ function buildScatterChart() {{
       c.setLineDash([]);
       c.font = 'bold 9px Segoe UI,system-ui,sans-serif';
       c.fillStyle = 'rgba(148,163,184,.45)';
-      c.textAlign = 'left';  c.fillText('Coladero', chartArea.left+4, chartArea.top+12);
-      c.textAlign = 'right'; c.fillText('S\u00f3lidos', chartArea.right-4, chartArea.top+12);
-      c.textAlign = 'left';  c.fillText('Robustos', chartArea.left+4, chartArea.bottom-4);
-      c.textAlign = 'right'; c.fillText('Killers', chartArea.right-4, chartArea.bottom-4);
+      c.textAlign = 'left';  c.fillText('Sin sangre', chartArea.left+4, chartArea.top+12);
+      c.textAlign = 'right'; c.fillText('All-In', chartArea.right-4, chartArea.top+12);
+      c.textAlign = 'left';  c.fillText('Autobus', chartArea.left+4, chartArea.bottom-4);
+      c.textAlign = 'right'; c.fillText('Apisonadora', chartArea.right-4, chartArea.bottom-4);
       c.restore();
     }}
   }};
@@ -5515,19 +5616,33 @@ function renderH2H() {{
   const resMap = LIGA_DATA.results_by_team   || {{}};
   const oppMap = LIGA_DATA.opponents_by_team  || {{}};
   const scMap  = SCORES_DATA.scores_by_team  || {{}};
-  const venMap = SCORES_DATA.venue_by_team   || {{}};
+  // Usar CANONICAL_VENUE (calendario H/A de generate_data.py) como fuente de verdad.
+  // venue_by_team de scores_data.json puede tener errores de datos.
+  // En modo histórico, LIGA_DATA.venue_by_team contiene los datos de la temporada histórica.
+  const venBase = (!_historicalMode && Object.keys(CANONICAL_VENUE).length > 0)
+    ? CANONICAL_VENUE
+    : (LIGA_DATA.venue_by_team || SCORES_DATA.venue_by_team || {{}});
   const h2h = {{}};
   for (const team of teams) {{
     const res = resMap[team] || [];
     const opp = oppMap[team] || [];
     const sc  = scMap[team]  || {{}};
-    const ven = venMap[team] || {{}};
-    for (let i = 0; i < res.length; i++) {{
+    const ven = venBase[team] || {{}};
+    // Extender hasta el último índice con marcador real (cubre J39+ aunque no estén en el Excel)
+    const scKeys = Object.keys(sc).map(Number).filter(n => !isNaN(n));
+    const maxIdx = Math.max(res.length - 1, scKeys.length ? Math.max(...scKeys) : -1);
+    for (let i = 0; i <= maxIdx; i++) {{
       const opponent = opp[i];
       const venue    = ven[String(i)];
       if (!opponent || venue !== 'H') continue;
-      const result = res[i];
-      const score  = sc[String(i)] || '-';
+      let result = res[i];
+      const score = sc[String(i)] || '-';
+      // Si no hay resultado oficial (Excel) pero sí marcador, derivarlo del marcador
+      if (!result && score !== '-') {{
+        const [gf, ga] = score.split('-').map(Number);
+        result = gf > ga ? 'V' : gf === ga ? 'E' : 'D';
+      }}
+      if (!result) continue;
       if (!h2h[team]) h2h[team] = {{}};
       h2h[team][opponent] = {{ res: result, score }};
     }}
@@ -5537,8 +5652,11 @@ function renderH2H() {{
   const tc    = r => r==='V'?'#0a0a0a':r==='E'?'#0a0a0a':r==='D'?'#fff':'var(--muted)';
   const crossEnabled = () => localStorage.getItem('h2h_cross') !== '0';
   let html = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
-  html += '<div style="font-size:10px;color:var(--muted)">Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota</div>';
+  html += '<div id="h2hLegend" style="font-size:10px;color:var(--muted)">Fila = local \u00b7 Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">\u25a0</span> Victoria local &nbsp;<span style="color:#f59e0b">\u25a0</span> Empate &nbsp;<span style="color:#ef4444">\u25a0</span> Derrota local</div>';
+  html += '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">';
   html += '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:10px;color:var(--muted);user-select:none"><input type="checkbox" id="h2hCrossToggle" style="accent-color:#39ff14;width:13px;height:13px;cursor:pointer"> Cruz de Selecci\u00f3n</label>';
+  html += '<div style="display:flex;align-items:center;gap:4px;font-size:10px"><span style="color:var(--muted)">Vista:</span><button id="h2hPovHome" style="padding:2px 8px;border-radius:4px;border:1px solid var(--border);background:var(--card2);color:var(--muted);cursor:pointer;font-size:10px">Local</button><button id="h2hPovAway" style="padding:2px 8px;border-radius:4px;border:1px solid var(--border);background:var(--card2);color:var(--muted);cursor:pointer;font-size:10px">Visitante</button></div>';
+  html += '</div>';
   html += '</div>';
   html += '<table class="h2h-matrix" style="border-collapse:collapse;font-size:8px;min-width:max-content"><thead><tr>';
   html += '<th style="min-width:26px;width:26px"></th>';
@@ -5560,7 +5678,7 @@ function renderH2H() {{
         const r    = cell?.res || '?';
         const s    = cell?.score || '-';
         const disp = (s !== '-' && s !== '?') ? s : '';
-        html += `<td data-r="${{ri}}" data-c="${{ci}}" style="background:${{bg(r)}};color:${{tc(r)}};width:24px;min-width:24px;height:20px;text-align:center;font-weight:700;font-size:8px" title="${{home}} vs ${{away}}: ${{s}}">${{disp}}</td>`;
+        html += `<td data-r="${{ri}}" data-c="${{ci}}" data-res="${{r}}" style="background:${{bg(r)}};color:${{tc(r)}};width:24px;min-width:24px;height:20px;text-align:center;font-weight:700;font-size:8px" title="${{home}} vs ${{away}}: ${{s}}">${{disp}}</td>`;
       }}
     }});
     html += '</tr>';
@@ -5595,6 +5713,39 @@ function renderH2H() {{
       tbl.querySelectorAll('.h2h-cross').forEach(x => x.classList.remove('h2h-cross'));
     }});
   }}
+  // ── POV toggle Local / Visitante ─────────────────────────────────────────
+  const _bgPov = (r, pov) => {{
+    if (r === 'E') return 'rgba(245,158,11,.70)';
+    if (r === '?') return 'var(--card2)';
+    return (pov === 'home' ? r === 'V' : r === 'D') ? 'rgba(57,255,20,.70)' : 'rgba(239,68,68,.70)';
+  }};
+  const _tcPov = (r, pov) => {{
+    if (r === '?') return 'var(--muted)';
+    return (r === 'E' || (pov === 'home' ? r === 'V' : r === 'D')) ? '#0a0a0a' : '#fff';
+  }};
+  const applyPov = (pov) => {{
+    localStorage.setItem('h2h_pov', pov);
+    const baseBtn = 'padding:2px 8px;border-radius:4px;cursor:pointer;font-size:10px;';
+    const btnH = el.querySelector('#h2hPovHome');
+    const btnA = el.querySelector('#h2hPovAway');
+    if (btnH) btnH.setAttribute('style', baseBtn + (pov==='home' ? 'border:1px solid #39ff14;background:#39ff1422;color:#39ff14' : 'border:1px solid var(--border);background:var(--card2);color:var(--muted)'));
+    if (btnA) btnA.setAttribute('style', baseBtn + (pov==='away' ? 'border:1px solid #39ff14;background:#39ff1422;color:#39ff14' : 'border:1px solid var(--border);background:var(--card2);color:var(--muted)'));
+    if (tbl) tbl.querySelectorAll('td[data-res]').forEach(td => {{
+      const r = td.dataset.res;
+      td.style.background = _bgPov(r, pov);
+      td.style.color = _tcPov(r, pov);
+    }});
+    const leg = el.querySelector('#h2hLegend');
+    if (leg) {{
+      const who = pov === 'home' ? 'local' : 'visitante';
+      leg.innerHTML = `Fila = local · Columna = visitante &nbsp;|&nbsp; <span style="color:#39ff14">■</span> Victoria ${{who}} &nbsp;<span style="color:#f59e0b">■</span> Empate &nbsp;<span style="color:#ef4444">■</span> Derrota ${{who}}`;
+    }}
+  }};
+  const btnPovHome = el.querySelector('#h2hPovHome');
+  const btnPovAway = el.querySelector('#h2hPovAway');
+  if (btnPovHome) btnPovHome.addEventListener('click', () => applyPov('home'));
+  if (btnPovAway) btnPovAway.addEventListener('click', () => applyPov('away'));
+  applyPov(localStorage.getItem('h2h_pov') || 'home');
 }}
 
 // ===== AUTO-UPDATE =====
@@ -5637,14 +5788,13 @@ function updateLiveBar() {{
     toShow.map(([name, ls]) => {{
       const isFT  = ls.minute === 'FT';
       const score = `${{ls.homeGoals}}-${{ls.awayGoals}}`;
-      const col   = ls.diff > 0 ? '#4ade80' : ls.diff < 0 ? '#f87171' : '#fbbf24';
       const minRaw = ls.minute || '';
       const minStr = isFT ? 'FIN' : (minRaw === 'HT' || minRaw === 'Descanso') ? "D'" : minRaw;
       const dot    = isFT ? '' : '<span class="live-dot-indicator"></span>';
       const label  = isFT ? '⬜ FIN' : '🔴 EN VIVO';
       return `<div class="live-match-pill">
         ${{crestHTML(name,18)}} <span>${{name}}</span>
-        <span class="live-score-pill" style="background:${{col}}22;color:${{col}}">${{dot}}${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>
+        <span class="live-score-pill">${{dot}}${{score}}${{minStr ? `<span style="font-size:9px;opacity:.75">${{minStr}}</span>` : ''}}</span>
         ${{crestHTML(ls.opponent,18)}} <span>${{ls.opponent}}</span>
       </div>`;
     }}).join('');
@@ -5701,6 +5851,7 @@ function scheduleUpdate() {{
 
 async function fetchAndUpdate() {{
   if (isFetching) return;
+  const savedUiState = captureUiState();
   isFetching = true;
   const el = document.getElementById('statusText');
   if (el) el.innerHTML = '<span style="color:var(--muted)">&#8635; Actualizando datos...</span>';
@@ -5753,8 +5904,10 @@ async function fetchAndUpdate() {{
           }});
           LIGA_DATA.final_standings.sort((a,b) => b.pts-a.pts || b.wins-a.wins);
         }}
+        const prevLiveState = Object.assign({{}}, liveState);
         liveState = {{}};
         parseLiveScores(html);
+        if (Object.keys(liveState).length === 0) liveState = prevLiveState;
       }}
     }} catch(e2) {{ console.warn('Fallback BeSoccer error:', e2.message); }}
     if (!lastUpdateTime) lastUpdateTime = new Date();
@@ -5762,11 +5915,21 @@ async function fetchAndUpdate() {{
     updateLiveBar();
     updateNextMatchBanner();
     autoDetectRound();
+    currentRound = clampRoundValue(savedUiState.round);
+    const roundInput = document.getElementById('roundInput');
+    if (roundInput) roundInput.value = currentRound;
     updateRoundsBadge();
     renderStandings();
     renderRoundResults();
     renderTeams();
     renderPredictions();
+    const tabToRestore = savedUiState.activeTab || 'clasificacion';
+    if (document.getElementById('tab-' + tabToRestore) && document.querySelector('[data-tab="' + tabToRestore + '"]')) {{
+      switchTab(tabToRestore);
+    }}
+    requestAnimationFrame(function() {{
+      window.scrollTo(0, Number.isFinite(savedUiState.scrollY) ? savedUiState.scrollY : 0);
+    }});
     lastUpdateTime = new Date();
     isFetching = false;
     updateStatusBar();
@@ -6512,7 +6675,11 @@ function initCollapsibleCards() {{
   }});
 }}
 function init() {{
+  const savedUiState = readUiState();
   autoDetectRound();
+  if (savedUiState) currentRound = clampRoundValue(savedUiState.round);
+  const roundInput = document.getElementById('roundInput');
+  if (roundInput) roundInput.value = currentRound;
   updateLiveBar();
   renderStandings();
   renderRoundResults();
@@ -6522,6 +6689,15 @@ function init() {{
   updateNextMatchBanner();
   setInterval(updateNextMatchBanner, 1000);
   initCollapsibleCards();
+  window.addEventListener('pagehide', function() {{
+    persistUiState({{ scrollY: window.scrollY }});
+  }});
+  if (savedUiState && savedUiState.activeTab && savedUiState.activeTab !== 'clasificacion') {{
+    switchTab(savedUiState.activeTab);
+  }}
+  requestAnimationFrame(function() {{
+    window.scrollTo(0, savedUiState && Number.isFinite(savedUiState.scrollY) ? savedUiState.scrollY : 0);
+  }});
   scheduleUpdate();
   // Fetch inmediato solo en servidor local; en GitHub Pages/file:// los datos ya
   // van embebidos en el HTML y el fetch remoto solo genera warnings innecesarios
@@ -6538,6 +6714,11 @@ document.addEventListener('DOMContentLoaded', init);
 auto_reload_js = f"""
 <script>
 (function(){{
+  // Limpiar ?v= e /index.html de la barra del navegador sin afectar al historial
+  var cleanPath = window.location.pathname.replace(/\/index\.html$/, '/') || '/';
+  if (cleanPath !== window.location.pathname || window.location.search) {{
+    history.replaceState(null, '', cleanPath);
+  }}
   var BUILD_TS = '{BUILD_TS}';
   function checkVersion(){{
     fetch('version.json?_=' + Date.now())
@@ -6545,6 +6726,7 @@ auto_reload_js = f"""
       .then(function(d){{
         if (d.ts && d.ts !== BUILD_TS) {{
           console.log('[auto-reload] nueva version:', d.ts);
+          if (typeof persistUiState === 'function') persistUiState({{ scrollY: window.scrollY }});
           // location.reload(true) está deprecated y los móviles lo ignoran.
           // Navegar con ?v= fuerza al navegador a pedir una URL distinta.
           var base = window.location.pathname;

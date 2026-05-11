@@ -526,7 +526,7 @@ def compute_data(rounds, total_season_rounds=42, extra_stats=None):
             if not m['played']:
                 d = m.get('date')
                 t = m.get('time')
-                fixtures.append({'round': r_idx, 'home': m['home'], 'away': m['away'],
+                fixtures.append({'round': r_idx + 1, 'home': m['home'], 'away': m['away'],
                                   'date': d, 'time': t})
                 if d:
                     if d not in match_days:
