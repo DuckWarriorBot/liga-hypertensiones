@@ -25,7 +25,7 @@
   ],
   "total_rounds": 39,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-11T18:00:57",
+  "last_updated": "2026-05-11T21:32:10",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -475,7 +475,8 @@
       "E",
       "D",
       "D",
-      "E"
+      "E",
+      "V"
     ],
     "Real Zaragoza": [
       "D",
@@ -638,6 +639,7 @@
       "E",
       "D",
       "V",
+      "D",
       "D"
     ],
     "Leganés": [
@@ -1542,7 +1544,7 @@
       15,
       16,
       16,
-      16
+      17
     ],
     "Mirandés": [
       17,
@@ -1706,7 +1708,7 @@
       16,
       17,
       17,
-      17
+      16
     ],
     "Real Zaragoza": [
       18,
@@ -2610,7 +2612,7 @@
       41,
       41,
       42,
-      42
+      45
     ],
     "Real Zaragoza": [
       0,
@@ -2918,6 +2920,18 @@
       "pos": 15
     },
     {
+      "name": "Real Sociedad B",
+      "pts": 45,
+      "wins": 12,
+      "draws": 9,
+      "losses": 18,
+      "played": 39,
+      "gf": 48,
+      "gc": 55,
+      "dif": -7,
+      "pos": 16
+    },
+    {
       "name": "Leganés",
       "pts": 42,
       "wins": 10,
@@ -2927,18 +2941,6 @@
       "gf": 42,
       "gc": 48,
       "dif": -6,
-      "pos": 16
-    },
-    {
-      "name": "Real Sociedad B",
-      "pts": 42,
-      "wins": 11,
-      "draws": 9,
-      "losses": 18,
-      "played": 38,
-      "gf": 46,
-      "gc": 54,
-      "dif": -8,
       "pos": 17
     },
     {
@@ -2958,11 +2960,11 @@
       "pts": 36,
       "wins": 9,
       "draws": 9,
-      "losses": 20,
-      "played": 38,
-      "gf": 39,
-      "gc": 59,
-      "dif": -20,
+      "losses": 21,
+      "played": 39,
+      "gf": 40,
+      "gc": 61,
+      "dif": -21,
       "pos": 19
     },
     {
@@ -3018,8 +3020,8 @@
     "Sporting": "PERMANENCIA",
     "Granada": "PERMANENCIA",
     "Valladolid": "PERMANENCIA",
+    "Real Sociedad B": "A 9 DEL DESCENSO",
     "Leganés": "A 6 DEL DESCENSO",
-    "Real Sociedad B": "A 6 DEL DESCENSO",
     "Cádiz": "A 3 DEL DESCENSO",
     "Huesca": "A 3 DE SALVACIÓN",
     "Mirandés": "A 3 DE SALVACIÓN",
@@ -3042,8 +3044,8 @@
     "Sporting": 9,
     "Granada": 9,
     "Valladolid": 9,
-    "Leganés": 9,
     "Real Sociedad B": 9,
+    "Leganés": 9,
     "Cádiz": 9,
     "Huesca": 9,
     "Mirandés": 9,
@@ -4022,13 +4024,6 @@
   },
   "fixtures": [
     {
-      "round": 39,
-      "home": "Huesca",
-      "away": "Real Sociedad B",
-      "date": "11/05",
-      "time": "20:30"
-    },
-    {
       "round": 40,
       "home": "Castellón",
       "away": "Cádiz",
@@ -4261,9 +4256,6 @@
     }
   ],
   "match_days": {
-    "11/05": [
-      "20:30"
-    ],
     "15/05": [
       "20:30",
       "21:00"
@@ -4926,6 +4918,10 @@
       "Real Zaragoza": {
         "score": "1-0",
         "res": "V"
+      },
+      "Real Sociedad B": {
+        "score": "1-2",
+        "res": "D"
       }
     },
     "Las Palmas": {
