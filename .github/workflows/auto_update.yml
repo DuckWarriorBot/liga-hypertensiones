@@ -9,6 +9,11 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:   # Permite lanzarlo manualmente desde la UI de GitHub
 
+# ── Evitar runs concurrentes que causarían conflictos en git push ─────────────
+concurrency:
+  group: auto-update
+  cancel-in-progress: false
+
 # ── Permisos para que pueda hacer git push ────────────────────────────────────
 permissions:
   contents: write
@@ -18,6 +23,8 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       # 1. Checkout del repo (con token para poder hacer push después)
@@ -72,18 +79,20 @@ jobs:
 
       # 11. Commit y push de los datos actualizados al repo
       #     (para que el siguiente run arranque con datos frescos)
+      #     Nota: results_db.json y version.json están en .gitignore (no trackeados)
+      #     → NO incluirlos en git add o git add falla con exit code 1
       - name: Commit updated data
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add liga_data.json scores_data.json besoccer_ids.json \
                   predictions.json predictions_history.json \
-                  results_db.json version.json as_stats.json
+                  as_stats.json
           # Solo hace commit si hay cambios
           if ! git diff --staged --quiet; then
             JORNADA=$(python -c "import json; print(json.load(open('liga_data.json'))['total_rounds'])")
             git commit -m "auto: J${JORNADA} – $(date -u '+%Y-%m-%d %H:%M UTC')"
-            git push
+            git push origin HEAD:master
           else
             echo "Sin cambios, no se hace commit."
           fi
