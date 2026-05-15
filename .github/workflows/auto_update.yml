@@ -3,13 +3,15 @@ name: Liga Hypertensiones – Auto Update
 # ── Cuándo se ejecuta ─────────────────────────────────────────────────────────
 on:
   schedule:
-    # Cada 15 min en horario de partidos: 12:00-21:45 UTC (14:00-23:45 España)
-    - cron: '*/15 12-21 * * *'
+    # Cada 5 min en horario de partidos: 12:00-21:55 UTC (14:00-23:55 España)
+    - cron: '*/5 12-21 * * *'
     # Una vez al día a las 06:00 UTC para refresco completo (madrugada España)
     - cron: '0 6 * * *'
   workflow_dispatch:   # Permite lanzarlo manualmente desde la UI de GitHub
 
 # ── Evitar runs concurrentes que causarían conflictos en git push ─────────────
+# cancel-in-progress: false → los runs se encolan en lugar de cancelarse;
+# con runs de ~2.5 min cada 5 min no hay problema de cola.
 concurrency:
   group: auto-update
   cancel-in-progress: false
@@ -22,7 +24,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 8
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -47,11 +49,18 @@ jobs:
           path: ~/.cache/pip
           key: pip-${{ hashFiles('requirements.txt') }}
 
-      # 4. Instalar dependencias Python
+      # 4. Cache Playwright Chromium (ahorra ~60s por run: de ~5min a ~2.5min)
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+      # 5. Instalar dependencias Python (incluye playwright-stealth para anti-bot)
       - name: Install Python deps
         run: pip install -r requirements.txt
 
-      # 5. Instalar Chromium para Playwright (necesario para fetch_flashscore.py)
+      # 6. Instalar Chromium para Playwright (usa caché si está disponible)
       - name: Install Playwright + Chromium
         run: python -m playwright install chromium --with-deps
 
@@ -60,8 +69,12 @@ jobs:
         run: python fetch_all.py
 
       # 7. Actualizar marcadores y fixtures desde Flashscore
+      #    continue-on-error: si Flashscore bloquea (anti-bot), el build continúa
+      #    con los datos del commit anterior en lugar de abortar todo el job.
+      #    fetch_flashscore.py ya tiene reintentos internos (3 intentos, backoff).
       - name: fetch_flashscore.py
         run: python fetch_flashscore.py
+        continue-on-error: true
 
       # 8. Actualizar scores adicionales (football-data.co.uk CSV)
       - name: fetch_scores.py

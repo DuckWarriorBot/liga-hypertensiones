@@ -102,7 +102,7 @@ def load_json(path):
         return {}
 
 
-def run_step(script_name):
+def run_step(script_name, extra_args=None):
     path = BASE_DIR / script_name
     if not path.exists():
         log(f'Aviso: {script_name} no encontrado')
@@ -111,12 +111,15 @@ def run_step(script_name):
     # Scripts que necesitan paramiko (deploy SFTP) también usan PYTHON_PLAYWRIGHT (Python311)
     _PLAYWRIGHT_SCRIPTS = {'fetch_flashscore.py', 'fetch_all.py', 'fetch_as.py',
                            'fetch_besoccer.py', 'fetch_scores.py', 'fetch_history.py',
-                           'fetch_predictions.py', 'fetch_team_assets.py', 'deploy.py'}
+                           'fetch_predictions.py', 'fetch_team_assets.py', 'deploy.py',
+                           'season_watcher.py'}
     py = PYTHON_PLAYWRIGHT if script_name in _PLAYWRIGHT_SCRIPTS else PYTHON
-    log(f'  > {script_name}...')
+    args_str = ' '.join(extra_args) if extra_args else ''
+    log(f'  > {script_name}{" " + args_str if args_str else ""} ...')
     t0 = time.time()
+    cmd = [py, str(path)] + (extra_args or [])
     r = subprocess.run(
-        [py, str(path)],
+        cmd,
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
         env=env_utf8()
@@ -355,6 +358,12 @@ def main():
                         _json.dumps(sc, ensure_ascii=False, indent=2), encoding='utf-8')
                 except Exception as _e:
                     log(f'  WARN no se pudo limpiar live_scores: {_e}')
+                # Fetch estadísticas AS de la jornada que acaba de terminar
+                if last_live_teams:
+                    round_nums = [int(idx) + 1 for idx in last_live_teams.values()]
+                    jornada_as = min(round_nums)
+                    log(f'  > Fetching AS stats jornada {jornada_as}...')
+                    run_step('fetch_as.py', ['2025_2026', '--only-jornada', str(jornada_as)])
                 run_full_cycle()
                 was_live = False
                 closing_cycles = 0
@@ -421,6 +430,15 @@ def main():
                         time.sleep(IDLE_SLEEP)
                 else:
                     log('[IDLE] sin proximos partidos -- check en {IDLE_SLEEP}s'.format(IDLE_SLEEP=IDLE_SLEEP))
+                    # ── Comprobación de nueva temporada (solo julio+, una vez al día) ──
+                    _now_m = datetime.date.today().month
+                    if _now_m >= 7:
+                        _sw_ts = BASE_DIR / '.watcher_ts'
+                        _secs = (time.time() - float(_sw_ts.read_text())) if _sw_ts.exists() else 99999
+                        if _secs > 86400:
+                            log('[IDLE] Comprobando nueva temporada...')
+                            run_step('season_watcher.py')
+                            _sw_ts.write_text(str(time.time()))
                     time.sleep(IDLE_SLEEP)
 
 

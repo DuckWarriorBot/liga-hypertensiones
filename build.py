@@ -714,7 +714,6 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     text-align: center;
   }}
   #nextMatchBanner {{ justify-content: center; flex-wrap: wrap; gap: 5px; }}
-  .status-bar {{ justify-content: center; }}
   .rounds-badge {{ display: none; }}
   nav {{
     display: none;
@@ -1755,37 +1754,7 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
   box-shadow: 2px 0 6px rgba(0,0,0,.5);
 }}
 
-/* ===== STATUS BAR (inline en header-meta) ===== */
-.status-bar {{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  color: var(--muted);
-  flex-wrap: wrap;
-}}
-.status-text {{ display: flex; align-items: center; gap: 8px; }}
-.pulse-dot {{
-  display: inline-block;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: #ef4444;
-  animation: pulse 1.2s infinite;
-  flex-shrink: 0;
-}}
-@keyframes pulse {{ 0%,100%{{ opacity:1; transform:scale(1); }} 50%{{ opacity:.4; transform:scale(.8); }} }}
-.refresh-btn {{
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 3px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 11px;
-  white-space: nowrap;
-  transition: color .15s, border-color .15s;
-}}
-.refresh-btn:hover {{ color: var(--text); border-color: var(--accent); }}
+
 
 /* ===== PREDICCIONES ===== */
 .pred-row {{
@@ -2103,12 +2072,6 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
         <span class="nm-teams" id="nmTeams"></span>
         <span class="nm-sep">·</span>
         <span class="nm-countdown" id="nmCountdown"></span>
-      </div>
-      <div class="status-bar">
-        <div class="status-text" id="statusText">
-          <span style="color:var(--muted);font-size:11px">⟳ Iniciando actualización automática...</span>
-        </div>
-        <button class="refresh-btn" onclick="fetchAndUpdate()" title="Actualizar datos ahora">⟳ Actualizar</button>
       </div>
     </div>
     <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>
@@ -5831,18 +5794,7 @@ function parseLiveScores(html) {{
   }} catch(e) {{}}
 }}
 
-function updateStatusBar() {{
-  const el = document.getElementById('statusText');
-  if (!el) return;
-  const t = lastUpdateTime
-    ? lastUpdateTime.toLocaleTimeString('es', {{hour:'2-digit',minute:'2-digit',second:'2-digit'}})
-    : 'nunca';
-  const interval = isMatchTime() ? '1 min' : '1 hora';
-  const dot = isMatchTime()
-    ? '<span class="pulse-dot"></span>'
-    : '<span style="color:#6b7280">●</span> ';
-  el.innerHTML = `${{dot}} Última actualización: <strong>${{t}}</strong> &nbsp;·&nbsp; Próxima en: <strong>${{interval}}</strong>`;
-}}
+function updateStatusBar() {{ /* eliminado */ }}
 
 function scheduleUpdate() {{
   if (autoUpdateTimer) clearTimeout(autoUpdateTimer);
@@ -6586,8 +6538,6 @@ function switchSeason(label) {{
   if (liveBar) liveBar.style.display = _historicalMode ? 'none' : '';
   const nmBanner = document.getElementById('nextMatchBanner');
   if (nmBanner) nmBanner.style.display = _historicalMode ? 'none' : '';
-  const statusBar = document.querySelector('.status-bar');
-  if (statusBar) statusBar.style.display = _historicalMode ? 'none' : '';
 }}
 
 // ===== ROUNDS BADGE =====

@@ -1,21 +1,13 @@
-name: Actualizar Liga Hypertensiones
+name: Actualizar Liga Hypertensiones [DESACTIVADO – usar auto_update.yml]
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Secreto requerido en GitHub → Settings → Secrets → Actions:
-#   IONOS_SFTP_PASS   (contraseña SFTP de IONOS)
-#
-# Configuración SFTP (no sensible, igual que deploy.py):
-#   Host:  home559128403.1and1-data.host : 22
-#   User:  acc147683744
+# DESACTIVADO: este workflow es un duplicado de auto_update.yml.
+# Tenerlos ambos activos provoca ejecuciones en paralelo que se sobreescriben.
+# Toda la lógica consolidada está en auto_update.yml.
 # ──────────────────────────────────────────────────────────────────────────────
 
 on:
-  schedule:
-    # Cada 10 min de 11:00 a 22:59 UTC (13:00-00:59 Madrid en verano)
-    - cron: '*/10 11-22 * * *'
-    # Cada hora fuera de ese rango (mantenimiento y datos del día siguiente)
-    - cron: '0 0-10,23 * * *'
-  workflow_dispatch:  # Permite lanzar manualmente desde GitHub
+  workflow_dispatch:  # Solo lanzado manualmente; schedule desactivado (ver auto_update.yml)
 
 jobs:
   update-and-deploy:

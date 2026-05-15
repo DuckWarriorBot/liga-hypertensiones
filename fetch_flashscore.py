@@ -13,6 +13,12 @@ import json, re, sys, unicodedata, time as _time, ast as _ast
 from pathlib import Path
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
+try:
+    from playwright_stealth import stealth_sync as _stealth_sync
+    _HAS_STEALTH = True
+except ImportError:
+    _HAS_STEALTH = False
+
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
@@ -166,7 +172,11 @@ def make_page(pw):
     ctx.add_init_script(
         "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
     )
-    return browser, ctx.new_page()
+    page = ctx.new_page()
+    # Aplicar playwright-stealth si está disponible (reduce detección anti-bot)
+    if _HAS_STEALTH:
+        _stealth_sync(page)
+    return browser, page
 
 def dismiss_cookies(page):
     """Cierra el banner de cookies si aparece (OneTrust / Didomi)."""
@@ -519,11 +529,13 @@ def update_scores(liga, scores, result_list, rdb=None):
 
         idx_str = str(idx)
 
-        # ── Guardia estricta: nunca sobreescribir J1-J38 con datos de flashscore ─
-        # Los datos de J1-J38 provienen EXCLUSIVAMENTE de football-data.co.uk
-        # (fetch_scores.py). Flashscore solo gestiona J39+ (jornadas actuales).
+        # ── Guardia: nunca sobreescribir jornadas que ya tienen fuente más fiable ─
+        # football-data.co.uk cubre J1..total_rounds (se actualiza a lo largo de
+        # la temporada). Flashscore solo gestiona la jornada en curso y superiores.
+        # Umbral = total_rounds - 1: permite que Flashscore escriba la última
+        # jornada completada (por si football-data aún no la tiene) y las futuras.
         total_rounds_val = liga.get('total_rounds', 38)
-        if idx < total_rounds_val:
+        if idx < total_rounds_val - 1:
             continue  # J1-J38: siempre saltar, usar sólo football-data.co.uk
 
         # ── Validar home/away con calendario canónico ─────────────────────
@@ -628,9 +640,33 @@ def update_fixtures(liga, fixture_list):
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 
+def _is_bot_blocked(page) -> bool:
+    """
+    Detecta si Flashscore nos ha bloqueado o muestra una página de verificación.
+    Comprueba indicadores comunes: título de captcha, contenido mínimo, Incapsula.
+    """
+    try:
+        title = page.title()
+        content = page.content()
+    except Exception:
+        return True
+    blocked_indicators = [
+        'Access Denied', 'Just a moment', 'Checking your browser',
+        'Verificación', 'Please Wait', 'Ray ID', '_Incapsula_',
+    ]
+    for indicator in blocked_indicators:
+        if indicator.lower() in title.lower() or indicator in content:
+            return True
+    return False
+
+
 def main():
     t0 = _time.time()
     print('[flashscore] Iniciando...', flush=True)
+    if _HAS_STEALTH:
+        print('  ✓ playwright-stealth activo', flush=True)
+    else:
+        print('  ⚠ playwright-stealth no instalado (pip install playwright-stealth)', flush=True)
 
     liga   = json.loads(LIGA_F.read_text(encoding='utf-8'))
     scores = json.loads(SCORES_F.read_text(encoding='utf-8')) if SCORES_F.exists() else {}
@@ -646,14 +682,46 @@ def main():
         rdb = None
         _rdb_mod = None
 
-    with sync_playwright() as pw:
-        browser, page = make_page(pw)
-        try:
-            result_list  = scrape_results(page)
-            fixture_list = scrape_fixtures(page)
-            live_list    = scrape_live_scores(page)   # página ya en /partidos/
-        finally:
-            browser.close()
+    # ── Scraping con reintentos (hasta 3 intentos, backoff 15s/30s) ──────
+    MAX_RETRIES = 3
+    result_list = fixture_list = live_list = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        if attempt > 1:
+            wait_secs = 15 * attempt
+            print(f'  ↻ Intento {attempt}/{MAX_RETRIES} (esperando {wait_secs}s)...', flush=True)
+            _time.sleep(wait_secs)
+        with sync_playwright() as pw:
+            browser, page = make_page(pw)
+            try:
+                result_list  = scrape_results(page)
+                # Verificar si fuimos bloqueados (0 resultados puede ser bloqueo)
+                if not result_list:
+                    if _is_bot_blocked(page):
+                        print(f'  ✗ Bloqueo anti-bot detectado en intento {attempt}', flush=True)
+                        continue
+                fixture_list = scrape_fixtures(page)
+                live_list    = scrape_live_scores(page)
+            except Exception as _scrape_err:
+                print(f'  ✗ Error en scraping (intento {attempt}): {_scrape_err}', flush=True)
+                result_list = []
+                continue
+            finally:
+                browser.close()
+        # Si tenemos resultados, salir del loop de reintentos
+        if result_list:
+            break
+        print(f'  ⚠ 0 resultados en intento {attempt}/{MAX_RETRIES}', flush=True)
+
+    # Si todos los reintentos fallan, abortar para no sobreescribir con datos vacíos
+    if not result_list:
+        print('[flashscore] ✗ FALLO: 0 resultados tras todos los reintentos. '
+              'Archivos sin modificar para preservar datos anteriores.', flush=True)
+        sys.exit(1)
+
+    if fixture_list is None:
+        fixture_list = []
+    if live_list is None:
+        live_list = []
 
     # ── Recargar scores tras el scraping (~60s) para no sobreescribir datos
     # frescos escritos por fetch_scores.py durante la ventana de scraping.
