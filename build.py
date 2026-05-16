@@ -2693,7 +2693,11 @@ function computeStandingsForRound(round) {{
   // cuando hay jornadas extra tipo J39) para evitar que quedanRnd quede inflado.
   const _maxPlayed = teams.length > 0 ? Math.max(...teams.map(t => t.played)) : r;
   const quedanRnd = (LIGA_DATA.total_season_rounds - _maxPlayed) * 3;
-  const maxDescRemain = maxRemainingPoints(teams.slice(18));
+  // Máximo de puntos absolutos (actuales + por disputar) que puede alcanzar cualquier equipo
+  // en zona de descenso. Un equipo de pos 7-18 tiene permanencia asegurada si sus puntos
+  // actuales superan ese máximo (ningún descendido puede igualarle aunque gane todo).
+  const maxAbsPtsDesc = teams.slice(18).reduce(
+    (mx, t2) => Math.max(mx, t2.pts + remainingPointsForEntry(t2)), 0);
   teams.forEach((t, i) => {{
     const pos = i + 1;
     const teamRemain = remainingPointsForEntry(t);
@@ -2734,9 +2738,9 @@ function computeStandingsForRound(round) {{
       }}
     }} else if (pos <= 18) {{
       const dPlay = pointsNeededForTargetPos(teams, t.name, 6, r, teamRemain);
-      const dDesc = t.pts - pts19;            // margen sobre la zona de descenso
+      const dDesc = t.pts - pts19;            // margen sobre la zona de descenso (para display)
       const canPlayoff = dPlay <= teamRemain;  // puede alcanzar el playoff
-      const safe       = dDesc > maxDescRemain;   // no puede descender si ni el mejor descendido con más margen puede alcanzarle
+      const safe       = t.pts > maxAbsPtsDesc; // permanencia asegurada: ningún descendido puede alcanzar sus pts
       if (safe && !canPlayoff) {{
         t.situacion = 'PERMANENCIA';
         t.secured   = 'permanence';
@@ -2989,8 +2993,9 @@ function renderStandings() {{
       }} else if (pos <= 18) {{
         const dPlay = pointsNeededForTargetPos(standingsData, t.name, 6, standingsRound, t.quedan);
         const dDesc = t.pts - lPts19;
-        const maxDescRemainLive = maxRemainingPoints(standingsData.slice(18));
-        const safe  = dDesc > maxDescRemainLive;
+        const maxAbsPtsDescLive = standingsData.slice(18).reduce(
+          (mx, t2) => Math.max(mx, t2.pts + remainingPointsForEntry(t2)), 0);
+        const safe  = t.pts > maxAbsPtsDescLive; // permanencia asegurada: ningún descendido puede alcanzar sus pts
         if (safe && dPlay > t.quedan) {{ t.situacion = 'PERMANENCIA'; t.secured = 'permanence'; }}
         else if (dPlay <= t.quedan && (safe || dPlay <= dDesc)) t.situacion = `A ${{dPlay}} DEL PLAYOFF`;
         else t.situacion = `A ${{dDesc}} DEL DESCENSO`;
