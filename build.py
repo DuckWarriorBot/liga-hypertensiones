@@ -2628,20 +2628,24 @@ function computeStandingsForRound(round) {{
     const draws  = res.filter(x=>x==='E').length;
     const losses = res.filter(x=>x==='D').length;
     let pts    = wins * 3 + draws;
-    // Acumular GF/GC desde los marcadores reales (scores_data.json)
+    // Acumular GF/GC desde los marcadores reales (scores_data.json).
+    // Solo hasta res.length para evitar doble conteo: el bucle extra cubre res.length..extraIdx.
     const teamScores = scMap[name] || {{}};
     let gf = 0, gc = 0;
-    for (let i = 0; i < r; i++) {{
+    for (let i = 0; i < res.length; i++) {{
       const sc = teamScores[String(i)];
       if (sc) {{
         const [a, b] = sc.split('-').map(Number);
         gf += a; gc += b;
       }}
     }}
-    // Incluir resultados extra (scores_by_team) para jornadas finalizadas más allá de total_rounds
+    // Incluir resultados extra (scores_by_team) para jornadas que ya tienen marcador en
+    // scores_by_team pero results_by_team aún no las tiene (football-data lag) o jornadas
+    // finalizadas más allá de total_rounds.
+    // Arranca en res.length (0-based, primer índice sin cubrir) hasta extraIdx inclusive.
     let extraPlayed = 0;
     let extraWins = 0, extraDraws = 0, extraLosses = 0;
-    for (let i = r; i <= extraIdx; i++) {{
+    for (let i = res.length; i <= extraIdx; i++) {{
       const sc = teamScores[String(i)];
       if (!sc) continue;
       const [a, b] = sc.split('-').map(Number);
@@ -2659,7 +2663,7 @@ function computeStandingsForRound(round) {{
     }}
     // Construir resultados extendidos incluyendo los de scores_by_team (para racha/forma de jornada actual)
     const extraResArr = [];
-    for (let i = r; i <= extraIdx; i++) {{
+    for (let i = res.length; i <= extraIdx; i++) {{
       const sc = teamScores[String(i)];
       if (!sc) continue;
       const [a, b] = sc.split('-').map(Number);
