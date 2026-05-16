@@ -5517,7 +5517,7 @@ function renderScenarios() {{
       maxPts     = t.pts + quedanPts;
       empPts     = t.pts + rndLeftT;
       // Respetar situacion ya calculada en standings (t.secured)
-      canAscend  = t.secured === 'promotion' || (!t.secured && maxPts >= pts2);
+      canAscend  = t.secured === 'promotion' || maxPts >= pts2;
       canPlayoff = t.secured === 'promotion' || t.secured === 'playoff' || (!t.secured && maxPts >= pts6);
       canSave    = t.secured !== 'relegation' && (t.secured === 'promotion' || t.secured === 'playoff' || t.secured === 'permanence' || maxPts >= pts18);
       canDescend = t.secured === 'relegation' || (!t.secured && max19 >= t.pts);
