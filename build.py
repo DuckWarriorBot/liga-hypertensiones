@@ -6649,9 +6649,10 @@ function init() {{
     window.scrollTo(0, savedUiState && Number.isFinite(savedUiState.scrollY) ? savedUiState.scrollY : 0);
   }});
   scheduleUpdate();
-  // Fetch inmediato solo en servidor local; en GitHub Pages/file:// los datos ya
-  // van embebidos en el HTML y el fetch remoto solo genera warnings innecesarios
-  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {{
+  // Fetch inmediato en cualquier servidor HTTP/HTTPS (no en file://).
+  // Aunque los datos van embebidos, el fetch refresca los JSON en el servidor
+  // y actualiza resultados recientes sin necesidad de hard-refresh por el usuario.
+  if (location.protocol !== 'file:') {{
     fetchAndUpdate();
   }}
 }}
