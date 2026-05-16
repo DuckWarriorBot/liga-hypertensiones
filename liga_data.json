@@ -25,7 +25,7 @@
   ],
   "total_rounds": 40,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-16T12:48:07",
+  "last_updated": "2026-05-16T14:01:40",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -477,7 +477,8 @@
       "D",
       "D",
       "E",
-      "V"
+      "V",
+      "E"
     ],
     "Real Zaragoza": [
       "D",
@@ -601,7 +602,8 @@
       "D",
       "V",
       "D",
-      "D"
+      "D",
+      "E"
     ],
     "Huesca": [
       "E",
@@ -1479,7 +1481,7 @@
       19,
       19,
       19,
-      19
+      20
     ],
     "Las Palmas": [
       13,
@@ -1605,7 +1607,7 @@
       20,
       20,
       20,
-      20
+      19
     ],
     "Málaga": [
       15,
@@ -1731,7 +1733,7 @@
       17,
       17,
       16,
-      16
+      15
     ],
     "Real Zaragoza": [
       18,
@@ -1857,7 +1859,7 @@
       15,
       15,
       15,
-      15
+      16
     ]
   },
   "points_by_team": {
@@ -2531,7 +2533,7 @@
       36,
       36,
       36,
-      36
+      37
     ],
     "Málaga": [
       1,
@@ -2657,7 +2659,7 @@
       41,
       42,
       45,
-      45
+      46
     ],
     "Real Zaragoza": [
       0,
@@ -2956,6 +2958,18 @@
       "pos": 14
     },
     {
+      "name": "Real Sociedad B",
+      "pts": 46,
+      "wins": 12,
+      "draws": 10,
+      "losses": 18,
+      "played": 40,
+      "gf": 48,
+      "gc": 55,
+      "dif": -7,
+      "pos": 15
+    },
+    {
       "name": "Valladolid",
       "pts": 46,
       "wins": 12,
@@ -2964,18 +2978,6 @@
       "played": 39,
       "gf": 43,
       "gc": 50,
-      "dif": -7,
-      "pos": 15
-    },
-    {
-      "name": "Real Sociedad B",
-      "pts": 45,
-      "wins": 12,
-      "draws": 9,
-      "losses": 18,
-      "played": 39,
-      "gf": 48,
-      "gc": 55,
       "dif": -7,
       "pos": 16
     },
@@ -3004,6 +3006,18 @@
       "pos": 18
     },
     {
+      "name": "Mirandés",
+      "pts": 37,
+      "wins": 9,
+      "draws": 10,
+      "losses": 21,
+      "played": 40,
+      "gf": 42,
+      "gc": 65,
+      "dif": -23,
+      "pos": 19
+    },
+    {
       "name": "Huesca",
       "pts": 36,
       "wins": 9,
@@ -3013,18 +3027,6 @@
       "gf": 40,
       "gc": 61,
       "dif": -21,
-      "pos": 19
-    },
-    {
-      "name": "Mirandés",
-      "pts": 36,
-      "wins": 9,
-      "draws": 9,
-      "losses": 21,
-      "played": 39,
-      "gf": 42,
-      "gc": 65,
-      "dif": -23,
       "pos": 20
     },
     {
@@ -3067,12 +3069,12 @@
     "Ceuta": "PERMANENCIA",
     "Sporting": "PERMANENCIA",
     "Granada": "PERMANENCIA",
-    "Valladolid": "PERMANENCIA",
     "Real Sociedad B": "PERMANENCIA",
-    "Leganés": "A 6 DEL DESCENSO",
-    "Cádiz": "A 4 DEL DESCENSO",
+    "Valladolid": "PERMANENCIA",
+    "Leganés": "A 5 DEL DESCENSO",
+    "Cádiz": "A 3 DEL DESCENSO",
+    "Mirandés": "A 3 DE SALVACIÓN",
     "Huesca": "A 4 DE SALVACIÓN",
-    "Mirandés": "A 4 DE SALVACIÓN",
     "Real Zaragoza": "A 5 DE SALVACIÓN",
     "Cultural Leonesa": "DESCENSO ASEGURADO"
   },
@@ -3091,12 +3093,12 @@
     "Ceuta": 6,
     "Sporting": 6,
     "Granada": 6,
-    "Valladolid": 6,
     "Real Sociedad B": 6,
+    "Valladolid": 6,
     "Leganés": 6,
     "Cádiz": 6,
-    "Huesca": 6,
     "Mirandés": 6,
+    "Huesca": 6,
     "Real Zaragoza": 6,
     "Cultural Leonesa": 6
   },
@@ -4073,13 +4075,6 @@
   "fixtures": [
     {
       "round": 40,
-      "home": "Real Sociedad B",
-      "away": "Mirandés",
-      "date": "16/05",
-      "time": "14:00"
-    },
-    {
-      "round": 40,
       "home": "Ceuta",
       "away": "Málaga",
       "date": "16/05",
@@ -4291,7 +4286,6 @@
   ],
   "match_days": {
     "16/05": [
-      "14:00",
       "16:15",
       "18:30"
     ],
@@ -4786,6 +4780,10 @@
         "res": "D"
       },
       "Burgos": {
+        "score": "0-0",
+        "res": "E"
+      },
+      "Mirandés": {
         "score": "0-0",
         "res": "E"
       }
