@@ -20,6 +20,10 @@ Uso:
 import sys, os, json, time, subprocess, datetime
 from pathlib import Path
 
+# En Windows, suprimir cualquier ventana de consola en procesos hijos.
+# Necesario cuando live_loop corre via pythonw.exe (sin consola propia).
+_NO_WINDOW = subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0
+
 # -- Configuracion
 BASE_DIR        = Path(__file__).parent
 
@@ -45,7 +49,8 @@ def _find_playwright_python():
         try:
             r = subprocess.run(
                 [py, '-c', 'import playwright'],
-                capture_output=True, timeout=10
+                capture_output=True, timeout=10,
+                creationflags=_NO_WINDOW
             )
             if r.returncode == 0:
                 return py
@@ -122,7 +127,7 @@ def run_step(script_name, extra_args=None):
         cmd,
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
-        env=env_utf8()
+        env=env_utf8(), creationflags=_NO_WINDOW
     )
     elapsed = time.time() - t0
     if r.returncode != 0:
@@ -157,7 +162,7 @@ def run_full_cycle():
                 [PYTHON, str(BASE_DIR / 'build.py')],
                 cwd=str(BASE_DIR),
                 capture_output=True, text=True, encoding='utf-8', errors='replace',
-                env=env_utf8()
+                env=env_utf8(), creationflags=_NO_WINDOW
             )
             built2 = index_path.read_text(encoding='utf-8', errors='replace')
             still_missing = [s for s in REQUIRED_STRINGS if s not in built2]
@@ -175,7 +180,7 @@ def run_full_cycle():
         [py_deploy, str(deploy_path), '--sftp', '--only-deploy'],
         cwd=str(BASE_DIR),
         capture_output=True, text=True, encoding='utf-8', errors='replace',
-        env=env_utf8()
+        env=env_utf8(), creationflags=_NO_WINDOW
     )
     elapsed = time.time() - t0
     if r.returncode == 0:
