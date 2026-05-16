@@ -591,7 +591,7 @@ header h1 {{
   border: 1px solid rgba(57,255,20,.20);
   border-radius: 10px;
   padding: 5px 11px;
-  min-width: 220px;
+  width: fit-content;
 }}
 .nm-row-top {{
   display: flex;
@@ -601,7 +601,6 @@ header h1 {{
 .nm-row-bot {{
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 10px;
 }}
 .nm-dot {{
@@ -624,7 +623,6 @@ header h1 {{
   flex-shrink: 0;
 }}
 .nm-date {{
-  margin-left: auto;
   color: var(--muted);
   font-size: 10px;
   font-weight: 600;
