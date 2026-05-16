@@ -585,10 +585,24 @@ header h1 {{
 /* ===== NEXT-MATCH (inline en header-meta) ===== */
 #nextMatchBanner {{
   display: none;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(57,255,20,.04);
+  border: 1px solid rgba(57,255,20,.20);
+  border-radius: 10px;
+  padding: 5px 11px;
+  min-width: 220px;
+}}
+.nm-row-top {{
+  display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--muted);
+  gap: 6px;
+}}
+.nm-row-bot {{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }}
 .nm-dot {{
   width: 6px; height: 6px;
@@ -598,29 +612,53 @@ header h1 {{
   animation: nmPulse 2s ease-in-out infinite;
 }}
 @keyframes nmPulse {{
-  0%,100% {{ opacity:1; transform:scale(1); }}
-  50% {{ opacity:.35; transform:scale(.65); }}
+  0%,100% {{ opacity:1; box-shadow: 0 0 4px #39ff14; }}
+  50%      {{ opacity:.3; box-shadow: none; }}
 }}
 .nm-label {{
   color: #39ff14;
   font-weight: 700;
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
+  flex-shrink: 0;
+}}
+.nm-date {{
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .3px;
   flex-shrink: 0;
 }}
 .nm-teams {{
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 13px;
   color: var(--text);
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}}
+.nm-sep {{ display: none; }}
+.nm-countdown {{
+  display: flex;
+  gap: 3px;
   flex-shrink: 0;
 }}
-.nm-sep {{ color: var(--border); flex-shrink: 0; }}
-.nm-countdown {{
+.nm-cd-block {{
   font-weight: 700;
-  color: #39ff14;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
-  letter-spacing: .5px;
-  flex-shrink: 0;
+  color: #39ff14;
+  background: rgba(57,255,20,.10);
+  border: 1px solid rgba(57,255,20,.18);
+  border-radius: 5px;
+  padding: 1px 5px;
+  letter-spacing: .2px;
+  min-width: 30px;
+  text-align: center;
 }}
 
 /* ===== TABS ===== */
@@ -713,7 +751,7 @@ nav button.active {{ color: var(--accent); border-bottom-color: var(--accent); }
     align-items: center;
     text-align: center;
   }}
-  #nextMatchBanner {{ justify-content: center; flex-wrap: wrap; gap: 5px; }}
+  #nextMatchBanner {{ align-items: center; width: 100%; max-width: 340px; }}
   .rounds-badge {{ display: none; }}
   nav {{
     display: none;
@@ -2067,11 +2105,15 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
     <h1>Liga Hypertensiones 25/26</h1>
     <div class="header-meta">
       <div id="nextMatchBanner">
-        <span class="nm-dot"></span>
-        <span class="nm-label">Próximo choque</span>
-        <span class="nm-teams" id="nmTeams"></span>
-        <span class="nm-sep">·</span>
-        <span class="nm-countdown" id="nmCountdown"></span>
+        <div class="nm-row-top">
+          <span class="nm-dot"></span>
+          <span class="nm-label">Próximo choque</span>
+          <span class="nm-date" id="nmDate"></span>
+        </div>
+        <div class="nm-row-bot">
+          <span class="nm-teams" id="nmTeams"></span>
+          <span class="nm-countdown" id="nmCountdown"></span>
+        </div>
       </div>
     </div>
     <div class="rounds-badge" id="roundsBadge">Jornada {total_rounds} / 42</div>
@@ -6426,8 +6468,23 @@ function updateNextMatchBanner() {{
   }} else {{
     timeStr = mins + 'm ' + String(secs).padStart(2,'0') + 's';
   }}
+  // Fecha y hora del partido
+  const dateEl = document.getElementById('nmDate');
+  if (dateEl) {{
+    const DAY_NAMES   = ['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b'];
+    const MONTH_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const md = new Date(matchDt);
+    dateEl.textContent = DAY_NAMES[md.getDay()] + ' ' + md.getDate() + ' ' + MONTH_NAMES[md.getMonth()]
+      + ' \u00b7 ' + String(md.getHours()).padStart(2,'0') + ':' + String(md.getMinutes()).padStart(2,'0');
+  }}
   teamsEl.textContent = f.home + ' vs ' + f.away;
-  cdEl.textContent = '\u23f1 ' + timeStr;
+  // Cuenta atrás en bloques separados
+  let blocks = [];
+  if (days >= 1)   blocks.push(days + 'd');
+  if (days >= 1 || hours > 0) blocks.push(String(hours).padStart(2,'0') + 'h');
+  blocks.push(String(mins).padStart(2,'0') + 'm');
+  if (days === 0)  blocks.push(String(secs).padStart(2,'0') + 's');
+  cdEl.innerHTML = blocks.map(b => '<span class="nm-cd-block">' + b + '</span>').join('');
   banner.style.display = 'flex';
 }}
 
