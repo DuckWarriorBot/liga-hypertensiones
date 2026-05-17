@@ -1,18 +1,18 @@
 {
   "shield_ids": {
-    "Racing": "1339",
-    "Almería": "603",
-    "Málaga": "1699",
+    "Racing": "1699",
+    "Almería": "1699",
+    "Málaga": "877",
     "Eibar": "1339",
-    "Andorra": "2136",
-    "Albacete": "877",
-    "Granada": "665",
-    "Leganés": "2125",
-    "Real Sociedad B": "140",
+    "Andorra": "565",
+    "Albacete": "2136",
+    "Granada": "2125",
+    "Leganés": "665",
+    "Real Sociedad B": "831",
     "Cádiz": "4235",
-    "Huesca": "831",
-    "Mirandés": "2654",
-    "Real Zaragoza": "2121",
+    "Huesca": "9501",
+    "Mirandés": "2121",
+    "Real Zaragoza": "2654",
     "Cultural Leonesa": "1535"
   }
 }
