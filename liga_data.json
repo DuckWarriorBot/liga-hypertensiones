@@ -25,7 +25,7 @@
   ],
   "total_rounds": 40,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-17T21:11:27",
+  "last_updated": "2026-05-17T21:35:14",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -529,7 +529,7 @@
       "D",
       "D",
       "D",
-      "E"
+      "D"
     ],
     "Cádiz": [
       "V",
@@ -821,7 +821,7 @@
       "D",
       "D",
       "D",
-      "E"
+      "V"
     ],
     "Córdoba": [
       "D",
@@ -1201,7 +1201,7 @@
       12,
       11,
       11,
-      12
+      13
     ],
     "Cultural Leonesa": [
       22,
@@ -1831,7 +1831,7 @@
       11,
       12,
       13,
-      13
+      12
     ],
     "Valladolid": [
       2,
@@ -2715,7 +2715,7 @@
       35,
       35,
       35,
-      36
+      35
     ],
     "Sporting": [
       3,
@@ -2757,7 +2757,7 @@
       52,
       52,
       52,
-      53
+      55
     ],
     "Valladolid": [
       3,
@@ -2936,6 +2936,18 @@
       "pos": 11
     },
     {
+      "name": "Sporting",
+      "pts": 55,
+      "wins": 16,
+      "draws": 7,
+      "losses": 17,
+      "played": 40,
+      "gf": 55,
+      "gc": 52,
+      "dif": 3,
+      "pos": 12
+    },
+    {
       "name": "Ceuta",
       "pts": 55,
       "wins": 15,
@@ -2945,18 +2957,6 @@
       "gf": 48,
       "gc": 63,
       "dif": -15,
-      "pos": 12
-    },
-    {
-      "name": "Sporting",
-      "pts": 53,
-      "wins": 15,
-      "draws": 8,
-      "losses": 17,
-      "played": 40,
-      "gf": 52,
-      "gc": 51,
-      "dif": 1,
       "pos": 13
     },
     {
@@ -3057,14 +3057,14 @@
     },
     {
       "name": "Real Zaragoza",
-      "pts": 36,
+      "pts": 35,
       "wins": 8,
-      "draws": 12,
-      "losses": 20,
+      "draws": 11,
+      "losses": 21,
       "played": 40,
-      "gf": 33,
-      "gc": 53,
-      "dif": -20,
+      "gf": 34,
+      "gc": 56,
+      "dif": -22,
       "pos": 22
     }
   ],
@@ -3080,8 +3080,8 @@
     "Córdoba": "A 6 DEL PLAYOFF",
     "Andorra": "PERMANENCIA",
     "Albacete": "PERMANENCIA",
-    "Ceuta": "PERMANENCIA",
     "Sporting": "PERMANENCIA",
+    "Ceuta": "PERMANENCIA",
     "Granada": "PERMANENCIA",
     "Real Sociedad B": "PERMANENCIA",
     "Valladolid": "PERMANENCIA",
@@ -3090,7 +3090,7 @@
     "Mirandés": "A 3 DE SALVACIÓN",
     "Huesca": "A 4 DE SALVACIÓN",
     "Cultural Leonesa": "A 4 DE SALVACIÓN",
-    "Real Zaragoza": "A 4 DE SALVACIÓN"
+    "Real Zaragoza": "A 5 DE SALVACIÓN"
   },
   "quedan_by_team": {
     "Racing": 6,
@@ -3104,8 +3104,8 @@
     "Córdoba": 6,
     "Andorra": 6,
     "Albacete": 6,
-    "Ceuta": 6,
     "Sporting": 6,
+    "Ceuta": 6,
     "Granada": 6,
     "Real Sociedad B": 6,
     "Valladolid": 6,
@@ -5647,8 +5647,8 @@
         "res": "D"
       },
       "Sporting": {
-        "score": "0-0",
-        "res": "E"
+        "score": "1-3",
+        "res": "D"
       }
     },
     "Deportivo": {
