@@ -2451,6 +2451,47 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
       </div>
     </div>
 
+    <!-- ===== MAPA DE RESULTADOS ===== -->
+    <div class="card" id="resultMapCard">
+      <div class="card-title">🗓️ Mapa de Resultados — temporada completa J1→J{total_rounds}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cada celda = resultado del equipo en esa jornada · ordenado por clasificación final · pasa el cursor para ver rival y marcador</div>
+      <div id="resultMapContainer" style="overflow-x:auto;-webkit-overflow-scrolling:touch"></div>
+      <div class="card-legend"><span style="color:#22c55e">■ V</span> Victoria &nbsp;·&nbsp; <span style="color:#fbbf24">■ E</span> Empate &nbsp;·&nbsp; <span style="color:#ef4444">■ D</span> Derrota &nbsp;·&nbsp; Lectura horizontal = racha de cada equipo a lo largo de la temporada</div>
+    </div>
+
+    <!-- ===== TRAMOS DE TEMPORADA ===== -->
+    <div class="card" id="tramosCard">
+      <div class="card-title">📊 Tramos de Temporada — ¿quién mejoró y quién empeoró?</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">PPG (puntos por partido) en cada tercio de la temporada · haz click en los encabezados para ordenar · <span style="color:#4ade80">↑</span> mejorando · <span style="color:#ef4444">↓</span> empeorando · <span style="color:#94a3b8">→</span> estable</div>
+      <div class="standings-wrapper" style="overflow-x:auto">
+        <table class="standings-table" id="tramosTable">
+          <thead><tr>
+            <th style="text-align:left;min-width:150px">Equipo</th>
+            <th id="tramosH1" style="cursor:pointer;white-space:nowrap" onclick="sortTramos('t1')">1er Tramo ↕</th>
+            <th id="tramosH2" style="cursor:pointer;white-space:nowrap" onclick="sortTramos('t2')">2º Tramo ↕</th>
+            <th id="tramosH3" style="cursor:pointer;white-space:nowrap" onclick="sortTramos('t3')">3er Tramo ↕</th>
+            <th style="cursor:pointer" onclick="sortTramos('total')">Total PPG ↕</th>
+            <th title="Tendencia: comparando primer tramo vs último">Tendencia</th>
+          </tr></thead>
+          <tbody id="tramosBody"></tbody>
+        </table>
+      </div>
+      <div class="card-legend" id="tramosLegend"></div>
+    </div>
+
+    <!-- ===== TENDENCIAS DE LA LIGA ===== -->
+    <div class="card" id="ligaTrendsCard">
+      <div class="card-title">📉 Tendencias de la Liga — jornada a jornada</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Evolución de indicadores clave de toda la competición a lo largo de la temporada · barras = valor de la jornada · línea = rolling 5 jornadas</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+        <button class="hist-sort-btn active" id="ltBtn-goals" onclick="switchLigaTrend('goals')">⚽ Goles/partido</button>
+        <button class="hist-sort-btn" id="ltBtn-home" onclick="switchLigaTrend('home')">🏠 % Victoria local</button>
+        <button class="hist-sort-btn" id="ltBtn-draw" onclick="switchLigaTrend('draw')">🤝 % Empates</button>
+        <button class="hist-sort-btn" id="ltBtn-btts" onclick="switchLigaTrend('btts')">🎯 % Ambos marcan</button>
+      </div>
+      <div class="chart-container" style="height:280px"><canvas id="ligaTrendsChart"></canvas></div>
+      <div class="card-legend"><b>Goles/partido</b> promedio de goles en todos los partidos de la jornada &nbsp;·&nbsp; <b>% Victoria local</b> porcentaje de partidos ganados por el equipo de casa &nbsp;·&nbsp; <b>% Ambos marcan</b> partidos en que ambos equipos anotaron ≥1 gol &nbsp;·&nbsp; La línea suaviza la tendencia (media móvil 5 jornadas)</div>
+    </div>
 
   </div>
 </div>
@@ -4497,6 +4538,10 @@ function initAnalysisTab() {{
   buildRadarSelector();
   buildRadarChart();
   buildConsistenciaChart();
+  renderResultMap();
+  renderTramosTemporada();
+  _ligaTrendMode = 'goals';
+  buildLigaTrendsChart();
 }}
 
 // ===== ADVANCED STATS (AS.com / Opta) =====
@@ -4855,6 +4900,259 @@ function buildConsistenciaChart() {{
           title: {{ display: true, text: '% partidos', color: '#64748b', font: {{size: 10}} }}
         }},
         y: {{ stacked: true, grid: {{ display: false }}, ticks: {{ color: '#94a3b8', font: {{size: 10}} }} }}
+      }}
+    }}
+  }});
+}}
+
+// ===== MAPA DE RESULTADOS =====
+function renderResultMap() {{
+  const container = document.getElementById('resultMapContainer');
+  if (!container) return;
+  const standings = computeStandings();
+  const T = LIGA_DATA.total_rounds || 40;
+  const scMap = SCORES_DATA.scores_by_team || {{}};
+  const venMap = SCORES_DATA.venue_by_team || {{}};
+  const oppMap = LIGA_DATA.opponents_by_team || {{}};
+
+  let html = '<table style="border-collapse:collapse;font-size:10px;white-space:nowrap">';
+  html += '<thead><tr><th style="position:sticky;left:0;background:var(--card);z-index:2;text-align:left;padding:3px 10px 3px 4px;color:var(--muted);font-weight:600;min-width:140px">Equipo</th>';
+  for (let j = 1; j <= T; j++) {{
+    html += `<th style="width:22px;min-width:22px;text-align:center;color:var(--muted);padding:2px 1px;font-weight:400;font-size:9px">${{j}}</th>`;
+  }}
+  html += '</tr></thead><tbody>';
+
+  for (const t of standings) {{
+    const name = t.name;
+    const results = LIGA_DATA.results_by_team[name] || [];
+    const opps = oppMap[name] || [];
+    const sc = scMap[name] || {{}};
+    const ven = venMap[name] || {{}};
+    html += `<tr><td style="position:sticky;left:0;background:var(--card);z-index:1;padding:2px 10px 2px 4px;white-space:nowrap"><div style="display:flex;align-items:center;gap:5px;min-width:130px">${{crestHTML(name,14)}}<span style="color:var(--text);font-size:10px;max-width:100px;overflow:hidden;text-overflow:ellipsis">${{name}}</span></div></td>`;
+    for (let idx = 0; idx < T; idx++) {{
+      const r = results[idx];
+      const opp = opps[idx] || '';
+      const rawSc = sc[String(idx)];
+      const venue = ven[String(idx)];
+      let dispSc = rawSc;
+      if (rawSc && venue === 'A') {{
+        const p = rawSc.split('-');
+        if (p.length === 2) dispSc = p[1] + '-' + p[0];
+      }}
+      const bg = r === 'V' ? 'rgba(34,197,94,0.3)' : r === 'E' ? 'rgba(251,191,36,0.28)' : r === 'D' ? 'rgba(239,68,68,0.28)' : 'rgba(255,255,255,0.03)';
+      const fc = r === 'V' ? '#4ade80' : r === 'E' ? '#fbbf24' : r === 'D' ? '#f87171' : '#374151';
+      const lbl = r || '·';
+      const tip = opp ? `J${{idx+1}} · ${{name}} vs ${{opp}}${{dispSc ? ' · '+dispSc : ''}} (${{venue==='H'?'Casa':'Fuera'}})` : `J${{idx+1}} · sin datos`;
+      html += `<td style="background:${{bg}};color:${{fc}};text-align:center;width:22px;height:22px;font-weight:700;padding:0;border:1px solid rgba(255,255,255,0.05);cursor:default" title="${{tip}}">${{lbl}}</td>`;
+    }}
+    html += '</tr>';
+  }}
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}}
+
+// ===== TRAMOS DE TEMPORADA =====
+let _tramosSortCol = 'pos';
+let _tramosSortAsc = true;
+
+function renderTramosTemporada() {{
+  const T = LIGA_DATA.total_rounds || 40;
+  const cut1 = Math.floor(T / 3);
+  const cut2 = Math.floor(T * 2 / 3);
+
+  const h1 = document.getElementById('tramosH1');
+  const h2 = document.getElementById('tramosH2');
+  const h3 = document.getElementById('tramosH3');
+  if (h1) h1.innerHTML = `1er Tramo J1–J${{cut1}} ↕`;
+  if (h2) h2.innerHTML = `2º Tramo J${{cut1+1}}–J${{cut2}} ↕`;
+  if (h3) h3.innerHTML = `3er Tramo J${{cut2+1}}–J${{T}} ↕`;
+  const legend = document.getElementById('tramosLegend');
+  if (legend) legend.textContent = `1er tramo: J1–J${{cut1}} (índices 0–${{cut1-1}}) · 2º tramo: J${{cut1+1}}–J${{cut2}} · 3er tramo: J${{cut2+1}}–J${{T}}`;
+
+  const standings = computeStandings();
+  const rows = standings.map(t => {{
+    const res = LIGA_DATA.results_by_team[t.name] || [];
+    function ppg(start, end) {{
+      const slice = res.slice(start, end).filter(r => r === 'V' || r === 'E' || r === 'D');
+      if (!slice.length) return null;
+      const pts = slice.reduce((s, r) => s + (r === 'V' ? 3 : r === 'E' ? 1 : 0), 0);
+      return pts / slice.length;
+    }}
+    const t1 = ppg(0, cut1);
+    const t2 = ppg(cut1, cut2);
+    const t3 = ppg(cut2, T);
+    const total = ppg(0, T);
+    const trend = (t1 !== null && t3 !== null) ? t3 - t1 : null;
+    return {{ name: t.name, t1, t2, t3, total, trend, pos: t.pos }};
+  }});
+
+  rows.sort((a, b) => {{
+    const va = a[_tramosSortCol] !== null && a[_tramosSortCol] !== undefined ? a[_tramosSortCol] : (_tramosSortAsc ? 9999 : -9999);
+    const vb = b[_tramosSortCol] !== null && b[_tramosSortCol] !== undefined ? b[_tramosSortCol] : (_tramosSortAsc ? 9999 : -9999);
+    return _tramosSortAsc ? va - vb : vb - va;
+  }});
+
+  const tbody = document.getElementById('tramosBody');
+  if (!tbody) return;
+
+  // Calcular medias para colorear celdas
+  const avgT1 = rows.filter(r=>r.t1!==null).reduce((s,r)=>s+r.t1,0) / (rows.filter(r=>r.t1!==null).length||1);
+  const avgT2 = rows.filter(r=>r.t2!==null).reduce((s,r)=>s+r.t2,0) / (rows.filter(r=>r.t2!==null).length||1);
+  const avgT3 = rows.filter(r=>r.t3!==null).reduce((s,r)=>s+r.t3,0) / (rows.filter(r=>r.t3!==null).length||1);
+
+  tbody.innerHTML = rows.map(r => {{
+    function fmt(v) {{ return v !== null ? v.toFixed(2) : '—'; }}
+    function cell(v, avg) {{
+      if (v === null) return `<td style="text-align:center;color:var(--muted)">—</td>`;
+      const diff = v - avg;
+      const color = diff > 0.18 ? '#4ade80' : diff < -0.18 ? '#f87171' : '#94a3b8';
+      const fw = Math.abs(diff) > 0.3 ? '700' : '400';
+      return `<td style="text-align:center;color:${{color}};font-weight:${{fw}}">${{fmt(v)}}</td>`;
+    }}
+    function trendCell(v) {{
+      if (v === null) return '<td style="text-align:center;color:var(--muted)">—</td>';
+      const arrow = v > 0.4 ? '↑↑' : v > 0.15 ? '↑' : v < -0.4 ? '↓↓' : v < -0.15 ? '↓' : '→';
+      const color = v > 0.15 ? '#4ade80' : v < -0.15 ? '#ef4444' : '#94a3b8';
+      const sign = v > 0 ? '+' : '';
+      return `<td style="text-align:center;color:${{color}};font-weight:700;font-size:15px" title="Δ PPG 1er→3er tramo: ${{sign}}${{v.toFixed(2)}}">${{arrow}}</td>`;
+    }}
+    return `<tr>
+      <td style="text-align:left;padding:4px 8px"><div style="display:flex;align-items:center;gap:5px">${{crestHTML(r.name,16)}}<span>${{r.name}}</span></div></td>
+      ${{cell(r.t1, avgT1)}}
+      ${{cell(r.t2, avgT2)}}
+      ${{cell(r.t3, avgT3)}}
+      <td style="text-align:center;font-weight:700;color:var(--text)">${{fmt(r.total)}}</td>
+      ${{trendCell(r.trend)}}
+    </tr>`;
+  }}).join('');
+}}
+
+window.sortTramos = function(col) {{
+  if (_tramosSortCol === col) {{ _tramosSortAsc = !_tramosSortAsc; }}
+  else {{ _tramosSortCol = col; _tramosSortAsc = false; }}
+  renderTramosTemporada();
+}};
+
+// ===== TENDENCIAS DE LA LIGA =====
+let _ligaTrendsChart = null;
+let _ligaTrendMode = 'goals';
+
+window.switchLigaTrend = function(mode) {{
+  _ligaTrendMode = mode;
+  document.querySelectorAll('[id^="ltBtn-"]').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('ltBtn-' + mode);
+  if (btn) btn.classList.add('active');
+  buildLigaTrendsChart();
+}};
+
+function buildLigaTrendsChart() {{
+  const ctx = document.getElementById('ligaTrendsChart');
+  if (!ctx) return;
+  if (_ligaTrendsChart) {{ _ligaTrendsChart.destroy(); _ligaTrendsChart = null; }}
+  const T = LIGA_DATA.total_rounds || 40;
+  const allTeams = Object.keys(LIGA_DATA.results_by_team || {{}});
+  const scMap = SCORES_DATA.scores_by_team || {{}};
+  const venMap = SCORES_DATA.venue_by_team || {{}};
+
+  const perJornada = [];
+  for (let j = 0; j < T; j++) {{
+    let goals = 0, homeWins = 0, draws = 0, btts = 0, total = 0;
+    for (const team of allTeams) {{
+      const ven = (venMap[team] || {{}})[String(j)];
+      if (ven !== 'H') continue; // contar cada partido una sola vez (perspectiva local)
+      const r = (LIGA_DATA.results_by_team[team] || [])[j];
+      const sc = (scMap[team] || {{}})[String(j)];
+      if (!r || !sc) continue;
+      const parts = sc.split('-').map(Number);
+      if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) continue;
+      const gf = parts[0], gc = parts[1];
+      goals += gf + gc;
+      if (r === 'V') homeWins++;
+      else if (r === 'E') draws++;
+      if (gf > 0 && gc > 0) btts++;
+      total++;
+    }}
+    perJornada.push({{
+      j: j + 1,
+      goals: total > 0 ? goals / total : null,
+      homeWinPct: total > 0 ? homeWins / total * 100 : null,
+      drawPct: total > 0 ? draws / total * 100 : null,
+      bttsPct: total > 0 ? btts / total * 100 : null,
+      total
+    }});
+  }}
+
+  const WINDOW = 5;
+  function rolling(key) {{
+    return perJornada.map((_, i) => {{
+      const slice = perJornada.slice(Math.max(0, i - WINDOW + 1), i + 1).filter(x => x[key] !== null && x.total > 0);
+      return slice.length ? slice.reduce((s, x) => s + x[key], 0) / slice.length : null;
+    }});
+  }}
+
+  const modeMap = {{
+    goals: {{ key: 'goals',      label: 'Goles / partido',   color: '#f59e0b', unit: '' }},
+    home:  {{ key: 'homeWinPct', label: '% Victoria local',  color: '#3b82f6', unit: '%' }},
+    draw:  {{ key: 'drawPct',    label: '% Empates',          color: '#8b5cf6', unit: '%' }},
+    btts:  {{ key: 'bttsPct',    label: '% Ambos marcan',     color: '#22c55e', unit: '%' }},
+  }};
+  const m = modeMap[_ligaTrendMode] || modeMap.goals;
+  const labels = perJornada.map(x => 'J' + x.j);
+  const barData = perJornada.map(x => x[m.key] !== null ? +x[m.key].toFixed(2) : null);
+  const lineData = rolling(m.key).map(v => v !== null ? +v.toFixed(2) : null);
+
+  _ligaTrendsChart = new Chart(ctx.getContext('2d'), {{
+    data: {{
+      labels,
+      datasets: [
+        {{
+          type: 'bar',
+          label: m.label + ' (jornada)',
+          data: barData,
+          backgroundColor: m.color + '44',
+          borderColor: m.color + '88',
+          borderWidth: 1,
+          yAxisID: 'y',
+        }},
+        {{
+          type: 'line',
+          label: `Rolling ${{WINDOW}}J`,
+          data: lineData,
+          borderColor: m.color,
+          backgroundColor: 'transparent',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          tension: 0.4,
+          yAxisID: 'y',
+        }}
+      ]
+    }},
+    options: {{
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {{
+        legend: {{ position: 'top', labels: {{ color: '#94a3b8', boxWidth: 12, font: {{size: 11}} }} }},
+        tooltip: {{
+          mode: 'index',
+          intersect: false,
+          callbacks: {{
+            label: c => ` ${{c.dataset.label}}: ${{c.parsed.y !== null ? c.parsed.y.toFixed(2) + m.unit : '—'}}`
+          }}
+        }}
+      }},
+      scales: {{
+        x: {{
+          grid: {{ color: '#2d3f5f44' }},
+          ticks: {{ color: '#94a3b8', font: {{size: 9}}, maxTicksLimit: 20 }}
+        }},
+        y: {{
+          grid: {{ color: '#2d3f5f44' }},
+          ticks: {{
+            color: '#94a3b8',
+            font: {{size: 10}},
+            callback: v => v + m.unit
+          }}
+        }}
       }}
     }}
   }});
