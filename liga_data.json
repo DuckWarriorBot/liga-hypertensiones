@@ -25,7 +25,7 @@
   ],
   "total_rounds": 40,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-17T12:22:53",
+  "last_updated": "2026-05-17T12:45:46",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -444,7 +444,8 @@
       "V",
       "E",
       "V",
-      "V"
+      "V",
+      "E"
     ],
     "Real Sociedad B": [
       "V",
@@ -776,7 +777,8 @@
       "V",
       "V",
       "D",
-      "V"
+      "V",
+      "E"
     ],
     "Sporting": [
       "V",
@@ -1997,7 +1999,7 @@
       55,
       55,
       58,
-      58
+      59
     ],
     "Burgos": [
       3,
@@ -2291,7 +2293,7 @@
       65,
       68,
       71,
-      71
+      72
     ],
     "Eibar": [
       1,
@@ -2813,11 +2815,11 @@
     },
     {
       "name": "Deportivo",
-      "pts": 71,
+      "pts": 72,
       "wins": 20,
-      "draws": 11,
+      "draws": 12,
       "losses": 8,
-      "played": 39,
+      "played": 40,
       "gf": 60,
       "gc": 41,
       "dif": 19,
@@ -2909,11 +2911,11 @@
     },
     {
       "name": "Andorra",
-      "pts": 58,
+      "pts": 59,
       "wins": 16,
-      "draws": 10,
+      "draws": 11,
       "losses": 13,
-      "played": 39,
+      "played": 40,
       "gf": 61,
       "gc": 49,
       "dif": 12,
@@ -3066,11 +3068,11 @@
   ],
   "situacion_by_team": {
     "Racing": "ASCENSO ASEGURADO",
-    "Deportivo": "A 6 DEL ASCENSO",
-    "Almería": "A 0 DEL ASCENSO",
-    "Málaga": "A 2 DEL ASCENSO",
-    "Las Palmas": "A 2 DEL ASCENSO",
-    "Castellón": "A 5 DEL ASCENSO",
+    "Deportivo": "A 5 DEL ASCENSO",
+    "Almería": "A 1 DEL ASCENSO",
+    "Málaga": "A 3 DEL ASCENSO",
+    "Las Palmas": "A 3 DEL ASCENSO",
+    "Castellón": "A 6 DEL ASCENSO",
     "Burgos": "A 0 DEL PLAYOFF",
     "Eibar": "A 2 DEL PLAYOFF",
     "Córdoba": "A 6 DEL PLAYOFF",
@@ -4085,13 +4087,6 @@
   "fixtures": [
     {
       "round": 40,
-      "home": "Deportivo",
-      "away": "Andorra",
-      "date": "17/05",
-      "time": "14:00"
-    },
-    {
-      "round": 40,
       "home": "Real Zaragoza",
       "away": "Sporting",
       "date": "17/05",
@@ -4261,7 +4256,6 @@
   ],
   "match_days": {
     "17/05": [
-      "14:00",
       "21:15"
     ],
     "18/05": [
@@ -5737,6 +5731,10 @@
       "Leganés": {
         "score": "2-1",
         "res": "V"
+      },
+      "Andorra": {
+        "score": "0-0",
+        "res": "E"
       }
     },
     "Cultural Leonesa": {
