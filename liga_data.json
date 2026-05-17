@@ -25,7 +25,7 @@
   ],
   "total_rounds": 40,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-17T19:03:10",
+  "last_updated": "2026-05-17T19:36:19",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -528,7 +528,8 @@
       "E",
       "D",
       "D",
-      "D"
+      "D",
+      "E"
     ],
     "Cádiz": [
       "V",
@@ -819,7 +820,8 @@
       "V",
       "D",
       "D",
-      "D"
+      "D",
+      "E"
     ],
     "Córdoba": [
       "D",
@@ -2713,7 +2715,7 @@
       35,
       35,
       35,
-      35
+      36
     ],
     "Sporting": [
       3,
@@ -2755,7 +2757,7 @@
       52,
       52,
       52,
-      52
+      53
     ],
     "Valladolid": [
       3,
@@ -2947,11 +2949,11 @@
     },
     {
       "name": "Sporting",
-      "pts": 52,
+      "pts": 53,
       "wins": 15,
-      "draws": 7,
+      "draws": 8,
       "losses": 17,
-      "played": 39,
+      "played": 40,
       "gf": 52,
       "gc": 51,
       "dif": 1,
@@ -3055,11 +3057,11 @@
     },
     {
       "name": "Real Zaragoza",
-      "pts": 35,
+      "pts": 36,
       "wins": 8,
-      "draws": 11,
+      "draws": 12,
       "losses": 20,
-      "played": 39,
+      "played": 40,
       "gf": 33,
       "gc": 53,
       "dif": -20,
@@ -3088,7 +3090,7 @@
     "Mirandés": "A 3 DE SALVACIÓN",
     "Huesca": "A 4 DE SALVACIÓN",
     "Cultural Leonesa": "A 4 DE SALVACIÓN",
-    "Real Zaragoza": "A 5 DE SALVACIÓN"
+    "Real Zaragoza": "A 4 DE SALVACIÓN"
   },
   "quedan_by_team": {
     "Racing": 6,
@@ -4087,13 +4089,6 @@
   "fixtures": [
     {
       "round": 40,
-      "home": "Real Zaragoza",
-      "away": "Sporting",
-      "date": "17/05",
-      "time": "21:15"
-    },
-    {
-      "round": 40,
       "home": "Leganés",
       "away": "Huesca",
       "date": "18/05",
@@ -4255,9 +4250,6 @@
     }
   ],
   "match_days": {
-    "17/05": [
-      "21:15"
-    ],
     "18/05": [
       "20:30"
     ],
@@ -5653,6 +5645,10 @@
       "Granada": {
         "score": "0-1",
         "res": "D"
+      },
+      "Sporting": {
+        "score": "0-0",
+        "res": "E"
       }
     },
     "Deportivo": {
