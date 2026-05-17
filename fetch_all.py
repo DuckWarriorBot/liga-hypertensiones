@@ -757,6 +757,34 @@ def main():
 
     with open(liga_path, 'w', encoding='utf-8') as f:
         json.dump(liga_data, f, ensure_ascii=False, indent=2)
+
+    # ── Merge con scores_data.json existente ──────────────────────────────────
+    # fetch_all genera scores desde cero con datos de Marca (puede ir con retraso).
+    # Si scores_data.json ya tiene marcadores de fetch_flashscore.py para la jornada
+    # actual (que Marca aún no tiene), los preservamos para que no desaparezcan.
+    try:
+        with open(scores_path, encoding='utf-8') as _sf:
+            _existing_sd = json.load(_sf)
+        _ex_sb = _existing_sd.get('scores_by_team', {})
+        _ex_vb = _existing_sd.get('venue_by_team',  {})
+        _new_sb = scores_data.get('scores_by_team', {})
+        _new_vb = scores_data.get('venue_by_team',  {})
+        # Para cada equipo: partir de datos existentes (flashscore) y sobreescribir
+        # solo los índices que Marca realmente tiene (más fiable para J1..total_rounds)
+        for _team in liga_data.get('teams', []):
+            _merged_sb = dict(_ex_sb.get(_team, {}))
+            _merged_vb = dict(_ex_vb.get(_team, {}))
+            _merged_sb.update(_new_sb.get(_team, {}))  # Marca sobreescribe donde tiene
+            _merged_vb.update(_new_vb.get(_team, {}))
+            scores_data.setdefault('scores_by_team', {})[_team] = _merged_sb
+            scores_data.setdefault('venue_by_team',  {})[_team] = _merged_vb
+            # Actualizar también las claves de primer nivel (fetch_all las escribe duplicadas)
+            scores_data[_team] = _merged_sb
+        print('  Merge con scores_data.json existente: datos flashscore preservados')
+    except (FileNotFoundError, Exception) as _e:
+        if not isinstance(_e, FileNotFoundError):
+            print(f'  ⚠ Merge scores_data: {_e} — generando desde cero')
+
     with open(scores_path, 'w', encoding='utf-8') as f:
         json.dump(scores_data, f, ensure_ascii=False, indent=2)
 

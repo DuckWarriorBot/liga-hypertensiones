@@ -59,13 +59,29 @@ teams       = liga['teams']
 results_map = liga['results_by_team']
 opps_map    = liga.get('opponents_by_team', {})
 
+# ─── Cargar scores_data existente (preservar datos flashscore de jornadas recientes) ──
+# fetch_scores solo cubre football-data.co.uk (va con retraso de días).
+# Si sobreescribimos con dicts vacíos se pierden los marcadores que fetch_flashscore.py
+# ya guardó para la jornada actual. Solución: cargar el existente y solo sobreescribir
+# los índices que football-data realmente tiene datos.
+try:
+    import os as _os
+    _sd_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'scores_data.json')
+    with open(_sd_path, encoding='utf-8') as _f:
+        _existing = json.load(_f)
+    scores_by_team = {t: dict(_existing.get('scores_by_team', {}).get(t, {})) for t in teams}
+    venue_by_team  = {t: dict(_existing.get('venue_by_team',  {}).get(t, {})) for t in teams}
+    print('  Datos existentes de scores_data.json cargados (merge)')
+except Exception as _e:
+    scores_by_team = {t: {} for t in teams}
+    venue_by_team  = {t: {} for t in teams}
+    print(f'  scores_data.json no encontrado o error ({_e}), generando desde cero')
+
 # ─── Asignar marcadores cruzando por nombre de equipos ──────────────────────
 # Usamos opponents_by_team para encontrar el índice exacto de cada partido,
 # evitando desalineaciones por partidos aplazados en el CSV cronológico.
 # used_idx[team] = set de índices ya asignados, para evitar sobreescrituras
 # cuando dos partidos del mismo par tienen el mismo resultado.
-scores_by_team = {t: {} for t in teams}
-venue_by_team  = {t: {} for t in teams}
 used_idx       = {t: set() for t in teams}
 assigned = 0
 unmapped = set()
