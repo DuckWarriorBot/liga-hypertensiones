@@ -52,11 +52,15 @@ DELAY_JORNADA   = 1.5    # segundos entre jornadas
 DELAY_MATCH     = 2.0    # segundos entre partidos
 HEADLESS        = True
 
-# Retomar desde jornada específica
+# Retomar desde jornada específica / solo una jornada concreta
 from_jornada = 1
+to_jornada   = TOTAL_JORNADAS   # inclusive
 for i, arg in enumerate(sys.argv):
     if arg == '--from-jornada' and i + 1 < len(sys.argv):
         from_jornada = int(sys.argv[i + 1])
+    elif arg == '--only-jornada' and i + 1 < len(sys.argv):
+        from_jornada = int(sys.argv[i + 1])
+        to_jornada   = int(sys.argv[i + 1])
 
 # ── Extractor de jornada ──────────────────────────────────────────────────────
 
@@ -175,7 +179,7 @@ def get_match_stats(page, jornada_n, match_id):
 
 
 def main():
-    print(f"[AS] Temporada: {SEASON}  |  Jornadas: {from_jornada}–{TOTAL_JORNADAS}")
+    print(f"[AS] Temporada: {SEASON}  |  Jornadas: {from_jornada}–{to_jornada}")
 
     # Cargar datos existentes
     if OUTPUT_FILE.exists():
@@ -203,7 +207,7 @@ def main():
         page = ctx.new_page()
         page.set_extra_http_headers({'Accept-Language': 'es-ES,es;q=0.9'})
 
-        for jornada_n in range(from_jornada, TOTAL_JORNADAS + 1):
+        for jornada_n in range(from_jornada, to_jornada + 1):
             print(f"\n[J{jornada_n:02d}] Cargando jornada...")
             matches = get_jornada_matches(page, jornada_n)
 
