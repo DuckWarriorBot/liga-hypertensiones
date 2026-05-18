@@ -25,7 +25,7 @@
   ],
   "total_rounds": 40,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-18T18:25:17",
+  "last_updated": "2026-05-18T19:06:56",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -654,7 +654,8 @@
       "D",
       "V",
       "D",
-      "D"
+      "D",
+      "E"
     ],
     "Leganés": [
       "E",
@@ -695,7 +696,8 @@
       "D",
       "D",
       "D",
-      "D"
+      "D",
+      "E"
     ],
     "Las Palmas": [
       "E",
@@ -1495,7 +1497,7 @@
       19,
       19,
       19,
-      20
+      19
     ],
     "Las Palmas": [
       13,
@@ -1621,7 +1623,7 @@
       20,
       20,
       20,
-      19
+      20
     ],
     "Málaga": [
       15,
@@ -2421,7 +2423,7 @@
       36,
       36,
       36,
-      36
+      37
     ],
     "Las Palmas": [
       1,
@@ -2505,7 +2507,7 @@
       42,
       42,
       42,
-      42
+      43
     ],
     "Mirandés": [
       0,
@@ -2997,11 +2999,11 @@
     },
     {
       "name": "Leganés",
-      "pts": 42,
+      "pts": 43,
       "wins": 10,
-      "draws": 12,
+      "draws": 13,
       "losses": 17,
-      "played": 39,
+      "played": 40,
       "gf": 42,
       "gc": 48,
       "dif": -6,
@@ -3020,6 +3022,18 @@
       "pos": 18
     },
     {
+      "name": "Huesca",
+      "pts": 37,
+      "wins": 9,
+      "draws": 10,
+      "losses": 21,
+      "played": 40,
+      "gf": 40,
+      "gc": 61,
+      "dif": -21,
+      "pos": 19
+    },
+    {
       "name": "Mirandés",
       "pts": 37,
       "wins": 9,
@@ -3029,18 +3043,6 @@
       "gf": 44,
       "gc": 67,
       "dif": -23,
-      "pos": 19
-    },
-    {
-      "name": "Huesca",
-      "pts": 36,
-      "wins": 9,
-      "draws": 9,
-      "losses": 21,
-      "played": 39,
-      "gf": 40,
-      "gc": 61,
-      "dif": -21,
       "pos": 20
     },
     {
@@ -3085,10 +3087,10 @@
     "Granada": "PERMANENCIA",
     "Real Sociedad B": "PERMANENCIA",
     "Valladolid": "PERMANENCIA",
-    "Leganés": "A 5 DEL DESCENSO",
+    "Leganés": "A 6 DEL DESCENSO",
     "Cádiz": "A 3 DEL DESCENSO",
+    "Huesca": "A 3 DE SALVACIÓN",
     "Mirandés": "A 3 DE SALVACIÓN",
-    "Huesca": "A 4 DE SALVACIÓN",
     "Cultural Leonesa": "A 4 DE SALVACIÓN",
     "Real Zaragoza": "A 5 DE SALVACIÓN"
   },
@@ -3111,8 +3113,8 @@
     "Valladolid": 6,
     "Leganés": 6,
     "Cádiz": 6,
-    "Mirandés": 6,
     "Huesca": 6,
+    "Mirandés": 6,
     "Cultural Leonesa": 6,
     "Real Zaragoza": 6
   },
@@ -4088,13 +4090,6 @@
   },
   "fixtures": [
     {
-      "round": 40,
-      "home": "Leganés",
-      "away": "Huesca",
-      "date": "18/05",
-      "time": "20:30"
-    },
-    {
       "round": 41,
       "home": "Albacete",
       "away": "Real Sociedad B",
@@ -4250,9 +4245,6 @@
     }
   ],
   "match_days": {
-    "18/05": [
-      "20:30"
-    ],
     "24/05": [
       "16:15",
       "18:30"
@@ -5404,6 +5396,10 @@
       "Racing": {
         "score": "1-2",
         "res": "D"
+      },
+      "Huesca": {
+        "score": "0-0",
+        "res": "E"
       }
     },
     "Mirandés": {
