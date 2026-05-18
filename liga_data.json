@@ -25,7 +25,7 @@
   ],
   "total_rounds": 40,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-18T15:55:03",
+  "last_updated": "2026-05-18T16:58:32",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -4103,6 +4103,13 @@
     },
     {
       "round": 41,
+      "home": "Andorra",
+      "away": "Ceuta",
+      "date": "24/05",
+      "time": "18:30"
+    },
+    {
+      "round": 41,
       "home": "Cultural Leonesa",
       "away": "Burgos",
       "date": "24/05",
@@ -4119,13 +4126,6 @@
       "round": 41,
       "home": "Eibar",
       "away": "Córdoba",
-      "date": "24/05",
-      "time": "18:30"
-    },
-    {
-      "round": 41,
-      "home": "Andorra",
-      "away": "Ceuta",
       "date": "24/05",
       "time": "18:30"
     },
@@ -4254,6 +4254,7 @@
       "20:30"
     ],
     "24/05": [
+      "16:15",
       "18:30"
     ],
     "31/05": [
