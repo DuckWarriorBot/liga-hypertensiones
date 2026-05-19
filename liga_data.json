@@ -25,7 +25,7 @@
   ],
   "total_rounds": 40,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-19T07:18:26",
+  "last_updated": "2026-05-19T13:08:42",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -4168,80 +4168,80 @@
     },
     {
       "round": 42,
+      "home": "Ceuta",
+      "away": "Albacete",
+      "date": "30/05",
+      "time": "16:15"
+    },
+    {
+      "round": 42,
+      "home": "Granada",
+      "away": "Sporting",
+      "date": "30/05",
+      "time": "21:00"
+    },
+    {
+      "round": 42,
       "home": "Almería",
       "away": "Valladolid",
       "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Burgos",
       "away": "Andorra",
       "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Castellón",
       "away": "Eibar",
       "date": "31/05",
-      "time": "18:00"
-    },
-    {
-      "round": 42,
-      "home": "Ceuta",
-      "away": "Albacete",
-      "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Córdoba",
       "away": "Huesca",
       "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Deportivo",
       "away": "Las Palmas",
       "date": "31/05",
-      "time": "18:00"
-    },
-    {
-      "round": 42,
-      "home": "Granada",
-      "away": "Sporting",
-      "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Leganés",
       "away": "Mirandés",
       "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Racing",
       "away": "Cádiz",
       "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Real Sociedad B",
       "away": "Cultural Leonesa",
       "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     },
     {
       "round": 42,
       "home": "Real Zaragoza",
       "away": "Málaga",
       "date": "31/05",
-      "time": "18:00"
+      "time": "18:30"
     }
   ],
   "match_days": {
@@ -4249,8 +4249,12 @@
       "16:15",
       "18:30"
     ],
+    "30/05": [
+      "16:15",
+      "21:00"
+    ],
     "31/05": [
-      "18:00"
+      "18:30"
     ]
   },
   "h2h_data": {
