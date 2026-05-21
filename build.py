@@ -2185,6 +2185,52 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
     </div>
     <div class="card-legend"><b>PJ</b> Partidos jugados &nbsp;·&nbsp; <b>PG/PE/PP</b> Ganados / Empates / Perdidos &nbsp;·&nbsp; <b>GF/GC</b> Goles a favor / en contra &nbsp;·&nbsp; <b>DIF</b> Diferencia de goles &nbsp;·&nbsp; <b>PPG</b> Puntos por partido (media) &nbsp;·&nbsp; <b>Forma</b> últimos 5 resultados (V/E/D) &nbsp;·&nbsp; <b>Racha</b> partidos consecutivos sin perder &nbsp;·&nbsp; <b>Quedan</b> puntos máximos posibles por disputar (jornadas restantes × 3)</div>
   </div>
+
+  <!-- ===== MINI-LIGA: Enfrentamientos directos ===== -->
+  <div class="card" id="miniLigaCard" style="margin-top:4px">
+    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none" onclick="toggleMiniLiga()">
+      <div class="card-title" style="margin-bottom:0">🔢 Clasificación por enfrentamientos directos</div>
+      <button class="round-btn" id="miniLigaToggleBtn" style="font-size:13px;min-width:34px;pointer-events:none">▼</button>
+    </div>
+    <div id="miniLigaContent" style="display:none;margin-top:14px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Selecciona los equipos cuyos encuentros directos quieres analizar · solo se contabilizan los partidos jugados entre los equipos seleccionados · ordena por puntos, luego diferencia de goles, luego goles a favor</div>
+      <!-- Accesos rápidos -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+        <button class="hist-sort-btn" onclick="selectMiniLigaTopN(2)">Ascenso (1-2)</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaTopN(4)">Top 4</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaTopN(6)">Top 6</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaTopN(8)">Top 8</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaTopN(10)">Top 10</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaZone('playoff')">Playoff (3-6)</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaZone('descenso')">Descenso (19-22)</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaAll()">Todos</button>
+        <button class="hist-sort-btn" onclick="selectMiniLigaNone()">Limpiar</button>
+      </div>
+      <!-- Selector de equipos con checkboxes -->
+      <div id="miniLigaSelector" style="display:flex;flex-wrap:wrap;gap:4px 10px;margin-bottom:14px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border)"></div>
+      <!-- Tabla de clasificación directa -->
+      <div class="standings-wrapper" style="overflow-x:auto">
+        <table class="standings-table" id="miniLigaTable">
+          <thead><tr>
+            <th style="text-align:center;width:32px">#</th>
+            <th style="text-align:left;min-width:160px">Equipo</th>
+            <th title="Partidos jugados entre los seleccionados">PJ</th>
+            <th title="Partidos ganados">PG</th>
+            <th title="Partidos empatados">PE</th>
+            <th title="Partidos perdidos">PP</th>
+            <th title="Goles a favor en enfrentamientos directos">GF</th>
+            <th title="Goles en contra en enfrentamientos directos">GC</th>
+            <th title="Diferencia de goles">DIF</th>
+            <th title="Puntos obtenidos en enfrentamientos directos">PTS</th>
+          </tr></thead>
+          <tbody id="miniLigaTableBody">
+            <tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">Selecciona al menos 2 equipos para ver la clasificación directa</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-legend">Solo se contabilizan los partidos disputados entre los equipos seleccionados · las puntuaciones de los partidos contra equipos no seleccionados <b>no</b> se incluyen · útil para desempates y análisis de grupos (playoff, descenso...)</div>
+    </div>
+  </div>
 </div>
 
 <!-- ============================== TAB 2: EVOLUCIÓN ============================== -->
@@ -2449,14 +2495,6 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
         <div style="font-size:11px;color:var(--muted);margin-bottom:12px">% de victorias, empates y derrotas · ordenado por % victorias</div>
         <div class="chart-container" style="height:420px"><canvas id="consistenciaChart"></canvas></div>
       </div>
-    </div>
-
-    <!-- ===== MAPA DE RESULTADOS ===== -->
-    <div class="card" id="resultMapCard">
-      <div class="card-title">🗓️ Mapa de Resultados — temporada completa J1→J{total_rounds}</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cada celda = resultado del equipo en esa jornada · ordenado por clasificación final · pasa el cursor para ver rival y marcador</div>
-      <div id="resultMapContainer" style="overflow-x:auto;-webkit-overflow-scrolling:touch"></div>
-      <div class="card-legend"><span style="color:#22c55e">■ V</span> Victoria &nbsp;·&nbsp; <span style="color:#fbbf24">■ E</span> Empate &nbsp;·&nbsp; <span style="color:#ef4444">■ D</span> Derrota &nbsp;·&nbsp; Lectura horizontal = racha de cada equipo a lo largo de la temporada</div>
     </div>
 
     <!-- ===== TRAMOS DE TEMPORADA ===== -->
@@ -3182,6 +3220,131 @@ function sortTable(col) {{
     return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
   }});
   drawStandingsTable();
+}}
+
+// ===== MINI-LIGA: ENFRENTAMIENTOS DIRECTOS =====
+let _miniLigaSelected = new Set();
+let _miniLigaOpen = false;
+
+window.toggleMiniLiga = function() {{
+  _miniLigaOpen = !_miniLigaOpen;
+  const content = document.getElementById('miniLigaContent');
+  const btn = document.getElementById('miniLigaToggleBtn');
+  if (content) content.style.display = _miniLigaOpen ? 'block' : 'none';
+  if (btn) btn.textContent = _miniLigaOpen ? '▲' : '▼';
+  if (_miniLigaOpen && _miniLigaSelected.size === 0) selectMiniLigaTopN(6);
+}};
+
+window.selectMiniLigaTopN = function(n) {{
+  const standings = computeStandings();
+  _miniLigaSelected = new Set(standings.slice(0, n).map(t => t.name));
+  _renderMiniLigaSelector();
+  _renderMiniLiga();
+}};
+
+window.selectMiniLigaZone = function(zone) {{
+  const standings = computeStandings();
+  let slice;
+  if (zone === 'playoff') slice = standings.slice(2, 6);
+  else if (zone === 'descenso') slice = standings.slice(18, 22);
+  else slice = [];
+  _miniLigaSelected = new Set(slice.map(t => t.name));
+  _renderMiniLigaSelector();
+  _renderMiniLiga();
+}};
+
+window.selectMiniLigaAll = function() {{
+  const standings = computeStandings();
+  _miniLigaSelected = new Set(standings.map(t => t.name));
+  _renderMiniLigaSelector();
+  _renderMiniLiga();
+}};
+
+window.selectMiniLigaNone = function() {{
+  _miniLigaSelected = new Set();
+  _renderMiniLigaSelector();
+  _renderMiniLiga();
+}};
+
+window.toggleMiniLigaTeam = function(name, checked) {{
+  if (checked) _miniLigaSelected.add(name);
+  else _miniLigaSelected.delete(name);
+  _renderMiniLiga();
+}};
+
+function _renderMiniLigaSelector() {{
+  const container = document.getElementById('miniLigaSelector');
+  if (!container) return;
+  const standings = computeStandings();
+  container.innerHTML = standings.map((t, i) => {{
+    const checked = _miniLigaSelected.has(t.name) ? 'checked' : '';
+    const safeName = t.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return `<label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:11px;color:var(--text);white-space:nowrap;padding:3px 0">
+      <input type="checkbox" ${{checked}} onchange="toggleMiniLigaTeam('${{safeName}}', this.checked)" style="cursor:pointer;accent-color:#3b82f6;width:13px;height:13px">
+      ${{crestHTML(t.name, 14)}}<span>${{t.name}}</span>
+    </label>`;
+  }}).join('');
+}}
+
+function _renderMiniLiga() {{
+  const tbody = document.getElementById('miniLigaTableBody');
+  if (!tbody) return;
+  if (_miniLigaSelected.size < 2) {{
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">Selecciona al menos 2 equipos</td></tr>';
+    return;
+  }}
+  const T = LIGA_DATA.total_rounds || 40;
+  const oppMap = LIGA_DATA.opponents_by_team || {{}};
+  const scMap = SCORES_DATA.scores_by_team || {{}};
+  const venMap = SCORES_DATA.venue_by_team || {{}};
+
+  const rows = Array.from(_miniLigaSelected).map(team => {{
+    const results = LIGA_DATA.results_by_team[team] || [];
+    const opps = oppMap[team] || [];
+    const sc = scMap[team] || {{}};
+    const ven = venMap[team] || {{}};
+    let pj = 0, wins = 0, draws = 0, losses = 0, gf = 0, gc = 0;
+
+    for (let idx = 0; idx < T; idx++) {{
+      const opp = opps[idx];
+      if (!opp || !_miniLigaSelected.has(opp)) continue;
+      const r = results[idx];
+      if (r !== 'V' && r !== 'E' && r !== 'D') continue;
+      const rawSc = sc[String(idx)];
+      if (!rawSc) continue;
+      const parts = rawSc.split('-').map(Number);
+      if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) continue;
+      // rawSc almacena siempre homeGoals-awayGoals
+      const myGf = ven[String(idx)] === 'H' ? parts[0] : parts[1];
+      const myGc = ven[String(idx)] === 'H' ? parts[1] : parts[0];
+      pj++; gf += myGf; gc += myGc;
+      if (r === 'V') wins++;
+      else if (r === 'E') draws++;
+      else losses++;
+    }}
+    return {{ name: team, pj, wins, draws, losses, gf, gc, dif: gf - gc, pts: wins * 3 + draws }};
+  }});
+
+  rows.sort((a, b) => b.pts - a.pts || b.dif - a.dif || b.gf - a.gf);
+
+  const ZONE_COLORS = ['#22c55e','#22c55e','#fbbf24','#fbbf24','#fbbf24','#fbbf24'];
+  tbody.innerHTML = rows.map((r, i) => {{
+    const zc = ZONE_COLORS[i] || '';
+    const posStyle = zc ? `color:${{zc}};font-weight:700` : 'color:var(--muted)';
+    const difColor = r.dif > 0 ? '#4ade80' : r.dif < 0 ? '#f87171' : 'var(--muted)';
+    return `<tr>
+      <td style="text-align:center;${{posStyle}}">${{i + 1}}</td>
+      <td style="text-align:left"><div style="display:flex;align-items:center;gap:6px">${{crestHTML(r.name, 18)}}<span>${{r.name}}</span></div></td>
+      <td style="text-align:center">${{r.pj}}</td>
+      <td style="text-align:center;color:#4ade80">${{r.wins}}</td>
+      <td style="text-align:center;color:#fbbf24">${{r.draws}}</td>
+      <td style="text-align:center;color:#f87171">${{r.losses}}</td>
+      <td style="text-align:center">${{r.gf}}</td>
+      <td style="text-align:center">${{r.gc}}</td>
+      <td style="text-align:center;color:${{difColor}}">${{r.dif > 0 ? '+' : ''}}${{r.dif}}</td>
+      <td style="text-align:center;font-weight:700;font-size:15px">${{r.pts}}</td>
+    </tr>`;
+  }}).join('');
 }}
 
 // ===== EVOLUTION CHART =====
@@ -4538,7 +4701,6 @@ function initAnalysisTab() {{
   buildRadarSelector();
   buildRadarChart();
   buildConsistenciaChart();
-  renderResultMap();
   renderTramosTemporada();
   _ligaTrendMode = 'goals';
   buildLigaTrendsChart();
@@ -4903,52 +5065,6 @@ function buildConsistenciaChart() {{
       }}
     }}
   }});
-}}
-
-// ===== MAPA DE RESULTADOS =====
-function renderResultMap() {{
-  const container = document.getElementById('resultMapContainer');
-  if (!container) return;
-  const standings = computeStandings();
-  const T = LIGA_DATA.total_rounds || 40;
-  const scMap = SCORES_DATA.scores_by_team || {{}};
-  const venMap = SCORES_DATA.venue_by_team || {{}};
-  const oppMap = LIGA_DATA.opponents_by_team || {{}};
-
-  let html = '<table style="border-collapse:collapse;font-size:10px;white-space:nowrap">';
-  html += '<thead><tr><th style="position:sticky;left:0;background:var(--card);z-index:2;text-align:left;padding:3px 10px 3px 4px;color:var(--muted);font-weight:600;min-width:140px">Equipo</th>';
-  for (let j = 1; j <= T; j++) {{
-    html += `<th style="width:22px;min-width:22px;text-align:center;color:var(--muted);padding:2px 1px;font-weight:400;font-size:9px">${{j}}</th>`;
-  }}
-  html += '</tr></thead><tbody>';
-
-  for (const t of standings) {{
-    const name = t.name;
-    const results = LIGA_DATA.results_by_team[name] || [];
-    const opps = oppMap[name] || [];
-    const sc = scMap[name] || {{}};
-    const ven = venMap[name] || {{}};
-    html += `<tr><td style="position:sticky;left:0;background:var(--card);z-index:1;padding:2px 10px 2px 4px;white-space:nowrap"><div style="display:flex;align-items:center;gap:5px;min-width:130px">${{crestHTML(name,14)}}<span style="color:var(--text);font-size:10px;max-width:100px;overflow:hidden;text-overflow:ellipsis">${{name}}</span></div></td>`;
-    for (let idx = 0; idx < T; idx++) {{
-      const r = results[idx];
-      const opp = opps[idx] || '';
-      const rawSc = sc[String(idx)];
-      const venue = ven[String(idx)];
-      let dispSc = rawSc;
-      if (rawSc && venue === 'A') {{
-        const p = rawSc.split('-');
-        if (p.length === 2) dispSc = p[1] + '-' + p[0];
-      }}
-      const bg = r === 'V' ? 'rgba(34,197,94,0.3)' : r === 'E' ? 'rgba(251,191,36,0.28)' : r === 'D' ? 'rgba(239,68,68,0.28)' : 'rgba(255,255,255,0.03)';
-      const fc = r === 'V' ? '#4ade80' : r === 'E' ? '#fbbf24' : r === 'D' ? '#f87171' : '#374151';
-      const lbl = r || '·';
-      const tip = opp ? `J${{idx+1}} · ${{name}} vs ${{opp}}${{dispSc ? ' · '+dispSc : ''}} (${{venue==='H'?'Casa':'Fuera'}})` : `J${{idx+1}} · sin datos`;
-      html += `<td style="background:${{bg}};color:${{fc}};text-align:center;width:22px;height:22px;font-weight:700;padding:0;border:1px solid rgba(255,255,255,0.05);cursor:default" title="${{tip}}">${{lbl}}</td>`;
-    }}
-    html += '</tr>';
-  }}
-  html += '</tbody></table>';
-  container.innerHTML = html;
 }}
 
 // ===== TRAMOS DE TEMPORADA =====
