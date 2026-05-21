@@ -1776,7 +1776,8 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
     </div>
     <div id="miniLigaContent" style="display:none;margin-top:14px">
       <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Selecciona los equipos cuyos encuentros directos quieres analizar · solo se contabilizan los partidos jugados entre los equipos seleccionados · ordena por puntos, luego diferencia de goles, luego goles a favor</div>
-      <!-- Accesos rápidos -->
+      <!-- Accesos rápidos equipos -->
+      <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Equipos</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
         <button class="hist-sort-btn" onclick="selectMiniLigaTopN(2)">Ascenso (1-2)</button>
         <button class="hist-sort-btn" onclick="selectMiniLigaTopN(4)">Top 4</button>
@@ -1790,6 +1791,29 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
       </div>
       <!-- Selector de equipos con checkboxes -->
       <div id="miniLigaSelector" style="display:flex;flex-wrap:wrap;gap:4px 10px;margin-bottom:14px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border)"></div>
+      <!-- Rango de jornadas -->
+      <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Rango de jornadas</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:12px;color:var(--muted)">Desde J</span>
+          <input type="number" id="miniLigaFromInput" min="1" max="42" value="1"
+            onchange="applyMiniLigaRange()"
+            style="width:52px;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px 6px;font-size:13px;text-align:center">
+          <span style="font-size:12px;color:var(--muted)">Hasta J</span>
+          <input type="number" id="miniLigaToInput" min="1" max="42" value="40"
+            onchange="applyMiniLigaRange()"
+            style="width:52px;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px 6px;font-size:13px;text-align:center">
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="hist-sort-btn active" id="mlr-all" onclick="setMiniLigaRange(1,40)">Completa</button>
+          <button class="hist-sort-btn" id="mlr-v1" onclick="setMiniLigaRange(1,21)">1ª Vuelta</button>
+          <button class="hist-sort-btn" id="mlr-v2" onclick="setMiniLigaRange(22,40)">2ª Vuelta</button>
+          <button class="hist-sort-btn" id="mlr-last5" onclick="setMiniLigaLastN(5)">Últ. 5J</button>
+          <button class="hist-sort-btn" id="mlr-last10" onclick="setMiniLigaLastN(10)">Últ. 10J</button>
+          <button class="hist-sort-btn" id="mlr-last20" onclick="setMiniLigaLastN(20)">Últ. 20J</button>
+        </div>
+        <span id="miniLigaRangeLabel" style="font-size:11px;color:var(--text);font-weight:600;margin-left:2px"></span>
+      </div>
       <!-- Tabla de clasificación directa -->
       <div class="standings-wrapper" style="overflow-x:auto">
         <table class="standings-table" id="miniLigaTable">
@@ -1810,7 +1834,7 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
           </tbody>
         </table>
       </div>
-      <div class="card-legend">Solo se contabilizan los partidos disputados entre los equipos seleccionados · las puntuaciones de los partidos contra equipos no seleccionados <b>no</b> se incluyen · útil para desempates y análisis de grupos (playoff, descenso...)</div>
+      <div class="card-legend" id="miniLigaFooter">Solo se contabilizan los partidos disputados entre los equipos seleccionados dentro del rango de jornadas seleccionado · útil para analizar etapas específicas (cambio de entrenador, rachas, primeras vs últimas jornadas...)</div>
     </div>
   </div>
 </div>
@@ -2807,6 +2831,8 @@ function sortTable(col) {
 // ===== MINI-LIGA: ENFRENTAMIENTOS DIRECTOS =====
 let _miniLigaSelected = new Set();
 let _miniLigaOpen = false;
+let _miniLigaFromJ = 1;
+let _miniLigaToJ = LIGA_DATA.total_rounds || 40;
 
 window.toggleMiniLiga = function() {
   _miniLigaOpen = !_miniLigaOpen;
@@ -2814,7 +2840,68 @@ window.toggleMiniLiga = function() {
   const btn = document.getElementById('miniLigaToggleBtn');
   if (content) content.style.display = _miniLigaOpen ? 'block' : 'none';
   if (btn) btn.textContent = _miniLigaOpen ? '▲' : '▼';
-  if (_miniLigaOpen && _miniLigaSelected.size === 0) selectMiniLigaTopN(6);
+  if (_miniLigaOpen) {
+    _miniLigaToJ = LIGA_DATA.total_rounds || 40;
+    const ti = document.getElementById('miniLigaToInput');
+    if (ti) ti.value = _miniLigaToJ;
+    _updateMiniLigaRangeUI();
+    if (_miniLigaSelected.size === 0) selectMiniLigaTopN(6);
+  }
+};
+
+function _updateMiniLigaRangeUI() {
+  const T = LIGA_DATA.total_rounds || 40;
+  const presets = [
+    { id: 'mlr-all',   from: 1,  to: T },
+    { id: 'mlr-v1',   from: 1,  to: 21 },
+    { id: 'mlr-v2',   from: 22, to: T },
+  ];
+  presets.forEach(p => {
+    const el = document.getElementById(p.id);
+    if (el) el.classList.toggle('active', _miniLigaFromJ === p.from && _miniLigaToJ === p.to);
+  });
+  ['mlr-last5','mlr-last10','mlr-last20'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const lbl = document.getElementById('miniLigaRangeLabel');
+  if (lbl) lbl.textContent = `J${_miniLigaFromJ} — J${_miniLigaToJ} (${_miniLigaToJ - _miniLigaFromJ + 1} jornadas)`;
+}
+
+window.setMiniLigaRange = function(from, to) {
+  const T = LIGA_DATA.total_rounds || 40;
+  _miniLigaFromJ = Math.max(1, from);
+  _miniLigaToJ = Math.min(to, T);
+  const fi = document.getElementById('miniLigaFromInput');
+  const ti = document.getElementById('miniLigaToInput');
+  if (fi) fi.value = _miniLigaFromJ;
+  if (ti) ti.value = _miniLigaToJ;
+  _updateMiniLigaRangeUI();
+  _renderMiniLiga();
+};
+
+window.setMiniLigaLastN = function(n) {
+  const T = LIGA_DATA.total_rounds || 40;
+  const from = Math.max(1, T - n + 1);
+  _miniLigaFromJ = from;
+  _miniLigaToJ = T;
+  const fi = document.getElementById('miniLigaFromInput');
+  const ti = document.getElementById('miniLigaToInput');
+  if (fi) fi.value = _miniLigaFromJ;
+  if (ti) ti.value = _miniLigaToJ;
+  // Mark matching last-N button active
+  _updateMiniLigaRangeUI();
+  const map = { 5: 'mlr-last5', 10: 'mlr-last10', 20: 'mlr-last20' };
+  if (map[n]) { const el = document.getElementById(map[n]); if (el) el.classList.add('active'); }
+  _renderMiniLiga();
+};
+
+window.applyMiniLigaRange = function() {
+  const fi = document.getElementById('miniLigaFromInput');
+  const ti = document.getElementById('miniLigaToInput');
+  const from = Math.max(1, parseInt(fi ? fi.value : 1) || 1);
+  const to = Math.max(from, parseInt(ti ? ti.value : 40) || 40);
+  setMiniLigaRange(from, to);
 };
 
 window.selectMiniLigaTopN = function(n) {
@@ -2886,7 +2973,10 @@ function _renderMiniLiga() {
     const ven = venMap[team] || {};
     let pj = 0, wins = 0, draws = 0, losses = 0, gf = 0, gc = 0;
 
+    const fromIdx = _miniLigaFromJ - 1;
+    const toIdx = _miniLigaToJ - 1;
     for (let idx = 0; idx < T; idx++) {
+      if (idx < fromIdx || idx > toIdx) continue;  // fuera del rango seleccionado
       const opp = opps[idx];
       if (!opp || !_miniLigaSelected.has(opp)) continue;
       const r = results[idx];
@@ -6724,7 +6814,7 @@ document.addEventListener('DOMContentLoaded', init);
   if (cleanPath !== window.location.pathname || window.location.search) {
     history.replaceState(null, '', cleanPath);
   }
-  var BUILD_TS = '2026-05-21T19:45:37';
+  var BUILD_TS = '2026-05-21T20:13:04';
   function checkVersion(){
     fetch('version.json?_=' + Date.now())
       .then(function(r){ return r.json(); })
