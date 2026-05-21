@@ -1734,6 +1734,22 @@ tr.secured-relegation td:first-child { border-left: 5px solid #ef4444 !important
     <button class="btn-form" id="fmt10" onclick="setFormMode(10)">Últ.10</button>
     <button class="btn-form" id="fmt20" onclick="setFormMode(20)">Últ.20</button>
   </div>
+  <!-- ===== Selector de rango de jornadas para la clasificación ===== -->
+  <div class="standings-round-nav" id="standingsRangeBar" style="padding:8px 0 10px;border-top:1px solid var(--border)">
+    <span style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-right:2px">Rango:</span>
+    <span style="font-size:12px;color:var(--muted)">Desde J</span>
+    <input type="number" id="standFromInput" min="1" max="42" value="1"
+      onchange="applyStandingsRange()"
+      style="width:50px;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:3px 6px;font-size:13px;text-align:center">
+    <span style="font-size:12px;color:var(--muted)">Hasta J</span>
+    <input type="number" id="standToInput" min="1" max="42" value="40"
+      onchange="applyStandingsRange()"
+      style="width:50px;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:3px 6px;font-size:13px;text-align:center">
+    <button class="hist-sort-btn active" id="srnAll" onclick="clearStandingsRange()">Completa</button>
+    <button class="hist-sort-btn" id="srnV1" onclick="setStandingsRange(1,21)">1ª Vuelta</button>
+    <button class="hist-sort-btn" id="srnV2" onclick="setStandingsRange(22,40)">2ª Vuelta</button>
+    <span id="standRangeLabel" style="font-size:11px;color:var(--accent)"></span>
+  </div>
   <div class="zone-legend">
     <div class="zone-item"><div class="zone-dot" style="background:#22c55e"></div> Ascenso Directo (1-2)</div>
     <div class="zone-item"><div class="zone-dot" style="background:#fbbf24"></div> Playoff Ascenso (3-6)</div>
@@ -2206,6 +2222,9 @@ let currentRound = (() => {
 })();
 let standingsRound = currentRound; // which jornada to show in standings
 let formMode = 0; // 0 = general, N = last N jornadas
+let _standingsRangeMode = false;
+let _standingsFromJ = 1;
+let _standingsToJ = LIGA_DATA.total_rounds || 40;
 let liveState = {}; // name -> {opponent, diff, homeGoals, awayGoals, isHome, minute}
 const UI_STATE_KEY = 'hypertensiones_ui_state_v1';
 
@@ -2518,7 +2537,37 @@ function computeFormStandings(n) {
       situacion: i<2?'ASCENSO':i<6?'PLAYOFF':i<18?'PERMANENCIA':'DESCENSO'
     }));
 }
+function computeRangeStandings(fromJ, toJ) {
+  const T = LIGA_DATA.total_rounds || 40;
+  const fromIdx = Math.max(0, fromJ - 1);
+  const toIdx = Math.min(T - 1, toJ - 1);
+  const scMap = SCORES_DATA.scores_by_team || {};
+  return LIGA_DATA.teams.map(name => {
+    const allRes = LIGA_DATA.results_by_team[name] || [];
+    const res = allRes.slice(fromIdx, toIdx + 1);
+    const wins   = res.filter(x=>x==='V').length;
+    const draws  = res.filter(x=>x==='E').length;
+    const losses = res.filter(x=>x==='D').length;
+    const pts    = wins * 3 + draws;
+    const teamScores = scMap[name] || {};
+    let gf = 0, gc = 0;
+    for (let i = fromIdx; i <= toIdx; i++) {
+      const sc = teamScores[String(i)];
+      if (sc) { const [a,b] = sc.split('-').map(Number); gf+=a; gc+=b; }
+    }
+    const racha = (() => { let c=0; for(let i=allRes.length-1;i>=0;i--){ if(allRes[i]==='D')break; c++; } return c; })();
+    const played = res.length;
+    return { name, wins, draws, losses, played, pts, gf, gc, dif: gf-gc, racha, allRes,
+      ppg: played > 0 ? (pts/played).toFixed(2) : '0.00',
+      quedan: 0, situacion: ''
+    };
+  }).sort((a,b) => b.pts - a.pts || b.wins - a.wins || b.dif - a.dif)
+    .map((t,i) => ({...t, pos: i+1,
+      situacion: i<2 ? 'ASCENSO' : i<6 ? 'PLAYOFF' : i<18 ? 'PERMANENCIA' : 'DESCENSO'
+    }));
+}
 function computeStandings() {
+  if (_standingsRangeMode) return computeRangeStandings(_standingsFromJ, _standingsToJ);
   if (formMode > 0) return computeFormStandings(formMode);
   return computeStandingsForRound(standingsRound).map((t,i)=>({...t, pos:i+1}));
 }
@@ -2648,6 +2697,8 @@ function liveScoreCell(name) {
 }
 
 function changeStandingsRound(delta) {
+  _standingsRangeMode = false;
+  _updateStandingsRangeUI();
   const maxR = currentRound;
   if (delta === 999) standingsRound = maxR;
   else standingsRound = Math.max(1, Math.min(maxR, standingsRound + delta));
@@ -3825,6 +3876,8 @@ function buildPredHistChart() {
 
 // ===== FORM MODE =====
 function setFormMode(n) {
+  _standingsRangeMode = false;
+  _updateStandingsRangeUI();
   formMode = n;
   document.querySelectorAll('.btn-form').forEach(b => b.classList.remove('active'));
   const id = n === 0 ? 'fmtAll' : 'fmt' + n;
@@ -3833,6 +3886,53 @@ function setFormMode(n) {
   sortCol = 'pos'; sortAsc = true;
   renderStandings();
 }
+
+// ===== STANDINGS RANGE MODE =====
+function _updateStandingsRangeUI() {
+  const T = LIGA_DATA.total_rounds || 40;
+  const on = _standingsRangeMode;
+  const btnAll = document.getElementById('srnAll');
+  const btnV1  = document.getElementById('srnV1');
+  const btnV2  = document.getElementById('srnV2');
+  const lbl    = document.getElementById('standRangeLabel');
+  if (btnAll) btnAll.classList.toggle('active', !on);
+  if (btnV1)  btnV1.classList.toggle('active',  on && _standingsFromJ===1  && _standingsToJ===21);
+  if (btnV2)  btnV2.classList.toggle('active',  on && _standingsFromJ===22 && _standingsToJ===T);
+  if (lbl) lbl.textContent = on ? `▶ J${_standingsFromJ}–J${_standingsToJ} (${_standingsToJ - _standingsFromJ + 1} jornadas)` : '';
+}
+window.clearStandingsRange = function() {
+  _standingsRangeMode = false;
+  sortCol = 'pos'; sortAsc = true;
+  _updateStandingsRangeUI();
+  renderStandings();
+};
+window.setStandingsRange = function(f, t) {
+  _standingsFromJ = f; _standingsToJ = t;
+  const fi = document.getElementById('standFromInput');
+  const ti = document.getElementById('standToInput');
+  if (fi) fi.value = f;
+  if (ti) ti.value = t;
+  _standingsRangeMode = true;
+  sortCol = 'pos'; sortAsc = true;
+  _updateStandingsRangeUI();
+  renderStandings();
+};
+window.applyStandingsRange = function() {
+  const fi = document.getElementById('standFromInput');
+  const ti = document.getElementById('standToInput');
+  let f = parseInt(fi?.value) || 1;
+  let t = parseInt(ti?.value) || (LIGA_DATA.total_rounds || 40);
+  const T = LIGA_DATA.total_rounds || 40;
+  f = Math.max(1, Math.min(f, T));
+  t = Math.max(f, Math.min(t, T));
+  if (fi) fi.value = f;
+  if (ti) ti.value = t;
+  _standingsFromJ = f; _standingsToJ = t;
+  _standingsRangeMode = (f > 1 || t < T);
+  sortCol = 'pos'; sortAsc = true;
+  _updateStandingsRangeUI();
+  renderStandings();
+};
 
 // ===== ANÁLISIS TAB =====
 let scatterChart = null;
@@ -6816,7 +6916,7 @@ document.addEventListener('DOMContentLoaded', init);
   if (cleanPath !== window.location.pathname || window.location.search) {
     history.replaceState(null, '', cleanPath);
   }
-  var BUILD_TS = '2026-05-21T20:16:50';
+  var BUILD_TS = '2026-05-21T20:33:59';
   function checkVersion(){
     fetch('version.json?_=' + Date.now())
       .then(function(r){ return r.json(); })
