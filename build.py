@@ -3278,9 +3278,8 @@ function _renderMiniLigaSelector() {{
   const standings = computeStandings();
   container.innerHTML = standings.map((t, i) => {{
     const checked = _miniLigaSelected.has(t.name) ? 'checked' : '';
-    const safeName = t.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     return `<label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:11px;color:var(--text);white-space:nowrap;padding:3px 0">
-      <input type="checkbox" ${{checked}} onchange="toggleMiniLigaTeam('${{safeName}}', this.checked)" style="cursor:pointer;accent-color:#3b82f6;width:13px;height:13px">
+      <input type="checkbox" ${{checked}} onchange="toggleMiniLigaTeam('${{t.name}}', this.checked)" style="cursor:pointer;accent-color:#3b82f6;width:13px;height:13px">
       ${{crestHTML(t.name, 14)}}<span>${{t.name}}</span>
     </label>`;
   }}).join('');
