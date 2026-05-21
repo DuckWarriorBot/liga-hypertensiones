@@ -2246,9 +2246,10 @@ tr.secured-relegation td:first-child {{ border-left: 5px solid #ef4444 !importan
             <th title="Goles en contra en enfrentamientos directos">GC</th>
             <th title="Diferencia de goles">DIF</th>
             <th title="Puntos obtenidos en enfrentamientos directos">PTS</th>
+            <th title="Puntos por partido">PPG</th>
           </tr></thead>
           <tbody id="miniLigaTableBody">
-            <tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">Selecciona al menos 2 equipos para ver la clasificación directa</td></tr>
+            <tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Selecciona al menos 2 equipos para ver la clasificación directa</td></tr>
           </tbody>
         </table>
       </div>
@@ -3376,7 +3377,7 @@ function _renderMiniLiga() {{
   const tbody = document.getElementById('miniLigaTableBody');
   if (!tbody) return;
   if (_miniLigaSelected.size < 2) {{
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">Selecciona al menos 2 equipos</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:20px">Selecciona al menos 2 equipos</td></tr>';
     return;
   }}
   const T = LIGA_DATA.total_rounds || 40;
@@ -3432,6 +3433,7 @@ function _renderMiniLiga() {{
       <td style="text-align:center">${{r.gc}}</td>
       <td style="text-align:center;color:${{difColor}}">${{r.dif > 0 ? '+' : ''}}${{r.dif}}</td>
       <td style="text-align:center;font-weight:700;font-size:15px">${{r.pts}}</td>
+      <td style="text-align:center;color:var(--muted);font-size:13px">${{r.pj ? (r.pts / r.pj).toFixed(2) : '—'}}</td>
     </tr>`;
   }}).join('');
 }}
