@@ -25,7 +25,7 @@
   ],
   "total_rounds": 41,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-25T07:39:30",
+  "last_updated": "2026-05-25T13:11:45",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -4164,6 +4164,13 @@
     },
     {
       "round": 42,
+      "home": "Real Sociedad B",
+      "away": "Cultural Leonesa",
+      "date": "30/05",
+      "time": "16:15"
+    },
+    {
+      "round": 42,
       "home": "Granada",
       "away": "Sporting",
       "date": "30/05",
@@ -4192,22 +4199,8 @@
     },
     {
       "round": 42,
-      "home": "Córdoba",
-      "away": "Huesca",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
       "home": "Deportivo",
       "away": "Las Palmas",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
-      "home": "Leganés",
-      "away": "Mirandés",
       "date": "31/05",
       "time": "18:30"
     },
@@ -4220,17 +4213,24 @@
     },
     {
       "round": 42,
-      "home": "Real Sociedad B",
-      "away": "Cultural Leonesa",
+      "home": "Real Zaragoza",
+      "away": "Málaga",
       "date": "31/05",
       "time": "18:30"
     },
     {
       "round": 42,
-      "home": "Real Zaragoza",
-      "away": "Málaga",
+      "home": "Córdoba",
+      "away": "Huesca",
       "date": "31/05",
-      "time": "18:30"
+      "time": "21:00"
+    },
+    {
+      "round": 42,
+      "home": "Leganés",
+      "away": "Mirandés",
+      "date": "31/05",
+      "time": "21:00"
     }
   ],
   "match_days": {
@@ -4239,7 +4239,8 @@
       "21:00"
     ],
     "31/05": [
-      "18:30"
+      "18:30",
+      "21:00"
     ]
   },
   "h2h_data": {
