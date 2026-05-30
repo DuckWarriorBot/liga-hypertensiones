@@ -25,7 +25,7 @@
   ],
   "total_rounds": 42,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-30T20:34:33",
+  "last_updated": "2026-05-30T20:59:58",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -199,7 +199,7 @@
       "E",
       "D",
       "V",
-      "E"
+      "V"
     ],
     "Racing": [
       "V",
@@ -412,6 +412,7 @@
       "D",
       "D",
       "V",
+      "D",
       "D",
       "D",
       "D"
@@ -845,6 +846,7 @@
       "D",
       "D",
       "V",
+      "V",
       "V"
     ],
     "Córdoba": [
@@ -975,7 +977,7 @@
       "V",
       "V",
       "V",
-      "E"
+      "D"
     ]
   },
   "positions_by_team": {
@@ -1021,7 +1023,7 @@
       12,
       11,
       10,
-      10
+      12
     ],
     "Almería": [
       9,
@@ -1109,7 +1111,7 @@
       10,
       10,
       13,
-      12
+      13
     ],
     "Burgos": [
       1,
@@ -1241,7 +1243,7 @@
       11,
       13,
       11,
-      11
+      10
     ],
     "Cultural Leonesa": [
       22,
@@ -1373,7 +1375,7 @@
       9,
       9,
       9,
-      9
+      11
     ],
     "Deportivo": [
       3,
@@ -1901,7 +1903,7 @@
       13,
       12,
       12,
-      13
+      9
     ],
     "Valladolid": [
       2,
@@ -1991,7 +1993,7 @@
       53,
       56,
       59,
-      60
+      59
     ],
     "Almería": [
       1,
@@ -2211,7 +2213,7 @@
       55,
       55,
       58,
-      59
+      61
     ],
     "Cultural Leonesa": [
       0,
@@ -2871,7 +2873,7 @@
       52,
       55,
       58,
-      58
+      61
     ],
     "Valladolid": [
       3,
@@ -3016,6 +3018,30 @@
       "pos": 8
     },
     {
+      "name": "Sporting",
+      "pts": 61,
+      "wins": 18,
+      "draws": 7,
+      "losses": 17,
+      "played": 42,
+      "gf": 60,
+      "gc": 54,
+      "dif": 6,
+      "pos": 9
+    },
+    {
+      "name": "Ceuta",
+      "pts": 61,
+      "wins": 17,
+      "draws": 10,
+      "losses": 15,
+      "played": 42,
+      "gf": 51,
+      "gc": 63,
+      "dif": -12,
+      "pos": 10
+    },
+    {
       "name": "Córdoba",
       "pts": 60,
       "wins": 17,
@@ -3025,31 +3051,19 @@
       "gf": 56,
       "gc": 60,
       "dif": -4,
-      "pos": 9
+      "pos": 11
     },
     {
       "name": "Albacete",
-      "pts": 60,
-      "wins": 16,
-      "draws": 12,
-      "losses": 14,
-      "played": 42,
-      "gf": 56,
-      "gc": 54,
-      "dif": 2,
-      "pos": 10
-    },
-    {
-      "name": "Ceuta",
       "pts": 59,
       "wins": 16,
       "draws": 11,
       "losses": 15,
       "played": 42,
-      "gf": 50,
-      "gc": 63,
-      "dif": -13,
-      "pos": 11
+      "gf": 56,
+      "gc": 55,
+      "dif": 1,
+      "pos": 12
     },
     {
       "name": "Andorra",
@@ -3061,18 +3075,6 @@
       "gf": 62,
       "gc": 53,
       "dif": 9,
-      "pos": 12
-    },
-    {
-      "name": "Sporting",
-      "pts": 58,
-      "wins": 17,
-      "draws": 7,
-      "losses": 17,
-      "played": 41,
-      "gf": 58,
-      "gc": 53,
-      "dif": 5,
       "pos": 13
     },
     {
@@ -3080,11 +3082,11 @@
       "pts": 48,
       "wins": 12,
       "draws": 12,
-      "losses": 17,
-      "played": 41,
-      "gf": 49,
-      "gc": 54,
-      "dif": -5,
+      "losses": 18,
+      "played": 42,
+      "gf": 50,
+      "gc": 56,
+      "dif": -6,
       "pos": 14
     },
     {
@@ -3094,8 +3096,8 @@
       "draws": 11,
       "losses": 19,
       "played": 42,
-      "gf": 51,
-      "gc": 60,
+      "gf": 52,
+      "gc": 61,
       "dif": -9,
       "pos": 15
     },
@@ -3166,8 +3168,8 @@
       "draws": 10,
       "losses": 23,
       "played": 42,
-      "gf": 38,
-      "gc": 67,
+      "gf": 39,
+      "gc": 68,
       "dif": -29,
       "pos": 21
     },
@@ -3193,11 +3195,11 @@
     "Castellón": "A 8 DEL ASCENSO",
     "Burgos": "A 0 DEL PLAYOFF",
     "Eibar": "PERMANENCIA",
+    "Sporting": "PERMANENCIA",
+    "Ceuta": "PERMANENCIA",
     "Córdoba": "PERMANENCIA",
     "Albacete": "PERMANENCIA",
-    "Ceuta": "PERMANENCIA",
     "Andorra": "PERMANENCIA",
-    "Sporting": "PERMANENCIA",
     "Granada": "PERMANENCIA",
     "Real Sociedad B": "PERMANENCIA",
     "Valladolid": "PERMANENCIA",
@@ -3217,11 +3219,11 @@
     "Castellón": 0,
     "Burgos": 0,
     "Eibar": 0,
+    "Sporting": 0,
+    "Ceuta": 0,
     "Córdoba": 0,
     "Albacete": 0,
-    "Ceuta": 0,
     "Andorra": 0,
-    "Sporting": 0,
     "Granada": 0,
     "Real Sociedad B": 0,
     "Valladolid": 0,
@@ -4205,13 +4207,6 @@
   "fixtures": [
     {
       "round": 42,
-      "home": "Granada",
-      "away": "Sporting",
-      "date": "30/05",
-      "time": "21:00"
-    },
-    {
-      "round": 42,
       "home": "Almería",
       "away": "Valladolid",
       "date": "31/05",
@@ -4268,9 +4263,6 @@
     }
   ],
   "match_days": {
-    "30/05": [
-      "21:00"
-    ],
     "31/05": [
       "18:30",
       "21:00"
@@ -4693,6 +4685,10 @@
       "Burgos": {
         "score": "0-1",
         "res": "D"
+      },
+      "Sporting": {
+        "score": "1-2",
+        "res": "D"
       }
     },
     "Real Sociedad B": {
@@ -4777,7 +4773,7 @@
         "res": "E"
       },
       "Cultural Leonesa": {
-        "score": "0-0",
+        "score": "1-1",
         "res": "E"
       }
     },
@@ -5625,8 +5621,8 @@
         "res": "D"
       },
       "Albacete": {
-        "score": "0-0",
-        "res": "E"
+        "score": "1-0",
+        "res": "V"
       }
     },
     "Real Zaragoza": {
