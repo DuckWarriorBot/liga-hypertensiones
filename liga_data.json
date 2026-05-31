@@ -25,7 +25,7 @@
   ],
   "total_rounds": 42,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-31T18:36:16",
+  "last_updated": "2026-05-31T19:05:01",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -67,6 +67,7 @@
       "E",
       "E",
       "E",
+      "V",
       "V",
       "V"
     ],
@@ -155,6 +156,7 @@
       "D",
       "V",
       "D",
+      "D",
       "D"
     ],
     "Ceuta": [
@@ -242,7 +244,8 @@
       "V",
       "V",
       "V",
-      "E"
+      "E",
+      "V"
     ],
     "Castellón": [
       "D",
@@ -285,6 +288,7 @@
       "D",
       "E",
       "E",
+      "V",
       "V"
     ],
     "Málaga": [
@@ -328,7 +332,8 @@
       "V",
       "V",
       "V",
-      "E"
+      "E",
+      "V"
     ],
     "Eibar": [
       "E",
@@ -371,7 +376,8 @@
       "D",
       "V",
       "D",
-      "V"
+      "V",
+      "D"
     ],
     "Granada": [
       "D",
@@ -458,7 +464,8 @@
       "V",
       "V",
       "V",
-      "V"
+      "V",
+      "D"
     ],
     "Real Sociedad B": [
       "V",
@@ -545,7 +552,8 @@
       "D",
       "D",
       "D",
-      "E"
+      "E",
+      "D"
     ],
     "Cádiz": [
       "V",
@@ -588,7 +596,8 @@
       "E",
       "D",
       "E",
-      "V"
+      "V",
+      "D"
     ],
     "Mirandés": [
       "D",
@@ -760,7 +769,8 @@
       "V",
       "D",
       "V",
-      "E"
+      "E",
+      "V"
     ],
     "Andorra": [
       "E",
@@ -802,6 +812,7 @@
       "V",
       "D",
       "V",
+      "D",
       "D",
       "D"
     ],
@@ -933,7 +944,8 @@
       "V",
       "E",
       "D",
-      "D"
+      "D",
+      "V"
     ],
     "Albacete": [
       "E",
@@ -2037,7 +2049,7 @@
       71,
       71,
       71,
-      71
+      74
     ],
     "Andorra": [
       1,
@@ -2125,7 +2137,7 @@
       63,
       66,
       69,
-      69
+      72
     ],
     "Castellón": [
       0,
@@ -2169,7 +2181,7 @@
       65,
       66,
       69,
-      69
+      72
     ],
     "Ceuta": [
       0,
@@ -2565,7 +2577,7 @@
       66,
       69,
       70,
-      70
+      73
     ],
     "Leganés": [
       1,
@@ -2697,7 +2709,7 @@
       66,
       69,
       70,
-      70
+      73
     ],
     "Racing": [
       3,
@@ -2741,7 +2753,7 @@
       75,
       78,
       79,
-      79
+      82
     ],
     "Real Sociedad B": [
       3,
@@ -2923,14 +2935,14 @@
   "final_standings": [
     {
       "name": "Racing",
-      "pts": 79,
-      "wins": 24,
+      "pts": 82,
+      "wins": 25,
       "draws": 7,
       "losses": 10,
-      "played": 41,
-      "gf": 86,
-      "gc": 60,
-      "dif": 26,
+      "played": 42,
+      "gf": 90,
+      "gc": 61,
+      "dif": 29,
       "pos": 1
     },
     {
@@ -2938,71 +2950,71 @@
       "pts": 77,
       "wins": 22,
       "draws": 11,
-      "losses": 8,
-      "played": 41,
-      "gf": 64,
-      "gc": 42,
-      "dif": 22,
+      "losses": 9,
+      "played": 42,
+      "gf": 65,
+      "gc": 44,
+      "dif": 21,
       "pos": 2
     },
     {
       "name": "Almería",
-      "pts": 71,
-      "wins": 21,
+      "pts": 74,
+      "wins": 22,
       "draws": 8,
       "losses": 12,
-      "played": 41,
-      "gf": 80,
+      "played": 42,
+      "gf": 81,
       "gc": 63,
-      "dif": 17,
+      "dif": 18,
       "pos": 3
     },
     {
       "name": "Málaga",
-      "pts": 70,
-      "wins": 20,
+      "pts": 73,
+      "wins": 21,
       "draws": 10,
       "losses": 11,
-      "played": 41,
-      "gf": 73,
+      "played": 42,
+      "gf": 75,
       "gc": 52,
-      "dif": 21,
+      "dif": 23,
       "pos": 4
     },
     {
       "name": "Las Palmas",
-      "pts": 70,
-      "wins": 19,
+      "pts": 73,
+      "wins": 20,
       "draws": 13,
       "losses": 9,
-      "played": 41,
-      "gf": 55,
-      "gc": 39,
-      "dif": 16,
+      "played": 42,
+      "gf": 57,
+      "gc": 40,
+      "dif": 17,
       "pos": 5
     },
     {
       "name": "Castellón",
-      "pts": 69,
-      "wins": 19,
+      "pts": 72,
+      "wins": 20,
       "draws": 12,
       "losses": 10,
-      "played": 41,
-      "gf": 68,
-      "gc": 50,
-      "dif": 18,
+      "played": 42,
+      "gf": 70,
+      "gc": 51,
+      "dif": 19,
       "pos": 6
     },
     {
       "name": "Burgos",
-      "pts": 69,
-      "wins": 19,
+      "pts": 72,
+      "wins": 20,
       "draws": 12,
       "losses": 10,
-      "played": 41,
-      "gf": 47,
+      "played": 42,
+      "gf": 48,
       "gc": 33,
-      "dif": 14,
+      "dif": 15,
       "pos": 7
     },
     {
@@ -3010,11 +3022,11 @@
       "pts": 67,
       "wins": 19,
       "draws": 10,
-      "losses": 12,
-      "played": 41,
-      "gf": 51,
-      "gc": 38,
-      "dif": 13,
+      "losses": 13,
+      "played": 42,
+      "gf": 52,
+      "gc": 40,
+      "dif": 12,
       "pos": 8
     },
     {
@@ -3070,11 +3082,11 @@
       "pts": 58,
       "wins": 16,
       "draws": 10,
-      "losses": 15,
-      "played": 41,
+      "losses": 16,
+      "played": 42,
       "gf": 62,
-      "gc": 53,
-      "dif": 9,
+      "gc": 54,
+      "dif": 8,
       "pos": 13
     },
     {
@@ -3106,11 +3118,11 @@
       "pts": 46,
       "wins": 12,
       "draws": 10,
-      "losses": 19,
-      "played": 41,
+      "losses": 20,
+      "played": 42,
       "gf": 44,
-      "gc": 56,
-      "dif": -12,
+      "gc": 57,
+      "dif": -13,
       "pos": 16
     },
     {
@@ -3118,11 +3130,11 @@
       "pts": 43,
       "wins": 11,
       "draws": 10,
-      "losses": 20,
-      "played": 41,
-      "gf": 40,
-      "gc": 57,
-      "dif": -17,
+      "losses": 21,
+      "played": 42,
+      "gf": 41,
+      "gc": 61,
+      "dif": -20,
       "pos": 17
     },
     {
@@ -3178,21 +3190,21 @@
       "pts": 36,
       "wins": 8,
       "draws": 12,
-      "losses": 21,
-      "played": 41,
+      "losses": 22,
+      "played": 42,
       "gf": 35,
-      "gc": 57,
-      "dif": -22,
+      "gc": 59,
+      "dif": -24,
       "pos": 22
     }
   ],
   "situacion_by_team": {
     "Racing": "ASCENSO ASEGURADO",
     "Deportivo": "ASCENSO ASEGURADO",
-    "Almería": "A 6 DEL ASCENSO",
-    "Málaga": "A 7 DEL ASCENSO",
-    "Las Palmas": "A 7 DEL ASCENSO",
-    "Castellón": "A 8 DEL ASCENSO",
+    "Almería": "A 3 DEL ASCENSO",
+    "Málaga": "A 4 DEL ASCENSO",
+    "Las Palmas": "A 4 DEL ASCENSO",
+    "Castellón": "A 5 DEL ASCENSO",
     "Burgos": "A 0 DEL PLAYOFF",
     "Eibar": "PERMANENCIA",
     "Sporting": "PERMANENCIA",
@@ -4207,48 +4219,6 @@
   "fixtures": [
     {
       "round": 42,
-      "home": "Almería",
-      "away": "Valladolid",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
-      "home": "Burgos",
-      "away": "Andorra",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
-      "home": "Castellón",
-      "away": "Eibar",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
-      "home": "Deportivo",
-      "away": "Las Palmas",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
-      "home": "Racing",
-      "away": "Cádiz",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
-      "home": "Real Zaragoza",
-      "away": "Málaga",
-      "date": "31/05",
-      "time": "18:30"
-    },
-    {
-      "round": 42,
       "home": "Córdoba",
       "away": "Huesca",
       "date": "31/05",
@@ -4260,11 +4230,50 @@
       "away": "Mirandés",
       "date": "31/05",
       "time": "21:00"
+    },
+    {
+      "round": 43,
+      "home": "Castellón",
+      "away": "Almería",
+      "date": "06/06",
+      "time": "21:00"
+    },
+    {
+      "round": 43,
+      "home": "Las Palmas",
+      "away": "Málaga",
+      "date": "07/06",
+      "time": "21:00"
+    },
+    {
+      "round": 43,
+      "home": "Almería",
+      "away": "Castellón",
+      "date": "09/06",
+      "time": "21:00"
+    },
+    {
+      "round": 43,
+      "home": "Málaga",
+      "away": "Las Palmas",
+      "date": "10/06",
+      "time": "21:00"
     }
   ],
   "match_days": {
     "31/05": [
-      "18:30",
+      "21:00"
+    ],
+    "06/06": [
+      "21:00"
+    ],
+    "07/06": [
+      "21:00"
+    ],
+    "09/06": [
+      "21:00"
+    ],
+    "10/06": [
       "21:00"
     ]
   },
@@ -4349,6 +4358,10 @@
       "Almería": {
         "score": "0-0",
         "res": "E"
+      },
+      "Andorra": {
+        "score": "1-0",
+        "res": "V"
       }
     },
     "Valladolid": {
@@ -4515,6 +4528,10 @@
         "res": "V"
       },
       "Valladolid": {
+        "score": "4-1",
+        "res": "V"
+      },
+      "Cádiz": {
         "score": "4-1",
         "res": "V"
       }
@@ -5201,6 +5218,10 @@
       "Las Palmas": {
         "score": "1-2",
         "res": "D"
+      },
+      "Valladolid": {
+        "score": "1-0",
+        "res": "V"
       }
     },
     "Eibar": {
@@ -5369,6 +5390,10 @@
       "Cádiz": {
         "score": "1-1",
         "res": "E"
+      },
+      "Eibar": {
+        "score": "2-1",
+        "res": "V"
       }
     },
     "Leganés": {
@@ -5705,6 +5730,10 @@
       "Sporting": {
         "score": "1-3",
         "res": "D"
+      },
+      "Málaga": {
+        "score": "0-2",
+        "res": "D"
       }
     },
     "Deportivo": {
@@ -5787,6 +5816,10 @@
       "Andorra": {
         "score": "2-1",
         "res": "V"
+      },
+      "Las Palmas": {
+        "score": "1-2",
+        "res": "D"
       }
     },
     "Cultural Leonesa": {
