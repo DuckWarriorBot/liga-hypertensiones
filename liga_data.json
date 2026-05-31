@@ -25,7 +25,7 @@
   ],
   "total_rounds": 42,
   "total_season_rounds": 42,
-  "last_updated": "2026-05-31T20:37:32",
+  "last_updated": "2026-05-31T21:04:08",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -641,7 +641,7 @@
       "D",
       "E",
       "V",
-      "E"
+      "D"
     ],
     "Huesca": [
       "E",
@@ -729,7 +729,7 @@
       "D",
       "E",
       "D",
-      "E"
+      "V"
     ],
     "Las Palmas": [
       "E",
@@ -1655,7 +1655,7 @@
       17,
       17,
       18,
-      17
+      16
     ],
     "Mirandés": [
       17,
@@ -1963,7 +1963,7 @@
       15,
       16,
       16,
-      16
+      17
     ]
   },
   "points_by_team": {
@@ -2625,7 +2625,7 @@
       42,
       43,
       43,
-      44
+      46
     ],
     "Mirandés": [
       0,
@@ -2669,7 +2669,7 @@
       36,
       37,
       40,
-      41
+      40
     ],
     "Málaga": [
       1,
@@ -3040,8 +3040,8 @@
       "draws": 10,
       "losses": 15,
       "played": 42,
-      "gf": 56,
-      "gc": 60,
+      "gf": 57,
+      "gc": 61,
       "dif": -4,
       "pos": 9
     },
@@ -3118,6 +3118,18 @@
       "pos": 15
     },
     {
+      "name": "Leganés",
+      "pts": 46,
+      "wins": 11,
+      "draws": 13,
+      "losses": 18,
+      "played": 42,
+      "gf": 43,
+      "gc": 51,
+      "dif": -8,
+      "pos": 16
+    },
+    {
       "name": "Valladolid",
       "pts": 46,
       "wins": 12,
@@ -3127,18 +3139,6 @@
       "gf": 44,
       "gc": 57,
       "dif": -13,
-      "pos": 16
-    },
-    {
-      "name": "Leganés",
-      "pts": 44,
-      "wins": 10,
-      "draws": 14,
-      "losses": 18,
-      "played": 42,
-      "gf": 42,
-      "gc": 51,
-      "dif": -9,
       "pos": 17
     },
     {
@@ -3155,14 +3155,14 @@
     },
     {
       "name": "Mirandés",
-      "pts": 41,
+      "pts": 40,
       "wins": 10,
-      "draws": 11,
-      "losses": 21,
+      "draws": 10,
+      "losses": 22,
       "played": 42,
       "gf": 47,
-      "gc": 68,
-      "dif": -21,
+      "gc": 69,
+      "dif": -22,
       "pos": 19
     },
     {
@@ -3172,8 +3172,8 @@
       "draws": 11,
       "losses": 22,
       "played": 42,
-      "gf": 40,
-      "gc": 62,
+      "gf": 41,
+      "gc": 63,
       "dif": -22,
       "pos": 20
     },
@@ -3218,8 +3218,8 @@
     "Andorra": "PERMANENCIA",
     "Granada": "PERMANENCIA",
     "Real Sociedad B": "PERMANENCIA",
-    "Valladolid": "PERMANENCIA",
     "Leganés": "PERMANENCIA",
+    "Valladolid": "PERMANENCIA",
     "Cádiz": "PERMANENCIA",
     "Mirandés": "DESCENSO ASEGURADO",
     "Huesca": "DESCENSO ASEGURADO",
@@ -3242,8 +3242,8 @@
     "Andorra": 0,
     "Granada": 0,
     "Real Sociedad B": 0,
-    "Valladolid": 0,
     "Leganés": 0,
+    "Valladolid": 0,
     "Cádiz": 0,
     "Mirandés": 0,
     "Huesca": 0,
@@ -5465,8 +5465,8 @@
         "res": "E"
       },
       "Mirandés": {
-        "score": "0-0",
-        "res": "E"
+        "score": "1-0",
+        "res": "V"
       }
     },
     "Mirandés": {
@@ -6067,7 +6067,7 @@
         "res": "D"
       },
       "Huesca": {
-        "score": "0-0",
+        "score": "1-1",
         "res": "E"
       }
     },
