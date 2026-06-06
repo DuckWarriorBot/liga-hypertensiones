@@ -23,9 +23,9 @@
     "Sporting",
     "Valladolid"
   ],
-  "total_rounds": 42,
+  "total_rounds": 43,
   "total_season_rounds": 42,
-  "last_updated": "2026-06-06T20:43:28",
+  "last_updated": "2026-06-06T21:12:08",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -289,7 +289,8 @@
       "E",
       "E",
       "V",
-      "V"
+      "V",
+      "E"
     ],
     "Málaga": [
       "E",
@@ -949,7 +950,8 @@
       "E",
       "D",
       "D",
-      "V"
+      "V",
+      "E"
     ],
     "Albacete": [
       "E",
@@ -1039,6 +1041,7 @@
       12,
       11,
       10,
+      12,
       12
     ],
     "Almería": [
@@ -1080,6 +1083,7 @@
       3,
       2,
       2,
+      3,
       3,
       3,
       3,
@@ -1127,6 +1131,7 @@
       10,
       10,
       13,
+      13,
       13
     ],
     "Burgos": [
@@ -1169,6 +1174,7 @@
       6,
       7,
       8,
+      7,
       7,
       7,
       7
@@ -1215,7 +1221,8 @@
       6,
       6,
       6,
-      6
+      6,
+      4
     ],
     "Ceuta": [
       21,
@@ -1259,6 +1266,7 @@
       11,
       13,
       11,
+      11,
       11
     ],
     "Cultural Leonesa": [
@@ -1301,6 +1309,7 @@
       22,
       22,
       22,
+      21,
       21,
       21,
       21
@@ -1347,6 +1356,7 @@
       18,
       18,
       17,
+      18,
       18
     ],
     "Córdoba": [
@@ -1387,6 +1397,7 @@
       12,
       11,
       10,
+      9,
       9,
       9,
       9,
@@ -1435,6 +1446,7 @@
       2,
       2,
       2,
+      2,
       2
     ],
     "Eibar": [
@@ -1479,6 +1491,7 @@
       7,
       8,
       8,
+      8,
       8
     ],
     "Granada": [
@@ -1517,6 +1530,7 @@
       13,
       14,
       13,
+      14,
       14,
       14,
       14,
@@ -1567,6 +1581,7 @@
       19,
       19,
       20,
+      20,
       20
     ],
     "Las Palmas": [
@@ -1611,7 +1626,8 @@
       5,
       5,
       5,
-      5
+      5,
+      6
     ],
     "Leganés": [
       14,
@@ -1655,6 +1671,7 @@
       17,
       17,
       18,
+      16,
       16
     ],
     "Mirandés": [
@@ -1698,6 +1715,7 @@
       20,
       20,
       20,
+      19,
       19,
       19
     ],
@@ -1743,7 +1761,8 @@
       4,
       4,
       4,
-      4
+      4,
+      5
     ],
     "Racing": [
       4,
@@ -1772,6 +1791,7 @@
       1,
       1,
       2,
+      1,
       1,
       1,
       1,
@@ -1831,6 +1851,7 @@
       16,
       15,
       15,
+      15,
       15
     ],
     "Real Zaragoza": [
@@ -1873,6 +1894,7 @@
       21,
       21,
       21,
+      22,
       22,
       22,
       22
@@ -1919,6 +1941,7 @@
       13,
       12,
       12,
+      10,
       10
     ],
     "Valladolid": [
@@ -1963,6 +1986,7 @@
       15,
       16,
       16,
+      17,
       17
     ]
   },
@@ -2009,6 +2033,7 @@
       53,
       56,
       59,
+      59,
       59
     ],
     "Almería": [
@@ -2053,7 +2078,8 @@
       71,
       71,
       71,
-      74
+      74,
+      75
     ],
     "Andorra": [
       1,
@@ -2094,6 +2120,7 @@
       52,
       55,
       55,
+      58,
       58,
       58,
       58,
@@ -2141,6 +2168,7 @@
       63,
       66,
       69,
+      72,
       72
     ],
     "Castellón": [
@@ -2185,7 +2213,8 @@
       65,
       66,
       69,
-      72
+      72,
+      73
     ],
     "Ceuta": [
       0,
@@ -2229,6 +2258,7 @@
       55,
       55,
       58,
+      61,
       61
     ],
     "Cultural Leonesa": [
@@ -2273,6 +2303,7 @@
       33,
       36,
       36,
+      37,
       37
     ],
     "Cádiz": [
@@ -2316,6 +2347,7 @@
       39,
       39,
       40,
+      43,
       43,
       43
     ],
@@ -2361,6 +2393,7 @@
       60,
       60,
       60,
+      61,
       61
     ],
     "Deportivo": [
@@ -2404,6 +2437,7 @@
       68,
       71,
       74,
+      77,
       77,
       77
     ],
@@ -2449,6 +2483,7 @@
       64,
       64,
       67,
+      67,
       67
     ],
     "Granada": [
@@ -2489,6 +2524,7 @@
       45,
       45,
       45,
+      48,
       48,
       48,
       48,
@@ -2537,6 +2573,7 @@
       36,
       37,
       37,
+      38,
       38
     ],
     "Las Palmas": [
@@ -2581,6 +2618,7 @@
       66,
       69,
       70,
+      73,
       73
     ],
     "Leganés": [
@@ -2625,6 +2663,7 @@
       42,
       43,
       43,
+      46,
       46
     ],
     "Mirandés": [
@@ -2668,6 +2707,7 @@
       36,
       36,
       37,
+      40,
       40,
       40
     ],
@@ -2713,6 +2753,7 @@
       66,
       69,
       70,
+      73,
       73
     ],
     "Racing": [
@@ -2757,6 +2798,7 @@
       75,
       78,
       79,
+      82,
       82
     ],
     "Real Sociedad B": [
@@ -2801,6 +2843,7 @@
       45,
       46,
       46,
+      47,
       47
     ],
     "Real Zaragoza": [
@@ -2844,6 +2887,7 @@
       35,
       35,
       35,
+      36,
       36,
       36
     ],
@@ -2889,6 +2933,7 @@
       52,
       55,
       58,
+      61,
       61
     ],
     "Valladolid": [
@@ -2933,6 +2978,7 @@
       46,
       46,
       46,
+      46,
       46
     ]
   },
@@ -2963,15 +3009,27 @@
     },
     {
       "name": "Almería",
-      "pts": 74,
+      "pts": 75,
       "wins": 22,
-      "draws": 8,
+      "draws": 9,
       "losses": 12,
-      "played": 42,
-      "gf": 81,
-      "gc": 63,
+      "played": 43,
+      "gf": 82,
+      "gc": 64,
       "dif": 18,
       "pos": 3
+    },
+    {
+      "name": "Castellón",
+      "pts": 73,
+      "wins": 20,
+      "draws": 13,
+      "losses": 10,
+      "played": 43,
+      "gf": 71,
+      "gc": 52,
+      "dif": 19,
+      "pos": 4
     },
     {
       "name": "Málaga",
@@ -2983,7 +3041,7 @@
       "gf": 75,
       "gc": 52,
       "dif": 23,
-      "pos": 4
+      "pos": 5
     },
     {
       "name": "Las Palmas",
@@ -2995,18 +3053,6 @@
       "gf": 57,
       "gc": 40,
       "dif": 17,
-      "pos": 5
-    },
-    {
-      "name": "Castellón",
-      "pts": 72,
-      "wins": 20,
-      "draws": 12,
-      "losses": 10,
-      "played": 42,
-      "gf": 70,
-      "gc": 51,
-      "dif": 19,
       "pos": 6
     },
     {
@@ -3205,11 +3251,11 @@
   "situacion_by_team": {
     "Racing": "ASCENSO ASEGURADO",
     "Deportivo": "ASCENSO ASEGURADO",
-    "Almería": "A 3 DEL ASCENSO",
+    "Almería": "A 2 DEL ASCENSO",
+    "Castellón": "A 4 DEL ASCENSO",
     "Málaga": "A 4 DEL ASCENSO",
     "Las Palmas": "A 4 DEL ASCENSO",
-    "Castellón": "A 5 DEL ASCENSO",
-    "Burgos": "A 0 DEL PLAYOFF",
+    "Burgos": "A 1 DEL PLAYOFF",
     "Eibar": "PERMANENCIA",
     "Córdoba": "PERMANENCIA",
     "Sporting": "PERMANENCIA",
@@ -3227,28 +3273,28 @@
     "Real Zaragoza": "DESCENSO ASEGURADO"
   },
   "quedan_by_team": {
-    "Racing": 0,
-    "Deportivo": 0,
-    "Almería": 0,
-    "Málaga": 0,
-    "Las Palmas": 0,
-    "Castellón": 0,
-    "Burgos": 0,
-    "Eibar": 0,
-    "Córdoba": 0,
-    "Sporting": 0,
-    "Ceuta": 0,
-    "Albacete": 0,
-    "Andorra": 0,
-    "Granada": 0,
-    "Real Sociedad B": 0,
-    "Leganés": 0,
-    "Valladolid": 0,
-    "Cádiz": 0,
-    "Mirandés": 0,
-    "Huesca": 0,
-    "Cultural Leonesa": 0,
-    "Real Zaragoza": 0
+    "Racing": -3,
+    "Deportivo": -3,
+    "Almería": -3,
+    "Castellón": -3,
+    "Málaga": -3,
+    "Las Palmas": -3,
+    "Burgos": -3,
+    "Eibar": -3,
+    "Córdoba": -3,
+    "Sporting": -3,
+    "Ceuta": -3,
+    "Albacete": -3,
+    "Andorra": -3,
+    "Granada": -3,
+    "Real Sociedad B": -3,
+    "Leganés": -3,
+    "Valladolid": -3,
+    "Cádiz": -3,
+    "Mirandés": -3,
+    "Huesca": -3,
+    "Cultural Leonesa": -3,
+    "Real Zaragoza": -3
   },
   "opponents_by_team": {
     "Albacete": [
@@ -4223,13 +4269,6 @@
   "fixtures": [
     {
       "round": 43,
-      "home": "Castellón",
-      "away": "Almería",
-      "date": "06/06",
-      "time": "21:00"
-    },
-    {
-      "round": 43,
       "home": "Las Palmas",
       "away": "Málaga",
       "date": "07/06",
@@ -4251,9 +4290,6 @@
     }
   ],
   "match_days": {
-    "06/06": [
-      "21:00"
-    ],
     "07/06": [
       "21:00"
     ],
@@ -5359,8 +5395,8 @@
         "res": "E"
       },
       "Almería": {
-        "score": "2-0",
-        "res": "V"
+        "score": "1-1",
+        "res": "E"
       },
       "Granada": {
         "score": "3-2",
@@ -6163,14 +6199,14 @@
       {
         "id": "SF1",
         "team_high": "Almería",
-        "team_low": "Castellón",
+        "team_low": "Las Palmas",
         "matches": [
           {
             "round": 43,
             "leg": 1,
             "label": "Semifinal Ida",
             "home": "Almería",
-            "away": "Castellón",
+            "away": "Las Palmas",
             "score": null,
             "played": false,
             "date": null
@@ -6179,7 +6215,7 @@
             "round": 44,
             "leg": 2,
             "label": "Semifinal Vuelta",
-            "home": "Castellón",
+            "home": "Las Palmas",
             "away": "Almería",
             "score": null,
             "played": false,
@@ -6191,15 +6227,15 @@
       },
       {
         "id": "SF2",
-        "team_high": "Málaga",
-        "team_low": "Las Palmas",
+        "team_high": "Castellón",
+        "team_low": "Málaga",
         "matches": [
           {
             "round": 43,
             "leg": 1,
             "label": "Semifinal Ida",
-            "home": "Málaga",
-            "away": "Las Palmas",
+            "home": "Castellón",
+            "away": "Málaga",
             "score": null,
             "played": false,
             "date": null
@@ -6208,8 +6244,8 @@
             "round": 44,
             "leg": 2,
             "label": "Semifinal Vuelta",
-            "home": "Las Palmas",
-            "away": "Málaga",
+            "home": "Málaga",
+            "away": "Castellón",
             "score": null,
             "played": false,
             "date": null
