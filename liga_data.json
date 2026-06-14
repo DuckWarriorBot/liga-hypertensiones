@@ -25,7 +25,7 @@
   ],
   "total_rounds": 43,
   "total_season_rounds": 42,
-  "last_updated": "2026-06-14T20:51:06",
+  "last_updated": "2026-06-14T21:23:08",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -337,6 +337,7 @@
       "E",
       "V",
       "V",
+      "E",
       "E"
     ],
     "Eibar": [
@@ -957,7 +958,8 @@
       "D",
       "V",
       "E",
-      "V"
+      "V",
+      "E"
     ],
     "Albacete": [
       "E",
@@ -3003,25 +3005,25 @@
     },
     {
       "name": "Almería",
-      "pts": 78,
+      "pts": 79,
       "wins": 23,
-      "draws": 9,
+      "draws": 10,
       "losses": 12,
-      "played": 44,
-      "gf": 84,
-      "gc": 65,
-      "dif": 19,
+      "played": 45,
+      "gf": 81,
+      "gc": 63,
+      "dif": 18,
       "pos": 2
     },
     {
       "name": "Málaga",
-      "pts": 77,
+      "pts": 78,
       "wins": 22,
-      "draws": 11,
+      "draws": 12,
       "losses": 11,
-      "played": 44,
-      "gf": 76,
-      "gc": 53,
+      "played": 45,
+      "gf": 75,
+      "gc": 52,
       "dif": 23,
       "pos": 3
     },
@@ -3258,9 +3260,9 @@
     "Racing": "ASCENSO ASEGURADO",
     "Almería": "ASCENSO ASEGURADO",
     "Málaga": "A 1 DEL ASCENSO",
-    "Deportivo": "A 1 DEL ASCENSO",
-    "Las Palmas": "A 4 DEL ASCENSO",
-    "Castellón": "A 5 DEL ASCENSO",
+    "Deportivo": "A 2 DEL ASCENSO",
+    "Las Palmas": "A 5 DEL ASCENSO",
+    "Castellón": "A 6 DEL ASCENSO",
     "Burgos": "A 1 DEL PLAYOFF",
     "Eibar": "PERMANENCIA",
     "Córdoba": "PERMANENCIA",
@@ -4275,13 +4277,6 @@
   "fixtures": [
     {
       "round": 43,
-      "home": "Málaga",
-      "away": "Almería",
-      "date": "14/06",
-      "time": "21:00"
-    },
-    {
-      "round": 43,
       "home": "Almería",
       "away": "Málaga",
       "date": "20/06",
@@ -4289,9 +4284,6 @@
     }
   ],
   "match_days": {
-    "14/06": [
-      "21:00"
-    ],
     "20/06": [
       "21:00"
     ]
@@ -4593,8 +4585,8 @@
         "res": "E"
       },
       "Almería": {
-        "score": "2-1",
-        "res": "V"
+        "score": "0-0",
+        "res": "E"
       },
       "Ceuta": {
         "score": "2-1",
