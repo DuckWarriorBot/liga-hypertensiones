@@ -25,7 +25,7 @@
   ],
   "total_rounds": 43,
   "total_season_rounds": 42,
-  "last_updated": "2026-06-20T18:55:53",
+  "last_updated": "2026-06-20T19:33:13",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -4280,12 +4280,11 @@
       "home": "Almería",
       "away": "Málaga",
       "date": "20/06",
-      "time": "21:00"
+      "time": "21:30"
     }
   ],
   "match_days": {
     "20/06": [
-      "21:00",
       "21:30"
     ]
   },
