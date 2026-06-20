@@ -25,7 +25,7 @@
   ],
   "total_rounds": 43,
   "total_season_rounds": 42,
-  "last_updated": "2026-06-20T21:11:39",
+  "last_updated": "2026-06-20T21:43:41",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -338,7 +338,8 @@
       "V",
       "V",
       "E",
-      "E"
+      "E",
+      "V"
     ],
     "Eibar": [
       "E",
@@ -959,7 +960,8 @@
       "V",
       "E",
       "V",
-      "E"
+      "E",
+      "D"
     ],
     "Albacete": [
       "E",
@@ -3004,27 +3006,27 @@
       "pos": 1
     },
     {
+      "name": "Málaga",
+      "pts": 81,
+      "wins": 23,
+      "draws": 12,
+      "losses": 11,
+      "played": 46,
+      "gf": 77,
+      "gc": 53,
+      "dif": 24,
+      "pos": 2
+    },
+    {
       "name": "Almería",
       "pts": 79,
       "wins": 23,
       "draws": 10,
-      "losses": 12,
-      "played": 45,
-      "gf": 81,
-      "gc": 63,
-      "dif": 18,
-      "pos": 2
-    },
-    {
-      "name": "Málaga",
-      "pts": 78,
-      "wins": 22,
-      "draws": 12,
-      "losses": 11,
-      "played": 45,
-      "gf": 75,
-      "gc": 52,
-      "dif": 23,
+      "losses": 13,
+      "played": 46,
+      "gf": 82,
+      "gc": 65,
+      "dif": 17,
       "pos": 3
     },
     {
@@ -3258,11 +3260,11 @@
   ],
   "situacion_by_team": {
     "Racing": "ASCENSO ASEGURADO",
-    "Almería": "ASCENSO ASEGURADO",
-    "Málaga": "A 1 DEL ASCENSO",
-    "Deportivo": "A 2 DEL ASCENSO",
-    "Las Palmas": "A 5 DEL ASCENSO",
-    "Castellón": "A 6 DEL ASCENSO",
+    "Málaga": "ASCENSO ASEGURADO",
+    "Almería": "A 2 DEL ASCENSO",
+    "Deportivo": "A 4 DEL ASCENSO",
+    "Las Palmas": "A 7 DEL ASCENSO",
+    "Castellón": "A 8 DEL ASCENSO",
     "Burgos": "A 1 DEL PLAYOFF",
     "Eibar": "PERMANENCIA",
     "Córdoba": "PERMANENCIA",
@@ -3282,8 +3284,8 @@
   },
   "quedan_by_team": {
     "Racing": -3,
-    "Almería": -3,
     "Málaga": -3,
+    "Almería": -3,
     "Deportivo": -3,
     "Las Palmas": -3,
     "Castellón": -3,
@@ -4274,20 +4276,8 @@
       "Almería"
     ]
   },
-  "fixtures": [
-    {
-      "round": 43,
-      "home": "Almería",
-      "away": "Málaga",
-      "date": "20/06",
-      "time": "21:30"
-    }
-  ],
-  "match_days": {
-    "20/06": [
-      "21:30"
-    ]
-  },
+  "fixtures": [],
+  "match_days": {},
   "h2h_data": {
     "Burgos": {
       "Cultural Leonesa": {
@@ -5219,8 +5209,8 @@
         "res": "V"
       },
       "Málaga": {
-        "score": "3-2",
-        "res": "V"
+        "score": "1-2",
+        "res": "D"
       },
       "Mirandés": {
         "score": "4-2",
@@ -6186,14 +6176,14 @@
     "semis": [
       {
         "id": "SF1",
-        "team_high": "Málaga",
+        "team_high": "Almería",
         "team_low": "Castellón",
         "matches": [
           {
             "round": 43,
             "leg": 1,
             "label": "Semifinal Ida",
-            "home": "Málaga",
+            "home": "Almería",
             "away": "Castellón",
             "score": null,
             "played": false,
@@ -6204,7 +6194,7 @@
             "leg": 2,
             "label": "Semifinal Vuelta",
             "home": "Castellón",
-            "away": "Málaga",
+            "away": "Almería",
             "score": null,
             "played": false,
             "date": null
