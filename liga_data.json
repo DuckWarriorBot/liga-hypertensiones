@@ -25,7 +25,7 @@
   ],
   "total_rounds": 43,
   "total_season_rounds": 42,
-  "last_updated": "2026-06-20T17:50:37",
+  "last_updated": "2026-06-20T18:21:47",
   "results_by_team": {
     "Burgos": [
       "V",
@@ -4285,7 +4285,8 @@
   ],
   "match_days": {
     "20/06": [
-      "21:00"
+      "21:00",
+      "21:30"
     ]
   },
   "h2h_data": {
